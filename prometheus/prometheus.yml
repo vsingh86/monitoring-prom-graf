@@ -19,10 +19,93 @@ scrape_configs:
         regex: "([^:]+):.*"
         replacement: "${1}"
 
-  - job_name: fake-app
+  # Each app gets its own job so the parent dashboard can filter by job name
+  - job_name: orders-api
     static_configs:
       - targets: ["fake-exporter:9999"]
+    params:
+      app: ["orders-api"]
     relabel_configs:
-      - source_labels: [__address__]
-        target_label: instance
-        replacement: "app-server-01"
+      - target_label: app
+        replacement: "orders-api"
+      - target_label: instance
+        replacement: "orders-api-01"
+      - target_label: tier
+        replacement: "backend"
+      - target_label: team
+        replacement: "commerce"
+
+  - job_name: payments-service
+    static_configs:
+      - targets: ["fake-exporter:9999"]
+    params:
+      app: ["payments-service"]
+    relabel_configs:
+      - target_label: app
+        replacement: "payments-service"
+      - target_label: instance
+        replacement: "payments-svc-01"
+      - target_label: tier
+        replacement: "backend"
+      - target_label: team
+        replacement: "fintech"
+
+  - job_name: user-portal
+    static_configs:
+      - targets: ["fake-exporter:9999"]
+    params:
+      app: ["user-portal"]
+    relabel_configs:
+      - target_label: app
+        replacement: "user-portal"
+      - target_label: instance
+        replacement: "portal-01"
+      - target_label: tier
+        replacement: "frontend"
+      - target_label: team
+        replacement: "growth"
+
+  - job_name: inventory-service
+    static_configs:
+      - targets: ["fake-exporter:9999"]
+    params:
+      app: ["inventory-service"]
+    relabel_configs:
+      - target_label: app
+        replacement: "inventory-service"
+      - target_label: instance
+        replacement: "inventory-01"
+      - target_label: tier
+        replacement: "backend"
+      - target_label: team
+        replacement: "logistics"
+
+  - job_name: notification-worker
+    static_configs:
+      - targets: ["fake-exporter:9999"]
+    params:
+      app: ["notification-worker"]
+    relabel_configs:
+      - target_label: app
+        replacement: "notification-worker"
+      - target_label: instance
+        replacement: "notif-worker-01"
+      - target_label: tier
+        replacement: "worker"
+      - target_label: team
+        replacement: "platform"
+
+  - job_name: auth-gateway
+    static_configs:
+      - targets: ["fake-exporter:9999"]
+    params:
+      app: ["auth-gateway"]
+    relabel_configs:
+      - target_label: app
+        replacement: "auth-gateway"
+      - target_label: instance
+        replacement: "auth-gw-01"
+      - target_label: tier
+        replacement: "gateway"
+      - target_label: team
+        replacement: "platform"

@@ -41,7 +41,8 @@ services:
       GF_USERS_ALLOW_SIGN_UP: "false"
       GF_AUTH_ANONYMOUS_ENABLED: "true"
       GF_AUTH_ANONYMOUS_ORG_ROLE: Viewer
-      GF_DASHBOARDS_DEFAULT_HOME_DASHBOARD_PATH: /var/lib/grafana/dashboards/main.json
+      # Set the overview as the home/landing dashboard
+      GF_DASHBOARDS_DEFAULT_HOME_DASHBOARD_PATH: /var/lib/grafana/dashboards/overview.json
     volumes:
       - grafana_data:/var/lib/grafana
       - ./grafana/provisioning:/etc/grafana/provisioning:ro
@@ -63,7 +64,6 @@ services:
       - --path.procfs=/host/proc
       - --path.sysfs=/host/sys
       - --collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)
-      # Disable collectors that require privileged host access not available in Docker
       - --no-collector.os
       - --no-collector.rapl
       - --no-collector.buddyinfo
@@ -76,7 +76,7 @@ services:
     networks:
       - monitoring
 
-  # ── Fake Exporter (simulated app metrics for all 6 layers) ────────────────
+  # ── Fake Exporter (multi-app simulated metrics) ────────────────────────────
   fake-exporter:
     build:
       context: ./fake-exporter
