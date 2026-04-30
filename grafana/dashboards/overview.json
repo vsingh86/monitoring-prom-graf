@@ -142,24 +142,17 @@
                 "id": "mappings",
                 "value": [
                   {
-                    "type": "range",
+                    "type": "value",
                     "options": {
-                      "from": 0,
-                      "to": 0.9499,
-                      "result": {
+                      "0": {
                         "text": "⬇ DOWN",
-                        "color": "red"
-                      }
-                    }
-                  },
-                  {
-                    "type": "range",
-                    "options": {
-                      "from": 0.95,
-                      "to": 1,
-                      "result": {
+                        "color": "red",
+                        "index": 0
+                      },
+                      "1": {
                         "text": "⬆ UP",
-                        "color": "green"
+                        "color": "green",
+                        "index": 1
                       }
                     }
                   }
@@ -182,7 +175,7 @@
                     },
                     {
                       "color": "green",
-                      "value": 0.95
+                      "value": 1
                     }
                   ]
                 }
@@ -231,7 +224,7 @@
             "type": "prometheus",
             "uid": "prometheus-demo"
           },
-          "expr": "app_uptime_ratio{app=\"CCMS\"}",
+          "expr": "app_up{app=\"CCMS\"}",
           "legendFormat": "Status",
           "refId": "B"
         }
@@ -353,24 +346,17 @@
                 "id": "mappings",
                 "value": [
                   {
-                    "type": "range",
+                    "type": "value",
                     "options": {
-                      "from": 0,
-                      "to": 0.9499,
-                      "result": {
+                      "0": {
                         "text": "⬇ DOWN",
-                        "color": "red"
-                      }
-                    }
-                  },
-                  {
-                    "type": "range",
-                    "options": {
-                      "from": 0.95,
-                      "to": 1,
-                      "result": {
+                        "color": "red",
+                        "index": 0
+                      },
+                      "1": {
                         "text": "⬆ UP",
-                        "color": "green"
+                        "color": "green",
+                        "index": 1
                       }
                     }
                   }
@@ -393,7 +379,7 @@
                     },
                     {
                       "color": "green",
-                      "value": 0.95
+                      "value": 1
                     }
                   ]
                 }
@@ -442,7 +428,7 @@
             "type": "prometheus",
             "uid": "prometheus-demo"
           },
-          "expr": "app_uptime_ratio{app=\"ECRS\"}",
+          "expr": "app_up{app=\"ECRS\"}",
           "legendFormat": "Status",
           "refId": "B"
         }
@@ -564,24 +550,17 @@
                 "id": "mappings",
                 "value": [
                   {
-                    "type": "range",
+                    "type": "value",
                     "options": {
-                      "from": 0,
-                      "to": 0.9499,
-                      "result": {
+                      "0": {
                         "text": "⬇ DOWN",
-                        "color": "red"
-                      }
-                    }
-                  },
-                  {
-                    "type": "range",
-                    "options": {
-                      "from": 0.95,
-                      "to": 1,
-                      "result": {
+                        "color": "red",
+                        "index": 0
+                      },
+                      "1": {
                         "text": "⬆ UP",
-                        "color": "green"
+                        "color": "green",
+                        "index": 1
                       }
                     }
                   }
@@ -604,7 +583,7 @@
                     },
                     {
                       "color": "green",
-                      "value": 0.95
+                      "value": 1
                     }
                   ]
                 }
@@ -653,7 +632,7 @@
             "type": "prometheus",
             "uid": "prometheus-demo"
           },
-          "expr": "app_uptime_ratio{app=\"HIMS\"}",
+          "expr": "app_up{app=\"HIMS\"}",
           "legendFormat": "Status",
           "refId": "B"
         }
@@ -775,24 +754,17 @@
                 "id": "mappings",
                 "value": [
                   {
-                    "type": "range",
+                    "type": "value",
                     "options": {
-                      "from": 0,
-                      "to": 0.9499,
-                      "result": {
+                      "0": {
                         "text": "⬇ DOWN",
-                        "color": "red"
-                      }
-                    }
-                  },
-                  {
-                    "type": "range",
-                    "options": {
-                      "from": 0.95,
-                      "to": 1,
-                      "result": {
+                        "color": "red",
+                        "index": 0
+                      },
+                      "1": {
                         "text": "⬆ UP",
-                        "color": "green"
+                        "color": "green",
+                        "index": 1
                       }
                     }
                   }
@@ -815,7 +787,7 @@
                     },
                     {
                       "color": "green",
-                      "value": 0.95
+                      "value": 1
                     }
                   ]
                 }
@@ -864,7 +836,7 @@
             "type": "prometheus",
             "uid": "prometheus-demo"
           },
-          "expr": "app_uptime_ratio{app=\"ESS\"}",
+          "expr": "app_up{app=\"ESS\"}",
           "legendFormat": "Status",
           "refId": "B"
         }
@@ -986,24 +958,17 @@
                 "id": "mappings",
                 "value": [
                   {
-                    "type": "range",
+                    "type": "value",
                     "options": {
-                      "from": 0,
-                      "to": 0.9499,
-                      "result": {
+                      "0": {
                         "text": "⬇ DOWN",
-                        "color": "red"
-                      }
-                    }
-                  },
-                  {
-                    "type": "range",
-                    "options": {
-                      "from": 0.95,
-                      "to": 1,
-                      "result": {
+                        "color": "red",
+                        "index": 0
+                      },
+                      "1": {
                         "text": "⬆ UP",
-                        "color": "green"
+                        "color": "green",
+                        "index": 1
                       }
                     }
                   }
@@ -1026,7 +991,7 @@
                     },
                     {
                       "color": "green",
-                      "value": 0.95
+                      "value": 1
                     }
                   ]
                 }
@@ -1075,7 +1040,7 @@
             "type": "prometheus",
             "uid": "prometheus-demo"
           },
-          "expr": "app_uptime_ratio{app=\"MARS\"}",
+          "expr": "app_up{app=\"MARS\"}",
           "legendFormat": "Status",
           "refId": "B"
         }
@@ -1197,24 +1162,17 @@
                 "id": "mappings",
                 "value": [
                   {
-                    "type": "range",
+                    "type": "value",
                     "options": {
-                      "from": 0,
-                      "to": 0.9499,
-                      "result": {
+                      "0": {
                         "text": "⬇ DOWN",
-                        "color": "red"
-                      }
-                    }
-                  },
-                  {
-                    "type": "range",
-                    "options": {
-                      "from": 0.95,
-                      "to": 1,
-                      "result": {
+                        "color": "red",
+                        "index": 0
+                      },
+                      "1": {
                         "text": "⬆ UP",
-                        "color": "green"
+                        "color": "green",
+                        "index": 1
                       }
                     }
                   }
@@ -1237,7 +1195,7 @@
                     },
                     {
                       "color": "green",
-                      "value": 0.95
+                      "value": 1
                     }
                   ]
                 }
@@ -1286,7 +1244,7 @@
             "type": "prometheus",
             "uid": "prometheus-demo"
           },
-          "expr": "app_uptime_ratio{app=\"SELF\"}",
+          "expr": "app_up{app=\"SELF\"}",
           "legendFormat": "Status",
           "refId": "B"
         }
@@ -1420,24 +1378,17 @@
                 "id": "mappings",
                 "value": [
                   {
-                    "type": "range",
+                    "type": "value",
                     "options": {
-                      "from": 0,
-                      "to": 0.9499,
-                      "result": {
+                      "0": {
                         "text": "⬇ DOWN",
-                        "color": "red"
-                      }
-                    }
-                  },
-                  {
-                    "type": "range",
-                    "options": {
-                      "from": 0.95,
-                      "to": 1,
-                      "result": {
+                        "color": "red",
+                        "index": 0
+                      },
+                      "1": {
                         "text": "⬆ UP",
-                        "color": "green"
+                        "color": "green",
+                        "index": 1
                       }
                     }
                   }
@@ -1460,7 +1411,7 @@
                     },
                     {
                       "color": "green",
-                      "value": 0.95
+                      "value": 1
                     }
                   ]
                 }
@@ -1509,7 +1460,7 @@
             "type": "prometheus",
             "uid": "prometheus-demo"
           },
-          "expr": "app_uptime_ratio{app=\"auth-api\"}",
+          "expr": "app_up{app=\"auth-api\"}",
           "legendFormat": "Status",
           "refId": "B"
         }
@@ -1631,24 +1582,17 @@
                 "id": "mappings",
                 "value": [
                   {
-                    "type": "range",
+                    "type": "value",
                     "options": {
-                      "from": 0,
-                      "to": 0.9499,
-                      "result": {
+                      "0": {
                         "text": "⬇ DOWN",
-                        "color": "red"
-                      }
-                    }
-                  },
-                  {
-                    "type": "range",
-                    "options": {
-                      "from": 0.95,
-                      "to": 1,
-                      "result": {
+                        "color": "red",
+                        "index": 0
+                      },
+                      "1": {
                         "text": "⬆ UP",
-                        "color": "green"
+                        "color": "green",
+                        "index": 1
                       }
                     }
                   }
@@ -1671,7 +1615,7 @@
                     },
                     {
                       "color": "green",
-                      "value": 0.95
+                      "value": 1
                     }
                   ]
                 }
@@ -1720,7 +1664,7 @@
             "type": "prometheus",
             "uid": "prometheus-demo"
           },
-          "expr": "app_uptime_ratio{app=\"card-api\"}",
+          "expr": "app_up{app=\"card-api\"}",
           "legendFormat": "Status",
           "refId": "B"
         }
@@ -1842,24 +1786,17 @@
                 "id": "mappings",
                 "value": [
                   {
-                    "type": "range",
+                    "type": "value",
                     "options": {
-                      "from": 0,
-                      "to": 0.9499,
-                      "result": {
+                      "0": {
                         "text": "⬇ DOWN",
-                        "color": "red"
-                      }
-                    }
-                  },
-                  {
-                    "type": "range",
-                    "options": {
-                      "from": 0.95,
-                      "to": 1,
-                      "result": {
+                        "color": "red",
+                        "index": 0
+                      },
+                      "1": {
                         "text": "⬆ UP",
-                        "color": "green"
+                        "color": "green",
+                        "index": 1
                       }
                     }
                   }
@@ -1882,7 +1819,7 @@
                     },
                     {
                       "color": "green",
-                      "value": 0.95
+                      "value": 1
                     }
                   ]
                 }
@@ -1931,7 +1868,7 @@
             "type": "prometheus",
             "uid": "prometheus-demo"
           },
-          "expr": "app_uptime_ratio{app=\"hims-api\"}",
+          "expr": "app_up{app=\"hims-api\"}",
           "legendFormat": "Status",
           "refId": "B"
         }
@@ -2053,24 +1990,17 @@
                 "id": "mappings",
                 "value": [
                   {
-                    "type": "range",
+                    "type": "value",
                     "options": {
-                      "from": 0,
-                      "to": 0.9499,
-                      "result": {
+                      "0": {
                         "text": "⬇ DOWN",
-                        "color": "red"
-                      }
-                    }
-                  },
-                  {
-                    "type": "range",
-                    "options": {
-                      "from": 0.95,
-                      "to": 1,
-                      "result": {
+                        "color": "red",
+                        "index": 0
+                      },
+                      "1": {
                         "text": "⬆ UP",
-                        "color": "green"
+                        "color": "green",
+                        "index": 1
                       }
                     }
                   }
@@ -2093,7 +2023,7 @@
                     },
                     {
                       "color": "green",
-                      "value": 0.95
+                      "value": 1
                     }
                   ]
                 }
@@ -2142,7 +2072,7 @@
             "type": "prometheus",
             "uid": "prometheus-demo"
           },
-          "expr": "app_uptime_ratio{app=\"ecrs-api\"}",
+          "expr": "app_up{app=\"ecrs-api\"}",
           "legendFormat": "Status",
           "refId": "B"
         }

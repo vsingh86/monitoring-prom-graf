@@ -100,7 +100,13 @@ pg_query_lat = Histogram(
 )
 app_uptime_ratio = Gauge(
     "app_uptime_ratio",
-    "Rolling availability ratio (0-1). Used by the overview dashboard.",
+    "Rolling availability ratio (0-1). Historical uptime based on incident penalties.",
+    ["job", "app", "tier"]
+)
+app_up = Gauge(
+    "app_up",
+    "Current app health: 1=UP (healthy right now), 0=DOWN (active severe incident). "
+    "Independent of the rolling uptime score — reflects point-in-time state.",
     ["job", "app", "tier"]
 )
 
@@ -179,12 +185,18 @@ def update_app(app, cfg):
         noisy(2 + (15 if "latency_spike" in active else 0))
     )
 
-    # Uptime — degrade during incidents, recover slowly
+    # Uptime % — rolling score, degrades during incidents, recovers slowly
     penalty = 0.0
     if "error_surge"   in active: penalty += inc.severity("error_surge")   * 0.04
     if "latency_spike" in active: penalty += inc.severity("latency_spike") * 0.015
     state["uptime_score"] = max(0.80, min(1.0, state["uptime_score"] - penalty + 0.0002))
     app_uptime_ratio.labels(job=app, app=app, tier=tier).set(state["uptime_score"])
+
+    # Current Status — binary, independent of rolling uptime.
+    # DOWN (0) when an error_surge incident is active with severity > 0.4.
+    # Recovers to UP (1) the moment the incident clears.
+    is_up = 0.0 if ("error_surge" in active and inc.severity("error_surge") > 0.4) else 1.0
+    app_up.labels(job=app, app=app, tier=tier).set(is_up)
 
 
 def update_loop():
