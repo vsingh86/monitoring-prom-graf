@@ -91,11 +91,6 @@
           "links": [
             {
               "title": "Performance Drilldown →",
-              "url": "/d/demo-monitoring-v1?var-app=${__field.labels.app}&viewPanel=200",
-              "targetBlank": false
-            },
-            {
-              "title": "Performance Drilldown →",
               "url": "/d/demo-monitoring-v1?var-app=$app&viewPanel=200",
               "targetBlank": false
             }
@@ -165,11 +160,6 @@
             "fillOpacity": 10
           },
           "links": [
-            {
-              "title": "Performance Drilldown →",
-              "url": "/d/demo-monitoring-v1?var-app=${__field.labels.app}&viewPanel=200",
-              "targetBlank": false
-            },
             {
               "title": "Performance Drilldown →",
               "url": "/d/demo-monitoring-v1?var-app=$app&viewPanel=200",
