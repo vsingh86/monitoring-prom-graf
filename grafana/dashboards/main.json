@@ -39,7 +39,7 @@
       "version": ""
     }
   ],
-  "description": "Centralized Application Monitoring \u2014 6-Layer Observability (Demo Stack)",
+  "description": "Centralized Application Monitoring — 6-Layer Observability (Demo Stack)",
   "editable": true,
   "graphTooltip": 1,
   "panels": [
@@ -52,8 +52,9 @@
         "y": 0
       },
       "id": 1,
-      "title": "\ud83d\udfe3  Layer 1 \u2014 The Four Golden Signals",
-      "type": "row"
+      "title": "🟣  Layer 1 — The Four Golden Signals",
+      "type": "row",
+      "panels": []
     },
     {
       "datasource": {
@@ -86,7 +87,19 @@
                 "value": 3
               }
             ]
-          }
+          },
+          "links": [
+            {
+              "title": "Performance Drilldown →",
+              "url": "/d/demo-monitoring-v1?var-app=${__field.labels.app}&viewPanel=200",
+              "targetBlank": false
+            },
+            {
+              "title": "Performance Drilldown →",
+              "url": "/d/demo-monitoring-v1?var-app=$app&viewPanel=200",
+              "targetBlank": false
+            }
+          ]
         }
       },
       "gridPos": {
@@ -98,7 +111,8 @@
       "id": 10,
       "options": {
         "tooltip": {
-          "mode": "multi"
+          "mode": "multi",
+          "sort": "desc"
         },
         "legend": {
           "displayMode": "list",
@@ -131,8 +145,9 @@
           "legendFormat": "p99"
         }
       ],
-      "title": "Request Latency \u2014 p50 / p95 / p99",
-      "type": "timeseries"
+      "title": "Request Latency — p50 / p95 / p99",
+      "type": "timeseries",
+      "description": "**What it measures:** Time from when the service receives a request to when it sends the response, expressed as percentile distributions.\n\n**p50 (median):** Half of requests complete faster than this. Represents the typical user experience.\n\n**p95:** 1 in 20 requests is slower than this. A good SLA target for most APIs.\n\n**p99:** 1 in 100 requests is slower than this. Reveals tail latency that averages hide — the experience of your worst-affected users.\n\n**How collected:** Prometheus Histogram metric (`http_request_duration_seconds`). The application records the duration of every request. PromQL `histogram_quantile()` computes percentiles from the bucket counts.\n\n**Thresholds:** Warn p99 > 1s · Critical p99 > 3s. Tighten for payment or auth flows (Warn > 500ms).\n\n**Common causes of spikes:** Slow database queries, GC pauses, downstream dependency latency, thread pool saturation."
     },
     {
       "datasource": {
@@ -148,7 +163,19 @@
           "custom": {
             "lineWidth": 2,
             "fillOpacity": 10
-          }
+          },
+          "links": [
+            {
+              "title": "Performance Drilldown →",
+              "url": "/d/demo-monitoring-v1?var-app=${__field.labels.app}&viewPanel=200",
+              "targetBlank": false
+            },
+            {
+              "title": "Performance Drilldown →",
+              "url": "/d/demo-monitoring-v1?var-app=$app&viewPanel=200",
+              "targetBlank": false
+            }
+          ]
         }
       },
       "gridPos": {
@@ -185,8 +212,9 @@
           "legendFormat": "2xx RPS"
         }
       ],
-      "title": "Traffic \u2014 Requests per Second",
-      "type": "timeseries"
+      "title": "Traffic — Requests per Second",
+      "type": "timeseries",
+      "description": "**What it measures:** The volume of requests your application is processing per second, broken down by HTTP status class.\n\n**Why it matters:** Traffic is your baseline. All other metrics must be interpreted relative to it. A 1% error rate means very different things at 10 RPS vs 10,000 RPS.\n\n**How collected:** Prometheus Counter (`http_requests_total`) incremented on every request. PromQL `rate()` converts the cumulative counter into a per-second rate over a sliding window.\n\n**What to watch:** Sudden drops (traffic fell away — routing issue?) are as important as spikes. Compare to same time yesterday using `offset 1d` in PromQL.\n\n**Thresholds:** Alert on deviation > 3× from rolling baseline rather than a fixed number."
     },
     {
       "datasource": {
@@ -195,7 +223,7 @@
       },
       "fieldConfig": {
         "defaults": {
-          "unit": "percentunit",
+          "unit": "short",
           "color": {
             "mode": "palette-classic"
           },
@@ -219,7 +247,14 @@
                 "value": 0.05
               }
             ]
-          }
+          },
+          "links": [
+            {
+              "title": "Error Drilldown →",
+              "url": "/d/demo-monitoring-v1?var-app=$app&viewPanel=201",
+              "targetBlank": false
+            }
+          ]
         }
       },
       "gridPos": {
@@ -235,20 +270,21 @@
             "type": "prometheus",
             "uid": "prometheus-demo"
           },
-          "expr": "sum(rate(http_requests_total{app=\"$app\",status=~\"5..\"}[$__rate_interval])) / sum(rate(http_requests_total{app=\"$app\"}[$__rate_interval]))",
-          "legendFormat": "5xx rate"
+          "expr": "sum(increase(http_requests_total{app=\"$app\", status=~\"5..\"}[$__rate_interval]))",
+          "legendFormat": "5xx errors (count)"
         },
         {
           "datasource": {
             "type": "prometheus",
             "uid": "prometheus-demo"
           },
-          "expr": "sum(rate(http_requests_total{app=\"$app\",status=~\"4..\"}[$__rate_interval])) / sum(rate(http_requests_total{app=\"$app\"}[$__rate_interval]))",
-          "legendFormat": "4xx rate"
+          "expr": "sum(increase(http_requests_total{app=\"$app\", status=~\"4..\"}[$__rate_interval]))",
+          "legendFormat": "4xx errors (count)"
         }
       ],
-      "title": "Error Rate \u2014 4xx / 5xx",
-      "type": "timeseries"
+      "title": "Error Count — 4xx / 5xx (per scrape interval)",
+      "type": "timeseries",
+      "description": "**What it measures:** Number of error responses in each scrape interval.\n\nUses `increase()` over `$__rate_interval` so every data point shows the actual count of errors in that window — not a per-second rate.\n\n**Click any data point to open the Error Drilldown table** (per-endpoint breakdown)."
     },
     {
       "datasource": {
@@ -257,10 +293,14 @@
       },
       "fieldConfig": {
         "defaults": {
-          "unit": "percentunit",
           "color": {
-            "mode": "thresholds"
+            "mode": "palette-classic"
           },
+          "custom": {
+            "lineWidth": 2,
+            "fillOpacity": 15
+          },
+          "unit": "percentunit",
           "min": 0,
           "max": 1,
           "thresholds": {
@@ -276,11 +316,12 @@
               },
               {
                 "color": "red",
-                "value": 0.85
+                "value": 0.9
               }
             ]
           }
-        }
+        },
+        "overrides": []
       },
       "gridPos": {
         "h": 8,
@@ -295,8 +336,7 @@
             "lastNotNull"
           ]
         },
-        "orientation": "auto",
-        "showThresholdMarkers": true
+        "orientation": "auto"
       },
       "targets": [
         {
@@ -304,15 +344,16 @@
             "type": "prometheus",
             "uid": "prometheus-demo"
           },
-          "expr": "hikaricp_connections_active / hikaricp_connections_max{app=\"$app\"}",
-          "legendFormat": "Connection pool saturation"
+          "expr": "pg_stat_activity_count{app=\"$app\"} / pg_settings_max_connections{app=\"$app\"}",
+          "legendFormat": "{{datname}} conn %"
         }
       ],
-      "title": "Saturation \u2014 Connection Pool %",
-      "type": "gauge"
+      "title": "Saturation — DB Connection Pool %",
+      "type": "gauge",
+      "description": "**What it measures:** Active database connections as a percentage of max_connections.\n\n**Source:** `pg_stat_activity_count / pg_settings_max_connections` from the fake exporter.\n\n**Thresholds:** Warn > 70% · Critical > 90%. Pool exhaustion causes connection-wait latency spikes."
     },
     {
-      "collapsed": false,
+      "collapsed": true,
       "gridPos": {
         "h": 1,
         "w": 24,
@@ -320,297 +361,305 @@
         "y": 33
       },
       "id": 2,
-      "title": "\ud83d\udfe2  Layer 2 \u2014 Infrastructure & Host (node_exporter \u2014 real host data)",
-      "type": "row"
-    },
-    {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "prometheus-demo"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "unit": "percent",
-          "color": {
-            "mode": "palette-classic"
+      "title": "🟢  Layer 2 — Infrastructure & Host (node_exporter — real host data)",
+      "type": "row",
+      "panels": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus-demo"
           },
-          "custom": {
-            "lineWidth": 2,
-            "fillOpacity": 10
-          },
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
+          "fieldConfig": {
+            "defaults": {
+              "unit": "percent",
+              "color": {
+                "mode": "palette-classic"
               },
-              {
-                "color": "yellow",
-                "value": 70
+              "custom": {
+                "lineWidth": 2,
+                "fillOpacity": 10
               },
-              {
-                "color": "red",
-                "value": 90
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  },
+                  {
+                    "color": "yellow",
+                    "value": 70
+                  },
+                  {
+                    "color": "red",
+                    "value": 90
+                  }
+                ]
               }
-            ]
-          }
-        }
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 8,
-        "x": 0,
-        "y": 34
-      },
-      "id": 20,
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "prometheus-demo"
+            }
           },
-          "expr": "100 - (avg by(instance) (rate(node_cpu_seconds_total{mode=\"idle\"}[$__rate_interval])) * 100)",
-          "legendFormat": "{{instance}} CPU %"
-        }
-      ],
-      "title": "CPU Utilization %",
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "prometheus-demo"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "unit": "bytes",
-          "color": {
-            "mode": "palette-classic"
+          "gridPos": {
+            "h": 8,
+            "w": 8,
+            "x": 0,
+            "y": 34
           },
-          "custom": {
-            "lineWidth": 2,
-            "fillOpacity": 10
-          }
-        }
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 8,
-        "x": 8,
-        "y": 42
-      },
-      "id": 21,
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "prometheus-demo"
-          },
-          "expr": "node_memory_MemTotal_bytes - node_memory_MemAvailable_bytes",
-          "legendFormat": "Used"
+          "id": 20,
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "prometheus-demo"
+              },
+              "expr": "100 - (avg by(instance) (rate(node_cpu_seconds_total{mode=\"idle\"}[$__rate_interval])) * 100)",
+              "legendFormat": "{{instance}} CPU %"
+            }
+          ],
+          "title": "CPU Utilization %",
+          "type": "timeseries",
+          "description": "**What it measures:** Percentage of CPU time spent on non-idle work per host, broken down by mode: user (application code), system (kernel), iowait (waiting for disk I/O), steal (stolen by hypervisor on VMs).\n\n**How collected:** `node_exporter` reads `/proc/stat` and exposes `node_cpu_seconds_total` counters per mode per core. PromQL computes the rate of non-idle time.\n\n**Thresholds:** Warn > 70% · Critical > 90% sustained for 5 minutes.\n\n**Key modes to watch:** High `iowait` means disk is the bottleneck. High `steal` means the VM host is overloaded — consider migrating to a less noisy host."
         },
         {
           "datasource": {
             "type": "prometheus",
             "uid": "prometheus-demo"
           },
-          "expr": "node_memory_MemAvailable_bytes",
-          "legendFormat": "Available"
-        }
-      ],
-      "title": "Memory \u2014 Used vs Available",
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "prometheus-demo"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "unit": "bytes",
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "lineWidth": 2,
-            "fillOpacity": 10
-          }
-        }
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 8,
-        "x": 16,
-        "y": 50
-      },
-      "id": 22,
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "prometheus-demo"
-          },
-          "expr": "node_memory_SwapTotal_bytes - node_memory_SwapFree_bytes",
-          "legendFormat": "Swap used"
-        }
-      ],
-      "title": "Swap Usage (should be 0)",
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "prometheus-demo"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "unit": "Bps",
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "lineWidth": 2,
-            "fillOpacity": 8
-          }
-        }
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 8,
-        "x": 0,
-        "y": 58
-      },
-      "id": 23,
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "prometheus-demo"
-          },
-          "expr": "rate(node_disk_read_bytes_total[$__rate_interval])",
-          "legendFormat": "{{device}} read"
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "prometheus-demo"
-          },
-          "expr": "rate(node_disk_written_bytes_total[$__rate_interval])",
-          "legendFormat": "{{device}} write"
-        }
-      ],
-      "title": "Disk I/O Throughput",
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "prometheus-demo"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "unit": "percentunit",
-          "color": {
-            "mode": "thresholds"
-          },
-          "min": 0,
-          "max": 1,
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
+          "fieldConfig": {
+            "defaults": {
+              "unit": "bytes",
+              "color": {
+                "mode": "palette-classic"
               },
-              {
-                "color": "yellow",
-                "value": 0.75
-              },
-              {
-                "color": "red",
-                "value": 0.9
+              "custom": {
+                "lineWidth": 2,
+                "fillOpacity": 10
               }
-            ]
-          }
-        }
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 8,
-        "x": 8,
-        "y": 66
-      },
-      "id": 24,
-      "options": {
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ]
-        },
-        "orientation": "auto"
-      },
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "prometheus-demo"
+            }
           },
-          "expr": "1 - (node_filesystem_avail_bytes{fstype!~\"tmpfs|overlay\"} / node_filesystem_size_bytes{fstype!~\"tmpfs|overlay\"})",
-          "legendFormat": "{{mountpoint}}"
-        }
-      ],
-      "title": "Disk Space Used %",
-      "type": "gauge"
-    },
-    {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "prometheus-demo"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "unit": "Bps",
-          "color": {
-            "mode": "palette-classic"
+          "gridPos": {
+            "h": 8,
+            "w": 8,
+            "x": 8,
+            "y": 42
           },
-          "custom": {
-            "lineWidth": 2,
-            "fillOpacity": 8
-          }
-        }
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 8,
-        "x": 16,
-        "y": 74
-      },
-      "id": 25,
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "prometheus-demo"
-          },
-          "expr": "rate(node_network_receive_bytes_total{device!~\"lo\"}[$__rate_interval])",
-          "legendFormat": "{{device}} rx"
+          "id": 21,
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "prometheus-demo"
+              },
+              "expr": "node_memory_MemTotal_bytes - node_memory_MemAvailable_bytes",
+              "legendFormat": "Used"
+            },
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "prometheus-demo"
+              },
+              "expr": "node_memory_MemAvailable_bytes",
+              "legendFormat": "Available"
+            }
+          ],
+          "title": "Memory — Used vs Available",
+          "type": "timeseries",
+          "description": "**What it measures:** RAM used by applications and the kernel vs RAM available for new allocations. Uses `MemAvailable` (not `MemFree`) which includes reclaimable page cache.\n\n**How collected:** `node_exporter` reads `/proc/meminfo` and exposes `node_memory_*` gauges.\n\n**Why MemAvailable matters:** Linux aggressively uses free RAM for file caching (beneficial). `MemFree` appears low even on healthy systems. `MemAvailable` is what the kernel can actually give to a new process.\n\n**Thresholds:** Warn when MemAvailable < 20% of total · Critical < 10%.\n\n**Watch for:** Any swap usage is a critical signal — apps hitting swap experience 100–1000× memory access latency."
         },
         {
           "datasource": {
             "type": "prometheus",
             "uid": "prometheus-demo"
           },
-          "expr": "rate(node_network_transmit_bytes_total{device!~\"lo\"}[$__rate_interval])",
-          "legendFormat": "{{device}} tx"
+          "fieldConfig": {
+            "defaults": {
+              "unit": "bytes",
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "lineWidth": 2,
+                "fillOpacity": 10
+              }
+            }
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 8,
+            "x": 16,
+            "y": 50
+          },
+          "id": 22,
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "prometheus-demo"
+              },
+              "expr": "node_memory_SwapTotal_bytes - node_memory_SwapFree_bytes",
+              "legendFormat": "Swap used"
+            }
+          ],
+          "title": "Swap Usage (should be 0)",
+          "type": "timeseries",
+          "description": "**What it measures:** Amount of swap space (disk used as overflow memory) currently in use. Should always be zero on a healthy system.\n\n**Why it matters:** When a system uses swap, it is treating disk as RAM. Disk is 100–1000× slower than RAM. Any process reading from swap will experience severe latency spikes.\n\n**How collected:** `node_exporter` exposes `node_memory_SwapTotal_bytes` and `node_memory_SwapFree_bytes`. Used = Total − Free.\n\n**Thresholds:** Any nonzero value is Critical — treat as a P1 incident. The OOM killer is the alternative, which terminates processes.\n\n**Common causes:** Memory leak, under-provisioned host, JVM heap set too large relative to available RAM."
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus-demo"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "unit": "Bps",
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "lineWidth": 2,
+                "fillOpacity": 8
+              }
+            }
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 8,
+            "x": 0,
+            "y": 58
+          },
+          "id": 23,
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "prometheus-demo"
+              },
+              "expr": "rate(node_disk_read_bytes_total[$__rate_interval])",
+              "legendFormat": "{{device}} read"
+            },
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "prometheus-demo"
+              },
+              "expr": "rate(node_disk_written_bytes_total[$__rate_interval])",
+              "legendFormat": "{{device}} write"
+            }
+          ],
+          "title": "Disk I/O Throughput",
+          "type": "timeseries",
+          "description": "**What it measures:** Bytes read from and written to disk per second per device.\n\n**How collected:** `node_exporter` reads `/proc/diskstats` and exposes `node_disk_read_bytes_total` and `node_disk_written_bytes_total` counters.\n\n**Saturation metric:** `rate(node_disk_io_time_seconds_total[5m])` approaching 1.0 means the disk is 100% busy and I/O operations are queuing.\n\n**Thresholds:** Disk utilisation Warn > 70% · Critical > 90%. Write latency Warn > 10ms (SSD) · Warn > 50ms (spinning disk).\n\n**Common causes of high write I/O:** Database writes, application logging, backup jobs, log rotation."
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus-demo"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "unit": "percentunit",
+              "color": {
+                "mode": "thresholds"
+              },
+              "min": 0,
+              "max": 1,
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  },
+                  {
+                    "color": "yellow",
+                    "value": 0.75
+                  },
+                  {
+                    "color": "red",
+                    "value": 0.9
+                  }
+                ]
+              }
+            }
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 8,
+            "x": 8,
+            "y": 66
+          },
+          "id": 24,
+          "options": {
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ]
+            },
+            "orientation": "auto"
+          },
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "prometheus-demo"
+              },
+              "expr": "1 - (node_filesystem_avail_bytes{fstype!~\"tmpfs|overlay\"} / node_filesystem_size_bytes{fstype!~\"tmpfs|overlay\"})",
+              "legendFormat": "{{mountpoint}}"
+            }
+          ],
+          "title": "Disk Space Used %",
+          "type": "gauge",
+          "description": "**What it measures:** Percentage of disk space used per filesystem mount point.\n\n**How collected:** `node_exporter` reads filesystem stats via `statfs()` and exposes `node_filesystem_avail_bytes` and `node_filesystem_size_bytes`.\n\n**Thresholds:** Warn < 20% free · Critical < 10% free.\n\n**Best practice:** Alert on rate of fill, not just current percentage. A disk filling at 1GB/hour needs a different response than one filling at 1MB/hour. Use `predict_linear(node_filesystem_avail_bytes[6h], 4*3600) < 0` to alert when a disk will fill within 4 hours."
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus-demo"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "unit": "Bps",
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "lineWidth": 2,
+                "fillOpacity": 8
+              }
+            }
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 8,
+            "x": 16,
+            "y": 74
+          },
+          "id": 25,
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "prometheus-demo"
+              },
+              "expr": "rate(node_network_receive_bytes_total{device!~\"lo\"}[$__rate_interval])",
+              "legendFormat": "{{device}} rx"
+            },
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "prometheus-demo"
+              },
+              "expr": "rate(node_network_transmit_bytes_total{device!~\"lo\"}[$__rate_interval])",
+              "legendFormat": "{{device}} tx"
+            }
+          ],
+          "title": "Network Throughput RX / TX",
+          "type": "timeseries",
+          "description": "**What it measures:** Bytes received (RX) and transmitted (TX) per network interface per second.\n\n**How collected:** `node_exporter` reads `/proc/net/dev` and exposes `node_network_receive_bytes_total` and `node_network_transmit_bytes_total` counters per interface.\n\n**Thresholds:** Compare against your interface speed (1Gbps = 125MB/s). Alert when sustained throughput > 80% of interface capacity.\n\n**Also monitor:** `node_network_receive_drop_total` and `node_network_transmit_drop_total` — any packet drops indicate saturation or hardware issues."
         }
-      ],
-      "title": "Network Throughput RX / TX",
-      "type": "timeseries"
+      ]
     },
     {
-      "collapsed": false,
+      "collapsed": true,
       "gridPos": {
         "h": 1,
         "w": 24,
@@ -618,534 +667,954 @@
         "y": 82
       },
       "id": 3,
-      "title": "\ud83d\udfe1  Layer 3 \u2014 Application Layer",
-      "type": "row"
-    },
-    {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "prometheus-demo"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "unit": "reqps",
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "lineWidth": 2,
-            "fillOpacity": 8
-          }
-        }
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 12,
-        "x": 0,
-        "y": 83
-      },
-      "id": 30,
-      "targets": [
+      "title": "🟡  Layer 3 — Application Layer",
+      "type": "row",
+      "panels": [
         {
           "datasource": {
             "type": "prometheus",
             "uid": "prometheus-demo"
           },
-          "expr": "sum by(handler) (rate(http_requests_total{app=\"$app\"}[$__rate_interval]))",
-          "legendFormat": "{{handler}}"
-        }
-      ],
-      "title": "Request Rate by Endpoint",
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "prometheus-demo"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "unit": "percentunit",
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "lineWidth": 2,
-            "fillOpacity": 12
-          },
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
+          "fieldConfig": {
+            "defaults": {
+              "unit": "reqps",
+              "color": {
+                "mode": "palette-classic"
               },
-              {
-                "color": "yellow",
-                "value": 0.005
-              },
-              {
-                "color": "red",
-                "value": 0.02
+              "custom": {
+                "lineWidth": 2,
+                "fillOpacity": 8
               }
-            ]
-          }
-        }
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 12,
-        "x": 12,
-        "y": 91
-      },
-      "id": 31,
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "prometheus-demo"
+            }
           },
-          "expr": "sum by(status) (rate(http_requests_total{app=\"$app\",status=~\"[45]..\"}[$__rate_interval])) / sum(rate(http_requests_total{app=\"$app\"}[$__rate_interval]))",
-          "legendFormat": "{{status}}"
-        }
-      ],
-      "title": "Error Rate by Status Code",
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "prometheus-demo"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "unit": "short",
-          "color": {
-            "mode": "palette-classic"
+          "gridPos": {
+            "h": 8,
+            "w": 12,
+            "x": 0,
+            "y": 83
           },
-          "custom": {
-            "lineWidth": 2,
-            "fillOpacity": 8
-          }
-        }
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 12,
-        "x": 0,
-        "y": 99
-      },
-      "id": 33,
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "prometheus-demo"
-          },
-          "expr": "sum by(type) (rate(business_transactions_total{app=\"$app\"}[$__rate_interval]))",
-          "legendFormat": "{{type}}"
-        }
-      ],
-      "title": "Business Transactions Rate (orders / payments / logins)",
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "prometheus-demo"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "unit": "s",
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "lineWidth": 2,
-            "fillOpacity": 8
-          }
-        }
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 12,
-        "x": 12,
-        "y": 107
-      },
-      "id": 34,
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "prometheus-demo"
-          },
-          "expr": "histogram_quantile(0.95, sum by(upstream, le) (rate(http_client_request_duration_seconds_bucket{app=\"$app\"}[$__rate_interval])))",
-          "legendFormat": "{{upstream}} p95"
-        }
-      ],
-      "title": "External Dependency Latency p95",
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "prometheus-demo"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "unit": "short",
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "lineWidth": 2,
-            "fillOpacity": 10
-          },
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
+          "id": 30,
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "prometheus-demo"
               },
-              {
-                "color": "yellow",
-                "value": 1000
+              "expr": "sum by(handler) (rate(http_requests_total{app=\"$app\"}[$__rate_interval]))",
+              "legendFormat": "{{handler}}"
+            }
+          ],
+          "title": "Request Rate by Endpoint",
+          "type": "timeseries",
+          "description": "**What it measures:** HTTP requests per second broken down by individual route/endpoint.\n\n**Why it matters:** Aggregate traffic hides the distribution. 1,000 RPS could mean 990 on `/health` and 10 on `/checkout` — very different implications for scaling.\n\n**How collected:** `http_requests_total` counter with a `handler` label set to the route template (e.g. `/api/orders/{id}` not `/api/orders/12345`). PromQL `sum by(handler)` groups by endpoint.\n\n**Drill-down:** Click a spike on this chart to correlate with the latency panel — filter by the same handler label to see whether the high-traffic endpoint is also slow.\n\n**Warning:** Never use user IDs or raw URLs as label values — this creates unbounded label cardinality that will crash Prometheus."
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus-demo"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
               },
-              {
-                "color": "red",
-                "value": 5000
+              "custom": {
+                "lineWidth": 2,
+                "fillOpacity": 12
+              },
+              "unit": "short",
+              "links": [
+                {
+                  "title": "Error Endpoint Drilldown →",
+                  "url": "/d/demo-monitoring-v1?var-app=$app&viewPanel=201",
+                  "targetBlank": false
+                }
+              ]
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 12,
+            "x": 12,
+            "y": 91
+          },
+          "id": 31,
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "prometheus-demo"
+              },
+              "expr": "sum by(status) (increase(http_requests_total{app=\"$app\", status=~\"5..\"}[$__rate_interval]))",
+              "legendFormat": "{{status}} (server error)"
+            },
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "prometheus-demo"
+              },
+              "expr": "sum by(status) (increase(http_requests_total{app=\"$app\", status=~\"4..\"}[$__rate_interval]))",
+              "legendFormat": "{{status}} (client error)"
+            }
+          ],
+          "title": "Error Count by Status Code (per scrape interval)",
+          "type": "timeseries",
+          "options": {
+            "tooltip": {
+              "mode": "multi"
+            },
+            "legend": {
+              "displayMode": "list",
+              "placement": "bottom"
+            }
+          },
+          "description": "**What it measures:** Count of error responses by HTTP status code in each interval.\n\nUses `increase()` to show the actual number of errors rather than a rate.\n\n**Click any line to drill into the Error Endpoint Drilldown table.**"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus-demo"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "unit": "short",
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "lineWidth": 2,
+                "fillOpacity": 8
               }
-            ]
-          }
-        }
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 12,
-        "x": 0,
-        "y": 115
-      },
-      "id": 35,
-      "targets": [
+            }
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 12,
+            "x": 0,
+            "y": 99
+          },
+          "id": 33,
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "prometheus-demo"
+              },
+              "expr": "sum by(type) (rate(business_transactions_total{app=\"$app\"}[$__rate_interval]))",
+              "legendFormat": "{{type}}"
+            }
+          ],
+          "title": "Business Transactions Rate (orders / payments / logins)",
+          "type": "timeseries",
+          "description": "**What it measures:** Domain-specific event counts — transactions completed, logins, report generations, or any meaningful business action — expressed as a rate per second.\n\n**Why it matters:** A system can be technically healthy (zero 5xx, low latency) and still fail to deliver business value. Business transaction metrics catch silent failures — for example, a payment form that always returns 200 OK but never actually processes the payment.\n\n**How collected:** Explicit `Counter` increments at each business event in application code. Named after the action: `business_transactions_total{type='transaction_completed'}`.\n\n**Alert pattern:** Alert on percentage drops from rolling baseline (`< baseline * 0.5`) rather than fixed numbers. A drop in transaction rate is often the first symptom of a broken user journey."
+        },
         {
           "datasource": {
             "type": "prometheus",
             "uid": "prometheus-demo"
           },
-          "expr": "queue_depth{app=\"$app\"}",
-          "legendFormat": "{{queue}}"
+          "fieldConfig": {
+            "defaults": {
+              "unit": "s",
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "lineWidth": 2,
+                "fillOpacity": 8
+              }
+            }
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 12,
+            "x": 12,
+            "y": 107
+          },
+          "id": 34,
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "prometheus-demo"
+              },
+              "expr": "histogram_quantile(0.95, sum by(upstream, le) (rate(http_client_request_duration_seconds_bucket{app=\"$app\"}[$__rate_interval])))",
+              "legendFormat": "{{upstream}} p95"
+            }
+          ],
+          "title": "External Dependency Latency p95",
+          "type": "timeseries",
+          "description": "**What it measures:** The 95th percentile latency of outbound HTTP calls from your application to downstream services — databases exposed via HTTP, external APIs, microservices, etc.\n\n**Why it matters:** Your application's latency cannot be better than the sum of its slowest dependency calls. If a downstream service degrades, your latency and error rate will follow within seconds.\n\n**How collected:** `http_client_request_duration_seconds` Histogram with an `upstream` label identifying the downstream service. PromQL `histogram_quantile(0.95)` per upstream.\n\n**What to watch:** Each upstream line independently. If one upstream's latency climbs while others stay flat, the problem is in that specific dependency, not your application.\n\n**Thresholds:** Warn when any upstream p95 > 2× its historical baseline."
         }
-      ],
-      "title": "Background Job Queue Depth",
-      "type": "timeseries"
+      ]
     },
     {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "prometheus-demo"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "unit": "s",
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "lineWidth": 2,
-            "fillOpacity": 8
-          }
-        }
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 12,
-        "x": 12,
-        "y": 123
-      },
-      "id": 36,
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "prometheus-demo"
-          },
-          "expr": "histogram_quantile(0.99, sum by(queue, le) (rate(job_processing_seconds_bucket{app=\"$app\"}[$__rate_interval])))",
-          "legendFormat": "{{queue}} p99"
-        }
-      ],
-      "title": "Job Processing Duration p99",
-      "type": "timeseries"
-    },
-    {
-      "collapsed": false,
+      "collapsed": true,
       "gridPos": {
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 131
+        "y": 115
       },
       "id": 5,
-      "title": "\ud83d\udd35  Layer 5 \u2014 Database & Storage",
-      "type": "row"
-    },
-    {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "prometheus-demo"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "unit": "ms",
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "lineWidth": 2,
-            "fillOpacity": 10
-          },
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "yellow",
-                "value": 100
-              },
-              {
-                "color": "red",
-                "value": 500
-              }
-            ]
-          }
-        }
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 12,
-        "x": 0,
-        "y": 132
-      },
-      "id": 50,
-      "targets": [
+      "title": "🔵  Layer 5 — Database & Storage",
+      "type": "row",
+      "panels": [
         {
           "datasource": {
             "type": "prometheus",
             "uid": "prometheus-demo"
           },
-          "expr": "histogram_quantile(0.95, rate(pg_stat_statements_total_exec_time_bucket{app=\"$app\"}[$__rate_interval]))",
-          "legendFormat": "Query latency p95"
+          "fieldConfig": {
+            "defaults": {
+              "unit": "ms",
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "lineWidth": 2,
+                "fillOpacity": 10
+              },
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  },
+                  {
+                    "color": "yellow",
+                    "value": 100
+                  },
+                  {
+                    "color": "red",
+                    "value": 500
+                  }
+                ]
+              }
+            }
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 12,
+            "x": 0,
+            "y": 116
+          },
+          "id": 50,
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "prometheus-demo"
+              },
+              "expr": "histogram_quantile(0.95, rate(pg_stat_statements_total_exec_time_bucket{app=\"$app\"}[$__rate_interval]))",
+              "legendFormat": "Query latency p95"
+            },
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "prometheus-demo"
+              },
+              "expr": "histogram_quantile(0.99, rate(pg_stat_statements_total_exec_time_bucket{app=\"$app\"}[$__rate_interval]))",
+              "legendFormat": "Query latency p99"
+            }
+          ],
+          "title": "DB Query Latency (p95 / p99)",
+          "type": "timeseries",
+          "description": "**What it measures:** How long the database takes to execute queries, at the 95th and 99th percentile. Includes parse time, planning time, lock wait time, and execution time.\n\n**How collected:** PostgreSQL: `pg_stat_statements` extension + `postgres_exporter`. MySQL: `mysqld_exporter` with slow query log. The exporter exposes query timing as a Histogram.\n\n**Why p99 matters:** A query that is fast 99% of the time but takes 10 seconds 1% of the time will devastate tail latency for your users.\n\n**Thresholds:** OLTP Warn p99 > 100ms · Critical p99 > 500ms.\n\n**Common causes of latency spikes:** Missing index, stale statistics causing plan regression, lock contention, replication lag on read replicas, vacuum running on a large table."
         },
         {
           "datasource": {
             "type": "prometheus",
             "uid": "prometheus-demo"
           },
-          "expr": "histogram_quantile(0.99, rate(pg_stat_statements_total_exec_time_bucket{app=\"$app\"}[$__rate_interval]))",
-          "legendFormat": "Query latency p99"
+          "fieldConfig": {
+            "defaults": {
+              "unit": "percentunit",
+              "color": {
+                "mode": "thresholds"
+              },
+              "min": 0,
+              "max": 1,
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  },
+                  {
+                    "color": "yellow",
+                    "value": 0.7
+                  },
+                  {
+                    "color": "red",
+                    "value": 0.9
+                  }
+                ]
+              }
+            }
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 6,
+            "x": 12,
+            "y": 124
+          },
+          "id": 51,
+          "options": {
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ]
+            },
+            "orientation": "auto"
+          },
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "prometheus-demo"
+              },
+              "expr": "pg_stat_activity_count / pg_settings_max_connections{app=\"$app\"}",
+              "legendFormat": "{{datname}}"
+            }
+          ],
+          "title": "DB Active Connections %",
+          "type": "gauge",
+          "description": "**What it measures:** Active database connections as a percentage of the maximum allowed (`max_connections` in PostgreSQL).\n\n**Why it matters:** Approaching `max_connections` causes 'too many connections' errors that make the application completely unable to reach the database.\n\n**How collected:** `postgres_exporter` queries `pg_stat_activity` for active connection count and `pg_settings` for `max_connections`. The ratio is the saturation metric.\n\n**Thresholds:** Warn > 70% · Critical > 90%.\n\n**Best practice:** Use a connection pooler (PgBouncer) in front of PostgreSQL. This allows many application threads to share a small number of actual database connections, preventing exhaustion under load."
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus-demo"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "unit": "s",
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "lineWidth": 2,
+                "fillOpacity": 10
+              },
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  },
+                  {
+                    "color": "yellow",
+                    "value": 10
+                  },
+                  {
+                    "color": "red",
+                    "value": 60
+                  }
+                ]
+              }
+            }
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 6,
+            "x": 18,
+            "y": 132
+          },
+          "id": 52,
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "prometheus-demo"
+              },
+              "expr": "pg_replication_lag{app=\"$app\"}",
+              "legendFormat": "{{instance}}"
+            }
+          ],
+          "title": "Replication Lag",
+          "type": "timeseries",
+          "description": "**What it measures:** The delay between a write being committed on the primary database and that write being applied on replica databases, in seconds.\n\n**Why it matters:** Applications reading from replicas see stale data during lag. More critically, if the primary fails during high replication lag, the data written during that window is lost in a failover.\n\n**How collected:** `postgres_exporter` queries `pg_stat_replication` on the primary for bytes of WAL not yet replicated. MySQL: `mysqld_exporter` reads `Seconds_Behind_Master` from replica status.\n\n**Thresholds:** Warn > 10s · Critical > 60s. For financial data: Warn > 2s.\n\n**Common causes:** Network issues between primary and replica, replica under-resourced, very high write throughput on primary."
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus-demo"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "unit": "short",
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "lineWidth": 2,
+                "fillOpacity": 8
+              }
+            }
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 9,
+            "x": 6,
+            "y": 140
+          },
+          "id": 54,
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "prometheus-demo"
+              },
+              "expr": "pg_locks_count{app=\"$app\"}",
+              "legendFormat": "{{datname}} {{mode}}"
+            },
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "prometheus-demo"
+              },
+              "expr": "rate(mysql_global_status_innodb_deadlocks[$__rate_interval])",
+              "legendFormat": "MySQL deadlocks/s"
+            }
+          ],
+          "title": "Lock Waits & Deadlocks",
+          "type": "timeseries",
+          "description": "**What it measures:** The number of database lock waits and deadlocks over time. Lock waits occur when a transaction needs a lock held by another transaction.\n\n**Why it matters:** Lock contention degrades throughput non-linearly — a few long-running transactions can block hundreds of others. Deadlocks cause transaction rollbacks and application errors.\n\n**How collected:** PostgreSQL: `pg_locks` view counts locks by type. MySQL: `Innodb_deadlocks` status variable via `mysqld_exporter`.\n\n**Thresholds:** Any increase in deadlocks should be investigated. Lock waits > 5 concurrent is Warn.\n\n**Common causes:** Long-running transactions, missing indexes causing full table scans that hold locks, application not committing transactions promptly."
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus-demo"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "unit": "bytes",
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "lineWidth": 2,
+                "fillOpacity": 8
+              }
+            }
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 9,
+            "x": 15,
+            "y": 148
+          },
+          "id": 55,
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "prometheus-demo"
+              },
+              "expr": "pg_database_size_bytes{app=\"$app\"}",
+              "legendFormat": "{{datname}}"
+            }
+          ],
+          "title": "Database Size Growth",
+          "type": "timeseries",
+          "description": "**What it measures:** Total size of each database in bytes, tracked over time to show growth trends.\n\n**How collected:** `postgres_exporter` queries `pg_database_size()` function which returns size in bytes per database.\n\n**Why it matters:** Unexpected growth spikes can indicate a runaway job inserting data, missing delete/archival processes, or a data leak. Predictable growth helps capacity planning.\n\n**Best practice:** Combine with tablespace-level breakdown to identify which tables are growing fastest. Alert when growth rate exceeds 3× the 30-day average daily growth.\n\n**Also monitor:** Table bloat from unvacuumed dead tuples in PostgreSQL — the table file grows even without new data."
         }
-      ],
-      "title": "DB Query Latency (p95 / p99)",
-      "type": "timeseries"
+      ]
     },
     {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "prometheus-demo"
+      "collapsed": true,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 300
       },
-      "fieldConfig": {
-        "defaults": {
-          "unit": "percentunit",
-          "color": {
-            "mode": "thresholds"
+      "id": 99,
+      "title": "📊 Drilldowns (opened via chart links)",
+      "type": "row",
+      "panels": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus-demo"
           },
-          "min": 0,
-          "max": 1,
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
+          "gridPos": {
+            "h": 14,
+            "w": 24,
+            "x": 0,
+            "y": 0
+          },
+          "id": 200,
+          "title": "📊 Performance Drilldown — Slowest Endpoints",
+          "description": "**Per-endpoint performance breakdown.** Each row is one route/operation. Duration (avg) is the mean response time for that endpoint over the selected time window. Count is total requests. Sorted slowest-first.\n\nClick an endpoint name to view the granular Operation Detail panel.",
+          "type": "table",
+          "options": {
+            "footer": {
+              "show": false
+            },
+            "sortBy": [
               {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "yellow",
-                "value": 0.7
-              },
-              {
-                "color": "red",
-                "value": 0.9
+                "displayName": "Duration (avg)",
+                "desc": true
               }
             ]
-          }
-        }
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 6,
-        "x": 12,
-        "y": 140
-      },
-      "id": 51,
-      "options": {
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "custom": {
+                "align": "left",
+                "displayMode": "auto",
+                "filterable": true
+              }
+            },
+            "overrides": [
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "Duration (avg)"
+                },
+                "properties": [
+                  {
+                    "id": "unit",
+                    "value": "s"
+                  },
+                  {
+                    "id": "custom.displayMode",
+                    "value": "color-background"
+                  },
+                  {
+                    "id": "custom.width",
+                    "value": 160
+                  },
+                  {
+                    "id": "thresholds",
+                    "value": {
+                      "mode": "absolute",
+                      "steps": [
+                        {
+                          "color": "green",
+                          "value": null
+                        },
+                        {
+                          "color": "yellow",
+                          "value": 0.5
+                        },
+                        {
+                          "color": "red",
+                          "value": 1.5
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "Count"
+                },
+                "properties": [
+                  {
+                    "id": "unit",
+                    "value": "short"
+                  },
+                  {
+                    "id": "custom.width",
+                    "value": 100
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "Operation (Endpoint)"
+                },
+                "properties": [
+                  {
+                    "id": "custom.width",
+                    "value": 260
+                  },
+                  {
+                    "id": "links",
+                    "value": [
+                      {
+                        "title": "Operation Detail →",
+                        "url": "/d/demo-monitoring-v1?var-app=$app&var-handler=${__data.fields[\"Operation (Endpoint)\"]}&viewPanel=202",
+                        "targetBlank": false
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "prometheus-demo"
+              },
+              "expr": "sum by(handler) (rate(http_request_duration_seconds_sum{app=\"$app\"}[$__rate_interval])) / sum by(handler) (rate(http_request_duration_seconds_count{app=\"$app\"}[$__rate_interval]))",
+              "legendFormat": "{{handler}}",
+              "instant": true,
+              "refId": "A",
+              "format": "table"
+            },
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "prometheus-demo"
+              },
+              "expr": "sum by(handler) (increase(http_requests_total{app=\"$app\"}[$__rate_interval]))",
+              "legendFormat": "{{handler}}",
+              "instant": true,
+              "refId": "B",
+              "format": "table"
+            }
+          ],
+          "transformations": [
+            {
+              "id": "merge",
+              "options": {}
+            },
+            {
+              "id": "organize",
+              "options": {
+                "excludeByName": {
+                  "Time": true,
+                  "__name__": true
+                },
+                "renameByName": {
+                  "handler": "Operation (Endpoint)",
+                  "Value #A": "Duration (avg)",
+                  "Value #B": "Count"
+                },
+                "indexByName": {
+                  "Operation (Endpoint)": 0,
+                  "Duration (avg)": 1,
+                  "Count": 2
+                }
+              }
+            },
+            {
+              "id": "sortBy",
+              "options": {
+                "fields": [
+                  {
+                    "displayName": "Duration (avg)",
+                    "desc": true
+                  }
+                ]
+              }
+            }
           ]
         },
-        "orientation": "auto"
-      },
-      "targets": [
         {
           "datasource": {
             "type": "prometheus",
             "uid": "prometheus-demo"
           },
-          "expr": "pg_stat_activity_count / pg_settings_max_connections{app=\"$app\"}",
-          "legendFormat": "{{datname}}"
-        }
-      ],
-      "title": "DB Active Connections %",
-      "type": "gauge"
-    },
-    {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "prometheus-demo"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "unit": "s",
-          "color": {
-            "mode": "palette-classic"
+          "gridPos": {
+            "h": 14,
+            "w": 24,
+            "x": 0,
+            "y": 14
           },
-          "custom": {
-            "lineWidth": 2,
-            "fillOpacity": 10
-          },
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
+          "id": 201,
+          "title": "🚨 Error Drilldown — Endpoints with Highest Error Count",
+          "description": "**Per-endpoint error breakdown.** Sorted by highest error count.\n\n- **Operation (Endpoint):** Route template.\n- **Error Count:** Total 4xx + 5xx responses in the time window.\n- **Avg Duration:** Mean response time (includes error responses).\n\nClick an endpoint to open the granular Operation Detail view.",
+          "type": "table",
+          "options": {
+            "footer": {
+              "show": false
+            },
+            "sortBy": [
               {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "yellow",
-                "value": 10
-              },
-              {
-                "color": "red",
-                "value": 60
+                "displayName": "Error Count",
+                "desc": true
               }
             ]
-          }
-        }
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 6,
-        "x": 18,
-        "y": 148
-      },
-      "id": 52,
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "prometheus-demo"
           },
-          "expr": "pg_replication_lag{app=\"$app\"}",
-          "legendFormat": "{{instance}}"
-        }
-      ],
-      "title": "Replication Lag",
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "prometheus-demo"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "unit": "short",
-          "color": {
-            "mode": "palette-classic"
+          "fieldConfig": {
+            "defaults": {
+              "custom": {
+                "align": "left",
+                "displayMode": "auto",
+                "filterable": true
+              }
+            },
+            "overrides": [
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "Error Count"
+                },
+                "properties": [
+                  {
+                    "id": "unit",
+                    "value": "short"
+                  },
+                  {
+                    "id": "custom.displayMode",
+                    "value": "color-background"
+                  },
+                  {
+                    "id": "custom.width",
+                    "value": 130
+                  },
+                  {
+                    "id": "thresholds",
+                    "value": {
+                      "mode": "absolute",
+                      "steps": [
+                        {
+                          "color": "green",
+                          "value": null
+                        },
+                        {
+                          "color": "yellow",
+                          "value": 5
+                        },
+                        {
+                          "color": "red",
+                          "value": 20
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "Avg Duration"
+                },
+                "properties": [
+                  {
+                    "id": "unit",
+                    "value": "s"
+                  },
+                  {
+                    "id": "custom.width",
+                    "value": 140
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "Operation (Endpoint)"
+                },
+                "properties": [
+                  {
+                    "id": "custom.width",
+                    "value": 260
+                  },
+                  {
+                    "id": "links",
+                    "value": [
+                      {
+                        "title": "Operation Detail →",
+                        "url": "/d/demo-monitoring-v1?var-app=$app&var-handler=${__data.fields[\"Operation (Endpoint)\"]}&viewPanel=202",
+                        "targetBlank": false
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
           },
-          "custom": {
-            "lineWidth": 2,
-            "fillOpacity": 8
-          }
-        }
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 9,
-        "x": 6,
-        "y": 156
-      },
-      "id": 54,
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "prometheus-demo"
-          },
-          "expr": "pg_locks_count{app=\"$app\"}",
-          "legendFormat": "{{datname}} {{mode}}"
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "prometheus-demo"
+              },
+              "expr": "sum by(handler) (increase(http_requests_total{app=\"$app\", status=~\"[45]..\"}[$__rate_interval]))",
+              "legendFormat": "{{handler}}",
+              "instant": true,
+              "refId": "A",
+              "format": "table"
+            },
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "prometheus-demo"
+              },
+              "expr": "sum by(handler) (rate(http_request_duration_seconds_sum{app=\"$app\"}[$__rate_interval])) / sum by(handler) (rate(http_request_duration_seconds_count{app=\"$app\"}[$__rate_interval]))",
+              "legendFormat": "{{handler}}",
+              "instant": true,
+              "refId": "B",
+              "format": "table"
+            }
+          ],
+          "transformations": [
+            {
+              "id": "merge",
+              "options": {}
+            },
+            {
+              "id": "organize",
+              "options": {
+                "excludeByName": {
+                  "Time": true,
+                  "__name__": true
+                },
+                "renameByName": {
+                  "handler": "Operation (Endpoint)",
+                  "Value #A": "Error Count",
+                  "Value #B": "Avg Duration"
+                },
+                "indexByName": {
+                  "Operation (Endpoint)": 0,
+                  "Error Count": 1,
+                  "Avg Duration": 2
+                }
+              }
+            },
+            {
+              "id": "sortBy",
+              "options": {
+                "fields": [
+                  {
+                    "displayName": "Error Count",
+                    "desc": true
+                  }
+                ]
+              }
+            }
+          ]
         },
         {
           "datasource": {
             "type": "prometheus",
             "uid": "prometheus-demo"
           },
-          "expr": "rate(mysql_global_status_innodb_deadlocks[$__rate_interval])",
-          "legendFormat": "MySQL deadlocks/s"
-        }
-      ],
-      "title": "Lock Waits & Deadlocks",
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "prometheus-demo"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "unit": "bytes",
-          "color": {
-            "mode": "palette-classic"
+          "gridPos": {
+            "h": 10,
+            "w": 24,
+            "x": 0,
+            "y": 28
           },
-          "custom": {
-            "lineWidth": 2,
-            "fillOpacity": 8
-          }
-        }
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 9,
-        "x": 15,
-        "y": 164
-      },
-      "id": 55,
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "prometheus-demo"
+          "id": 202,
+          "title": "🔍 Operation Detail — ${handler:raw}",
+          "description": "Granular view for the selected endpoint.\n\nShows error count, total request rate and p95 latency for this single operation. Use the time range picker to zoom into the incident window.\n\n**For deeper log investigation** connect Grafana Loki or Elasticsearch and filter by `app=$app handler=$handler status=~[45]..`",
+          "type": "timeseries",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "lineWidth": 2,
+                "fillOpacity": 10
+              }
+            },
+            "overrides": [
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "Error Count"
+                },
+                "properties": [
+                  {
+                    "id": "unit",
+                    "value": "short"
+                  },
+                  {
+                    "id": "color",
+                    "value": {
+                      "fixedColor": "#f87171",
+                      "mode": "fixed"
+                    }
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "p95 Latency"
+                },
+                "properties": [
+                  {
+                    "id": "unit",
+                    "value": "s"
+                  },
+                  {
+                    "id": "color",
+                    "value": {
+                      "fixedColor": "#60a5fa",
+                      "mode": "fixed"
+                    }
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "Total RPS"
+                },
+                "properties": [
+                  {
+                    "id": "unit",
+                    "value": "reqps"
+                  },
+                  {
+                    "id": "color",
+                    "value": {
+                      "fixedColor": "#34d399",
+                      "mode": "fixed"
+                    }
+                  }
+                ]
+              }
+            ]
           },
-          "expr": "pg_database_size_bytes{app=\"$app\"}",
-          "legendFormat": "{{datname}}"
+          "options": {
+            "tooltip": {
+              "mode": "multi"
+            },
+            "legend": {
+              "displayMode": "list",
+              "placement": "bottom"
+            }
+          },
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "prometheus-demo"
+              },
+              "expr": "sum(increase(http_requests_total{app=\"$app\", handler=\"$handler\", status=~\"[45]..\"}[$__rate_interval]))",
+              "legendFormat": "Error Count",
+              "refId": "A"
+            },
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "prometheus-demo"
+              },
+              "expr": "sum(rate(http_requests_total{app=\"$app\", handler=\"$handler\"}[$__rate_interval]))",
+              "legendFormat": "Total RPS",
+              "refId": "B"
+            },
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "prometheus-demo"
+              },
+              "expr": "histogram_quantile(0.95, sum by(le) (rate(http_request_duration_seconds_bucket{app=\"$app\", handler=\"$handler\"}[$__rate_interval])))",
+              "legendFormat": "p95 Latency",
+              "refId": "C"
+            }
+          ]
         }
-      ],
-      "title": "Database Size Growth",
-      "type": "timeseries"
+      ]
     }
   ],
   "refresh": "10s",
@@ -1161,7 +1630,7 @@
   },
   "timepicker": {},
   "timezone": "browser",
-  "title": "Centralized Monitoring \u2014 6-Layer Observability (Demo)",
+  "title": "Centralized Monitoring — 6-Layer Observability (Demo)",
   "uid": "demo-monitoring-v1",
   "version": 1,
   "templating": {
@@ -1186,6 +1655,27 @@
         "sort": 1,
         "type": "query",
         "label": "Application"
+      },
+      {
+        "current": {},
+        "datasource": {
+          "type": "prometheus",
+          "uid": "prometheus-demo"
+        },
+        "definition": "label_values(http_requests_total{app=\"$app\"}, handler)",
+        "hide": 2,
+        "includeAll": true,
+        "multi": false,
+        "name": "handler",
+        "options": [],
+        "query": {
+          "query": "label_values(http_requests_total{app=\"$app\"}, handler)",
+          "refId": "A"
+        },
+        "refresh": 2,
+        "sort": 1,
+        "type": "query",
+        "label": "Endpoint"
       }
     ]
   },
@@ -1197,7 +1687,7 @@
       "keepTime": true,
       "tags": [],
       "targetBlank": false,
-      "title": "\u2190 Portfolio Overview",
+      "title": "← Portfolio Overview",
       "tooltip": "Back to Application Portfolio Overview",
       "type": "link",
       "url": "/d/app-portfolio-overview"

@@ -1,5 +1,5 @@
 {
-  "description": "Application Portfolio Overview \u2014 click any card to open the full 6-layer analytics dashboard.",
+  "description": "Application Portfolio Overview — click any card to open the full 6-layer analytics dashboard.",
   "editable": true,
   "graphTooltip": 1,
   "panels": [
@@ -15,9 +15,8 @@
         "y": 0
       },
       "id": 1,
-      "pid_inc": true,
       "options": {
-        "content": "<div style=\"font-family:'DM Sans',Arial,sans-serif;display:flex;align-items:center;justify-content:space-between;padding:14px 20px;background:linear-gradient(135deg,#0f172a 0%,#1e293b 60%,#0f2744 100%);border-radius:10px;border:1px solid #1e3a5f\">\n  <div style=\"display:flex;align-items:center;gap:14px\">\n    <div style=\"display:flex;gap:6px;align-items:center\">\n      <div style=\"width:10px;height:10px;border-radius:50%;background:#22c55e;box-shadow:0 0 8px #22c55e;animation:pulse 2s infinite\"></div>\n    </div>\n    <div>\n      <div style=\"color:#f1f5f9;font-size:18px;font-weight:700;letter-spacing:0.01em\">Application Portfolio Overview</div>\n      <div style=\"color:#64748b;font-size:12px;margin-top:2px\">10 applications monitored &nbsp;\u00b7&nbsp; Click any card to open the full 6-layer analytics dashboard</div>\n    </div>\n  </div>\n  <div style=\"display:flex;gap:24px;align-items:center\">\n    <div style=\"text-align:center\"><div style=\"color:#22c55e;font-size:11px;font-weight:600\">WEB APPS</div><div style=\"color:#94a3b8;font-size:11px\">6 services</div></div>\n    <div style=\"width:1px;height:28px;background:#334155\"></div>\n    <div style=\"text-align:center\"><div style=\"color:#60a5fa;font-size:11px;font-weight:600\">APIs</div><div style=\"color:#94a3b8;font-size:11px\">4 services</div></div>\n  </div>\n</div>",
+        "content": "<div style=\"font-family:'DM Sans',Arial,sans-serif;display:flex;align-items:center;justify-content:space-between;padding:14px 20px;background:linear-gradient(135deg,#0f172a 0%,#1e293b 60%,#0f2744 100%);border-radius:10px;border:1px solid #1e3a5f\">\n  <div style=\"display:flex;align-items:center;gap:14px\">\n    <div style=\"width:10px;height:10px;border-radius:50%;background:#22c55e;box-shadow:0 0 8px #22c55e\"></div>\n    <div>\n      <div style=\"color:#f1f5f9;font-size:18px;font-weight:700;letter-spacing:0.01em\">Application Portfolio Overview</div>\n      <div style=\"color:#64748b;font-size:12px;margin-top:2px\">10 applications monitored &nbsp;·&nbsp; Click any card to open the full 6-layer analytics dashboard</div>\n    </div>\n  </div>\n  <div style=\"display:flex;gap:24px;align-items:center\">\n    <div style=\"text-align:center\"><div style=\"color:#22c55e;font-size:11px;font-weight:600\">WEB APPS</div><div style=\"color:#94a3b8;font-size:11px\">6 services</div></div>\n    <div style=\"width:1px;height:28px;background:#334155\"></div>\n    <div style=\"text-align:center\"><div style=\"color:#60a5fa;font-size:11px;font-weight:600\">APIs</div><div style=\"color:#94a3b8;font-size:11px\">4 services</div></div>\n  </div>\n</div>",
         "mode": "html"
       },
       "title": "",
@@ -33,7 +32,7 @@
         "y": 3
       },
       "id": 2,
-      "title": "\ud83c\udf10  Web Applications",
+      "title": "🌐  Web Applications",
       "type": "row"
     },
     {
@@ -63,23 +62,138 @@
               }
             ]
           },
-          "unit": "percentunit",
+          "noValue": "No data",
           "min": 0,
           "max": 1,
-          "noValue": "No data",
           "links": [
             {
-              "title": "Open Analytics \u2192",
+              "title": "Open Analytics →",
               "url": "/d/demo-monitoring-v1?var-app=CCMS",
               "targetBlank": false
             }
           ]
         },
-        "overrides": []
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Uptime"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "percentunit"
+              },
+              {
+                "id": "decimals",
+                "value": 1
+              },
+              {
+                "id": "mappings",
+                "value": []
+              },
+              {
+                "id": "custom.displayName",
+                "value": "Uptime"
+              },
+              {
+                "id": "color",
+                "value": {
+                  "mode": "thresholds"
+                }
+              },
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "red",
+                      "value": null
+                    },
+                    {
+                      "color": "yellow",
+                      "value": 0.95
+                    },
+                    {
+                      "color": "green",
+                      "value": 0.99
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Status"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "none"
+              },
+              {
+                "id": "decimals",
+                "value": 0
+              },
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "type": "range",
+                    "options": {
+                      "from": 0,
+                      "to": 0.9499,
+                      "result": {
+                        "text": "⬇ DOWN",
+                        "color": "red"
+                      }
+                    }
+                  },
+                  {
+                    "type": "range",
+                    "options": {
+                      "from": 0.95,
+                      "to": 1,
+                      "result": {
+                        "text": "⬆ UP",
+                        "color": "green"
+                      }
+                    }
+                  }
+                ]
+              },
+              {
+                "id": "color",
+                "value": {
+                  "mode": "thresholds"
+                }
+              },
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "red",
+                      "value": null
+                    },
+                    {
+                      "color": "green",
+                      "value": 0.95
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        ]
       },
       "gridPos": {
         "h": 6,
-        "w": 8,
+        "w": 4,
         "x": 0,
         "y": 4
       },
@@ -92,16 +206,16 @@
           "fields": "",
           "values": false
         },
-        "textMode": "auto",
+        "textMode": "value_and_name",
         "colorMode": "background",
-        "graphMode": "area",
+        "graphMode": "none",
         "justifyMode": "center",
+        "orientation": "horizontal",
         "text": {
           "titleSize": 13,
           "valueSize": 34
         }
       },
-      "pluginVersion": "10.4.1",
       "targets": [
         {
           "datasource": {
@@ -109,14 +223,24 @@
             "uid": "prometheus-demo"
           },
           "expr": "app_uptime_ratio{app=\"CCMS\"}",
-          "legendFormat": "Uptime"
+          "legendFormat": "Uptime",
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus-demo"
+          },
+          "expr": "app_uptime_ratio{app=\"CCMS\"}",
+          "legendFormat": "Status",
+          "refId": "B"
         }
       ],
-      "title": "\ud83d\uddc2\ufe0f  Content & Case Mgmt",
+      "title": "🗂️ Content & Case Mgmt (CCMS)",
       "type": "stat",
       "links": [
         {
-          "title": "Open Analytics \u2192",
+          "title": "Open Analytics →",
           "url": "/d/demo-monitoring-v1?var-app=CCMS",
           "targetBlank": false
         }
@@ -149,27 +273,142 @@
               }
             ]
           },
-          "unit": "percentunit",
+          "noValue": "No data",
           "min": 0,
           "max": 1,
-          "noValue": "No data",
           "links": [
             {
-              "title": "Open Analytics \u2192",
+              "title": "Open Analytics →",
               "url": "/d/demo-monitoring-v1?var-app=ECRS",
               "targetBlank": false
             }
           ]
         },
-        "overrides": []
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Uptime"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "percentunit"
+              },
+              {
+                "id": "decimals",
+                "value": 1
+              },
+              {
+                "id": "mappings",
+                "value": []
+              },
+              {
+                "id": "custom.displayName",
+                "value": "Uptime"
+              },
+              {
+                "id": "color",
+                "value": {
+                  "mode": "thresholds"
+                }
+              },
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "red",
+                      "value": null
+                    },
+                    {
+                      "color": "yellow",
+                      "value": 0.95
+                    },
+                    {
+                      "color": "green",
+                      "value": 0.99
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Status"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "none"
+              },
+              {
+                "id": "decimals",
+                "value": 0
+              },
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "type": "range",
+                    "options": {
+                      "from": 0,
+                      "to": 0.9499,
+                      "result": {
+                        "text": "⬇ DOWN",
+                        "color": "red"
+                      }
+                    }
+                  },
+                  {
+                    "type": "range",
+                    "options": {
+                      "from": 0.95,
+                      "to": 1,
+                      "result": {
+                        "text": "⬆ UP",
+                        "color": "green"
+                      }
+                    }
+                  }
+                ]
+              },
+              {
+                "id": "color",
+                "value": {
+                  "mode": "thresholds"
+                }
+              },
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "red",
+                      "value": null
+                    },
+                    {
+                      "color": "green",
+                      "value": 0.95
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        ]
       },
       "gridPos": {
         "h": 6,
-        "w": 8,
-        "x": 8,
+        "w": 4,
+        "x": 4,
         "y": 4
       },
-      "id": 4,
+      "id": 5,
       "options": {
         "reduceOptions": {
           "calcs": [
@@ -178,16 +417,16 @@
           "fields": "",
           "values": false
         },
-        "textMode": "auto",
+        "textMode": "value_and_name",
         "colorMode": "background",
-        "graphMode": "area",
+        "graphMode": "none",
         "justifyMode": "center",
+        "orientation": "horizontal",
         "text": {
           "titleSize": 13,
           "valueSize": 34
         }
       },
-      "pluginVersion": "10.4.1",
       "targets": [
         {
           "datasource": {
@@ -195,14 +434,24 @@
             "uid": "prometheus-demo"
           },
           "expr": "app_uptime_ratio{app=\"ECRS\"}",
-          "legendFormat": "Uptime"
+          "legendFormat": "Uptime",
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus-demo"
+          },
+          "expr": "app_uptime_ratio{app=\"ECRS\"}",
+          "legendFormat": "Status",
+          "refId": "B"
         }
       ],
-      "title": "\ud83d\udccb  Electronic Claims",
+      "title": "📋 Electronic Claims (ECRS)",
       "type": "stat",
       "links": [
         {
-          "title": "Open Analytics \u2192",
+          "title": "Open Analytics →",
           "url": "/d/demo-monitoring-v1?var-app=ECRS",
           "targetBlank": false
         }
@@ -235,27 +484,142 @@
               }
             ]
           },
-          "unit": "percentunit",
+          "noValue": "No data",
           "min": 0,
           "max": 1,
-          "noValue": "No data",
           "links": [
             {
-              "title": "Open Analytics \u2192",
+              "title": "Open Analytics →",
               "url": "/d/demo-monitoring-v1?var-app=HIMS",
               "targetBlank": false
             }
           ]
         },
-        "overrides": []
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Uptime"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "percentunit"
+              },
+              {
+                "id": "decimals",
+                "value": 1
+              },
+              {
+                "id": "mappings",
+                "value": []
+              },
+              {
+                "id": "custom.displayName",
+                "value": "Uptime"
+              },
+              {
+                "id": "color",
+                "value": {
+                  "mode": "thresholds"
+                }
+              },
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "red",
+                      "value": null
+                    },
+                    {
+                      "color": "yellow",
+                      "value": 0.95
+                    },
+                    {
+                      "color": "green",
+                      "value": 0.99
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Status"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "none"
+              },
+              {
+                "id": "decimals",
+                "value": 0
+              },
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "type": "range",
+                    "options": {
+                      "from": 0,
+                      "to": 0.9499,
+                      "result": {
+                        "text": "⬇ DOWN",
+                        "color": "red"
+                      }
+                    }
+                  },
+                  {
+                    "type": "range",
+                    "options": {
+                      "from": 0.95,
+                      "to": 1,
+                      "result": {
+                        "text": "⬆ UP",
+                        "color": "green"
+                      }
+                    }
+                  }
+                ]
+              },
+              {
+                "id": "color",
+                "value": {
+                  "mode": "thresholds"
+                }
+              },
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "red",
+                      "value": null
+                    },
+                    {
+                      "color": "green",
+                      "value": 0.95
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        ]
       },
       "gridPos": {
         "h": 6,
-        "w": 8,
-        "x": 16,
+        "w": 4,
+        "x": 8,
         "y": 4
       },
-      "id": 5,
+      "id": 7,
       "options": {
         "reduceOptions": {
           "calcs": [
@@ -264,16 +628,16 @@
           "fields": "",
           "values": false
         },
-        "textMode": "auto",
+        "textMode": "value_and_name",
         "colorMode": "background",
-        "graphMode": "area",
+        "graphMode": "none",
         "justifyMode": "center",
+        "orientation": "horizontal",
         "text": {
           "titleSize": 13,
           "valueSize": 34
         }
       },
-      "pluginVersion": "10.4.1",
       "targets": [
         {
           "datasource": {
@@ -281,14 +645,24 @@
             "uid": "prometheus-demo"
           },
           "expr": "app_uptime_ratio{app=\"HIMS\"}",
-          "legendFormat": "Uptime"
+          "legendFormat": "Uptime",
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus-demo"
+          },
+          "expr": "app_uptime_ratio{app=\"HIMS\"}",
+          "legendFormat": "Status",
+          "refId": "B"
         }
       ],
-      "title": "\ud83c\udfe5  Health Info Mgmt",
+      "title": "🏥 Health Info Mgmt (HIMS)",
       "type": "stat",
       "links": [
         {
-          "title": "Open Analytics \u2192",
+          "title": "Open Analytics →",
           "url": "/d/demo-monitoring-v1?var-app=HIMS",
           "targetBlank": false
         }
@@ -321,27 +695,142 @@
               }
             ]
           },
-          "unit": "percentunit",
+          "noValue": "No data",
           "min": 0,
           "max": 1,
-          "noValue": "No data",
           "links": [
             {
-              "title": "Open Analytics \u2192",
+              "title": "Open Analytics →",
               "url": "/d/demo-monitoring-v1?var-app=ESS",
               "targetBlank": false
             }
           ]
         },
-        "overrides": []
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Uptime"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "percentunit"
+              },
+              {
+                "id": "decimals",
+                "value": 1
+              },
+              {
+                "id": "mappings",
+                "value": []
+              },
+              {
+                "id": "custom.displayName",
+                "value": "Uptime"
+              },
+              {
+                "id": "color",
+                "value": {
+                  "mode": "thresholds"
+                }
+              },
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "red",
+                      "value": null
+                    },
+                    {
+                      "color": "yellow",
+                      "value": 0.95
+                    },
+                    {
+                      "color": "green",
+                      "value": 0.99
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Status"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "none"
+              },
+              {
+                "id": "decimals",
+                "value": 0
+              },
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "type": "range",
+                    "options": {
+                      "from": 0,
+                      "to": 0.9499,
+                      "result": {
+                        "text": "⬇ DOWN",
+                        "color": "red"
+                      }
+                    }
+                  },
+                  {
+                    "type": "range",
+                    "options": {
+                      "from": 0.95,
+                      "to": 1,
+                      "result": {
+                        "text": "⬆ UP",
+                        "color": "green"
+                      }
+                    }
+                  }
+                ]
+              },
+              {
+                "id": "color",
+                "value": {
+                  "mode": "thresholds"
+                }
+              },
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "red",
+                      "value": null
+                    },
+                    {
+                      "color": "green",
+                      "value": 0.95
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        ]
       },
       "gridPos": {
         "h": 6,
-        "w": 8,
-        "x": 0,
-        "y": 10
+        "w": 4,
+        "x": 12,
+        "y": 4
       },
-      "id": 6,
+      "id": 9,
       "options": {
         "reduceOptions": {
           "calcs": [
@@ -350,16 +839,16 @@
           "fields": "",
           "values": false
         },
-        "textMode": "auto",
+        "textMode": "value_and_name",
         "colorMode": "background",
-        "graphMode": "area",
+        "graphMode": "none",
         "justifyMode": "center",
+        "orientation": "horizontal",
         "text": {
           "titleSize": 13,
           "valueSize": 34
         }
       },
-      "pluginVersion": "10.4.1",
       "targets": [
         {
           "datasource": {
@@ -367,14 +856,24 @@
             "uid": "prometheus-demo"
           },
           "expr": "app_uptime_ratio{app=\"ESS\"}",
-          "legendFormat": "Uptime"
+          "legendFormat": "Uptime",
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus-demo"
+          },
+          "expr": "app_uptime_ratio{app=\"ESS\"}",
+          "legendFormat": "Status",
+          "refId": "B"
         }
       ],
-      "title": "\ud83d\udc64  Employee Self-Service",
+      "title": "👤 Employee Self-Service (ESS)",
       "type": "stat",
       "links": [
         {
-          "title": "Open Analytics \u2192",
+          "title": "Open Analytics →",
           "url": "/d/demo-monitoring-v1?var-app=ESS",
           "targetBlank": false
         }
@@ -407,27 +906,142 @@
               }
             ]
           },
-          "unit": "percentunit",
+          "noValue": "No data",
           "min": 0,
           "max": 1,
-          "noValue": "No data",
           "links": [
             {
-              "title": "Open Analytics \u2192",
+              "title": "Open Analytics →",
               "url": "/d/demo-monitoring-v1?var-app=MARS",
               "targetBlank": false
             }
           ]
         },
-        "overrides": []
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Uptime"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "percentunit"
+              },
+              {
+                "id": "decimals",
+                "value": 1
+              },
+              {
+                "id": "mappings",
+                "value": []
+              },
+              {
+                "id": "custom.displayName",
+                "value": "Uptime"
+              },
+              {
+                "id": "color",
+                "value": {
+                  "mode": "thresholds"
+                }
+              },
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "red",
+                      "value": null
+                    },
+                    {
+                      "color": "yellow",
+                      "value": 0.95
+                    },
+                    {
+                      "color": "green",
+                      "value": 0.99
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Status"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "none"
+              },
+              {
+                "id": "decimals",
+                "value": 0
+              },
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "type": "range",
+                    "options": {
+                      "from": 0,
+                      "to": 0.9499,
+                      "result": {
+                        "text": "⬇ DOWN",
+                        "color": "red"
+                      }
+                    }
+                  },
+                  {
+                    "type": "range",
+                    "options": {
+                      "from": 0.95,
+                      "to": 1,
+                      "result": {
+                        "text": "⬆ UP",
+                        "color": "green"
+                      }
+                    }
+                  }
+                ]
+              },
+              {
+                "id": "color",
+                "value": {
+                  "mode": "thresholds"
+                }
+              },
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "red",
+                      "value": null
+                    },
+                    {
+                      "color": "green",
+                      "value": 0.95
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        ]
       },
       "gridPos": {
         "h": 6,
-        "w": 8,
-        "x": 8,
-        "y": 10
+        "w": 4,
+        "x": 16,
+        "y": 4
       },
-      "id": 7,
+      "id": 11,
       "options": {
         "reduceOptions": {
           "calcs": [
@@ -436,16 +1050,16 @@
           "fields": "",
           "values": false
         },
-        "textMode": "auto",
+        "textMode": "value_and_name",
         "colorMode": "background",
-        "graphMode": "area",
+        "graphMode": "none",
         "justifyMode": "center",
+        "orientation": "horizontal",
         "text": {
           "titleSize": 13,
           "valueSize": 34
         }
       },
-      "pluginVersion": "10.4.1",
       "targets": [
         {
           "datasource": {
@@ -453,14 +1067,24 @@
             "uid": "prometheus-demo"
           },
           "expr": "app_uptime_ratio{app=\"MARS\"}",
-          "legendFormat": "Uptime"
+          "legendFormat": "Uptime",
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus-demo"
+          },
+          "expr": "app_uptime_ratio{app=\"MARS\"}",
+          "legendFormat": "Status",
+          "refId": "B"
         }
       ],
-      "title": "\ud83d\udcca  Management & Reporting",
+      "title": "📊 Management & Reporting (MARS)",
       "type": "stat",
       "links": [
         {
-          "title": "Open Analytics \u2192",
+          "title": "Open Analytics →",
           "url": "/d/demo-monitoring-v1?var-app=MARS",
           "targetBlank": false
         }
@@ -493,27 +1117,142 @@
               }
             ]
           },
-          "unit": "percentunit",
+          "noValue": "No data",
           "min": 0,
           "max": 1,
-          "noValue": "No data",
           "links": [
             {
-              "title": "Open Analytics \u2192",
+              "title": "Open Analytics →",
               "url": "/d/demo-monitoring-v1?var-app=SELF",
               "targetBlank": false
             }
           ]
         },
-        "overrides": []
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Uptime"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "percentunit"
+              },
+              {
+                "id": "decimals",
+                "value": 1
+              },
+              {
+                "id": "mappings",
+                "value": []
+              },
+              {
+                "id": "custom.displayName",
+                "value": "Uptime"
+              },
+              {
+                "id": "color",
+                "value": {
+                  "mode": "thresholds"
+                }
+              },
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "red",
+                      "value": null
+                    },
+                    {
+                      "color": "yellow",
+                      "value": 0.95
+                    },
+                    {
+                      "color": "green",
+                      "value": 0.99
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Status"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "none"
+              },
+              {
+                "id": "decimals",
+                "value": 0
+              },
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "type": "range",
+                    "options": {
+                      "from": 0,
+                      "to": 0.9499,
+                      "result": {
+                        "text": "⬇ DOWN",
+                        "color": "red"
+                      }
+                    }
+                  },
+                  {
+                    "type": "range",
+                    "options": {
+                      "from": 0.95,
+                      "to": 1,
+                      "result": {
+                        "text": "⬆ UP",
+                        "color": "green"
+                      }
+                    }
+                  }
+                ]
+              },
+              {
+                "id": "color",
+                "value": {
+                  "mode": "thresholds"
+                }
+              },
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "red",
+                      "value": null
+                    },
+                    {
+                      "color": "green",
+                      "value": 0.95
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        ]
       },
       "gridPos": {
         "h": 6,
-        "w": 8,
-        "x": 16,
-        "y": 10
+        "w": 4,
+        "x": 20,
+        "y": 4
       },
-      "id": 8,
+      "id": 13,
       "options": {
         "reduceOptions": {
           "calcs": [
@@ -522,16 +1261,16 @@
           "fields": "",
           "values": false
         },
-        "textMode": "auto",
+        "textMode": "value_and_name",
         "colorMode": "background",
-        "graphMode": "area",
+        "graphMode": "none",
         "justifyMode": "center",
+        "orientation": "horizontal",
         "text": {
           "titleSize": 13,
           "valueSize": 34
         }
       },
-      "pluginVersion": "10.4.1",
       "targets": [
         {
           "datasource": {
@@ -539,194 +1278,28 @@
             "uid": "prometheus-demo"
           },
           "expr": "app_uptime_ratio{app=\"SELF\"}",
-          "legendFormat": "Uptime"
+          "legendFormat": "Uptime",
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus-demo"
+          },
+          "expr": "app_uptime_ratio{app=\"SELF\"}",
+          "legendFormat": "Status",
+          "refId": "B"
         }
       ],
-      "title": "\ud83d\udd11  Self-Service Portal",
+      "title": "🔑 Self-Service Portal (SELF)",
       "type": "stat",
       "links": [
         {
-          "title": "Open Analytics \u2192",
+          "title": "Open Analytics →",
           "url": "/d/demo-monitoring-v1?var-app=SELF",
           "targetBlank": false
         }
       ]
-    },
-    {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "prometheus-demo"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "lineWidth": 1,
-            "fillOpacity": 12,
-            "spanNulls": true
-          },
-          "unit": "reqps"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 7,
-        "w": 12,
-        "x": 0,
-        "y": 16
-      },
-      "id": 9,
-      "options": {
-        "tooltip": {
-          "mode": "multi"
-        },
-        "legend": {
-          "displayMode": "list",
-          "placement": "bottom"
-        }
-      },
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "prometheus-demo"
-          },
-          "expr": "sum(rate(http_requests_total{app=\"CCMS\"}[$__rate_interval]))",
-          "legendFormat": "CCMS"
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "prometheus-demo"
-          },
-          "expr": "sum(rate(http_requests_total{app=\"ECRS\"}[$__rate_interval]))",
-          "legendFormat": "ECRS"
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "prometheus-demo"
-          },
-          "expr": "sum(rate(http_requests_total{app=\"HIMS\"}[$__rate_interval]))",
-          "legendFormat": "HIMS"
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "prometheus-demo"
-          },
-          "expr": "sum(rate(http_requests_total{app=\"ESS\"}[$__rate_interval]))",
-          "legendFormat": "ESS"
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "prometheus-demo"
-          },
-          "expr": "sum(rate(http_requests_total{app=\"MARS\"}[$__rate_interval]))",
-          "legendFormat": "MARS"
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "prometheus-demo"
-          },
-          "expr": "sum(rate(http_requests_total{app=\"SELF\"}[$__rate_interval]))",
-          "legendFormat": "SELF"
-        }
-      ],
-      "title": "Web Apps \u2014 Request Rate (RPS)",
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "prometheus-demo"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "lineWidth": 1,
-            "fillOpacity": 12,
-            "spanNulls": true
-          },
-          "unit": "percentunit"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 7,
-        "w": 12,
-        "x": 12,
-        "y": 16
-      },
-      "id": 10,
-      "options": {
-        "tooltip": {
-          "mode": "multi"
-        },
-        "legend": {
-          "displayMode": "list",
-          "placement": "bottom"
-        }
-      },
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "prometheus-demo"
-          },
-          "expr": "sum(rate(http_requests_total{app=\"CCMS\",status=~\"5..\"}[$__rate_interval])) / sum(rate(http_requests_total{app=\"CCMS\"}[$__rate_interval]))",
-          "legendFormat": "CCMS"
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "prometheus-demo"
-          },
-          "expr": "sum(rate(http_requests_total{app=\"ECRS\",status=~\"5..\"}[$__rate_interval])) / sum(rate(http_requests_total{app=\"ECRS\"}[$__rate_interval]))",
-          "legendFormat": "ECRS"
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "prometheus-demo"
-          },
-          "expr": "sum(rate(http_requests_total{app=\"HIMS\",status=~\"5..\"}[$__rate_interval])) / sum(rate(http_requests_total{app=\"HIMS\"}[$__rate_interval]))",
-          "legendFormat": "HIMS"
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "prometheus-demo"
-          },
-          "expr": "sum(rate(http_requests_total{app=\"ESS\",status=~\"5..\"}[$__rate_interval])) / sum(rate(http_requests_total{app=\"ESS\"}[$__rate_interval]))",
-          "legendFormat": "ESS"
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "prometheus-demo"
-          },
-          "expr": "sum(rate(http_requests_total{app=\"MARS\",status=~\"5..\"}[$__rate_interval])) / sum(rate(http_requests_total{app=\"MARS\"}[$__rate_interval]))",
-          "legendFormat": "MARS"
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "prometheus-demo"
-          },
-          "expr": "sum(rate(http_requests_total{app=\"SELF\",status=~\"5..\"}[$__rate_interval])) / sum(rate(http_requests_total{app=\"SELF\"}[$__rate_interval]))",
-          "legendFormat": "SELF"
-        }
-      ],
-      "title": "Web Apps \u2014 5xx Error Rate",
-      "type": "timeseries"
     },
     {
       "collapsed": false,
@@ -734,10 +1307,10 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 23
+        "y": 9
       },
-      "id": 11,
-      "title": "\u26a1  APIs",
+      "id": 15,
+      "title": "⚡  APIs",
       "type": "row"
     },
     {
@@ -767,27 +1340,142 @@
               }
             ]
           },
-          "unit": "percentunit",
+          "noValue": "No data",
           "min": 0,
           "max": 1,
-          "noValue": "No data",
           "links": [
             {
-              "title": "Open Analytics \u2192",
+              "title": "Open Analytics →",
               "url": "/d/demo-monitoring-v1?var-app=auth-api",
               "targetBlank": false
             }
           ]
         },
-        "overrides": []
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Uptime"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "percentunit"
+              },
+              {
+                "id": "decimals",
+                "value": 1
+              },
+              {
+                "id": "mappings",
+                "value": []
+              },
+              {
+                "id": "custom.displayName",
+                "value": "Uptime"
+              },
+              {
+                "id": "color",
+                "value": {
+                  "mode": "thresholds"
+                }
+              },
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "red",
+                      "value": null
+                    },
+                    {
+                      "color": "yellow",
+                      "value": 0.95
+                    },
+                    {
+                      "color": "green",
+                      "value": 0.99
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Status"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "none"
+              },
+              {
+                "id": "decimals",
+                "value": 0
+              },
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "type": "range",
+                    "options": {
+                      "from": 0,
+                      "to": 0.9499,
+                      "result": {
+                        "text": "⬇ DOWN",
+                        "color": "red"
+                      }
+                    }
+                  },
+                  {
+                    "type": "range",
+                    "options": {
+                      "from": 0.95,
+                      "to": 1,
+                      "result": {
+                        "text": "⬆ UP",
+                        "color": "green"
+                      }
+                    }
+                  }
+                ]
+              },
+              {
+                "id": "color",
+                "value": {
+                  "mode": "thresholds"
+                }
+              },
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "red",
+                      "value": null
+                    },
+                    {
+                      "color": "green",
+                      "value": 0.95
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        ]
       },
       "gridPos": {
         "h": 6,
         "w": 6,
         "x": 0,
-        "y": 24
+        "y": 10
       },
-      "id": 12,
+      "id": 16,
       "options": {
         "reduceOptions": {
           "calcs": [
@@ -796,16 +1484,16 @@
           "fields": "",
           "values": false
         },
-        "textMode": "auto",
+        "textMode": "value_and_name",
         "colorMode": "background",
-        "graphMode": "area",
+        "graphMode": "none",
         "justifyMode": "center",
+        "orientation": "horizontal",
         "text": {
           "titleSize": 13,
           "valueSize": 34
         }
       },
-      "pluginVersion": "10.4.1",
       "targets": [
         {
           "datasource": {
@@ -813,14 +1501,24 @@
             "uid": "prometheus-demo"
           },
           "expr": "app_uptime_ratio{app=\"auth-api\"}",
-          "legendFormat": "Uptime"
+          "legendFormat": "Uptime",
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus-demo"
+          },
+          "expr": "app_uptime_ratio{app=\"auth-api\"}",
+          "legendFormat": "Status",
+          "refId": "B"
         }
       ],
-      "title": "\ud83d\udd10  Auth API",
+      "title": "🔐 Auth API",
       "type": "stat",
       "links": [
         {
-          "title": "Open Analytics \u2192",
+          "title": "Open Analytics →",
           "url": "/d/demo-monitoring-v1?var-app=auth-api",
           "targetBlank": false
         }
@@ -853,27 +1551,142 @@
               }
             ]
           },
-          "unit": "percentunit",
+          "noValue": "No data",
           "min": 0,
           "max": 1,
-          "noValue": "No data",
           "links": [
             {
-              "title": "Open Analytics \u2192",
+              "title": "Open Analytics →",
               "url": "/d/demo-monitoring-v1?var-app=card-api",
               "targetBlank": false
             }
           ]
         },
-        "overrides": []
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Uptime"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "percentunit"
+              },
+              {
+                "id": "decimals",
+                "value": 1
+              },
+              {
+                "id": "mappings",
+                "value": []
+              },
+              {
+                "id": "custom.displayName",
+                "value": "Uptime"
+              },
+              {
+                "id": "color",
+                "value": {
+                  "mode": "thresholds"
+                }
+              },
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "red",
+                      "value": null
+                    },
+                    {
+                      "color": "yellow",
+                      "value": 0.95
+                    },
+                    {
+                      "color": "green",
+                      "value": 0.99
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Status"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "none"
+              },
+              {
+                "id": "decimals",
+                "value": 0
+              },
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "type": "range",
+                    "options": {
+                      "from": 0,
+                      "to": 0.9499,
+                      "result": {
+                        "text": "⬇ DOWN",
+                        "color": "red"
+                      }
+                    }
+                  },
+                  {
+                    "type": "range",
+                    "options": {
+                      "from": 0.95,
+                      "to": 1,
+                      "result": {
+                        "text": "⬆ UP",
+                        "color": "green"
+                      }
+                    }
+                  }
+                ]
+              },
+              {
+                "id": "color",
+                "value": {
+                  "mode": "thresholds"
+                }
+              },
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "red",
+                      "value": null
+                    },
+                    {
+                      "color": "green",
+                      "value": 0.95
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        ]
       },
       "gridPos": {
         "h": 6,
         "w": 6,
         "x": 6,
-        "y": 24
+        "y": 10
       },
-      "id": 13,
+      "id": 18,
       "options": {
         "reduceOptions": {
           "calcs": [
@@ -882,16 +1695,16 @@
           "fields": "",
           "values": false
         },
-        "textMode": "auto",
+        "textMode": "value_and_name",
         "colorMode": "background",
-        "graphMode": "area",
+        "graphMode": "none",
         "justifyMode": "center",
+        "orientation": "horizontal",
         "text": {
           "titleSize": 13,
           "valueSize": 34
         }
       },
-      "pluginVersion": "10.4.1",
       "targets": [
         {
           "datasource": {
@@ -899,14 +1712,24 @@
             "uid": "prometheus-demo"
           },
           "expr": "app_uptime_ratio{app=\"card-api\"}",
-          "legendFormat": "Uptime"
+          "legendFormat": "Uptime",
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus-demo"
+          },
+          "expr": "app_uptime_ratio{app=\"card-api\"}",
+          "legendFormat": "Status",
+          "refId": "B"
         }
       ],
-      "title": "\ud83d\udcb3  CARD API",
+      "title": "💳 CARD API",
       "type": "stat",
       "links": [
         {
-          "title": "Open Analytics \u2192",
+          "title": "Open Analytics →",
           "url": "/d/demo-monitoring-v1?var-app=card-api",
           "targetBlank": false
         }
@@ -939,27 +1762,142 @@
               }
             ]
           },
-          "unit": "percentunit",
+          "noValue": "No data",
           "min": 0,
           "max": 1,
-          "noValue": "No data",
           "links": [
             {
-              "title": "Open Analytics \u2192",
+              "title": "Open Analytics →",
               "url": "/d/demo-monitoring-v1?var-app=hims-api",
               "targetBlank": false
             }
           ]
         },
-        "overrides": []
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Uptime"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "percentunit"
+              },
+              {
+                "id": "decimals",
+                "value": 1
+              },
+              {
+                "id": "mappings",
+                "value": []
+              },
+              {
+                "id": "custom.displayName",
+                "value": "Uptime"
+              },
+              {
+                "id": "color",
+                "value": {
+                  "mode": "thresholds"
+                }
+              },
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "red",
+                      "value": null
+                    },
+                    {
+                      "color": "yellow",
+                      "value": 0.95
+                    },
+                    {
+                      "color": "green",
+                      "value": 0.99
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Status"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "none"
+              },
+              {
+                "id": "decimals",
+                "value": 0
+              },
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "type": "range",
+                    "options": {
+                      "from": 0,
+                      "to": 0.9499,
+                      "result": {
+                        "text": "⬇ DOWN",
+                        "color": "red"
+                      }
+                    }
+                  },
+                  {
+                    "type": "range",
+                    "options": {
+                      "from": 0.95,
+                      "to": 1,
+                      "result": {
+                        "text": "⬆ UP",
+                        "color": "green"
+                      }
+                    }
+                  }
+                ]
+              },
+              {
+                "id": "color",
+                "value": {
+                  "mode": "thresholds"
+                }
+              },
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "red",
+                      "value": null
+                    },
+                    {
+                      "color": "green",
+                      "value": 0.95
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        ]
       },
       "gridPos": {
         "h": 6,
         "w": 6,
         "x": 12,
-        "y": 24
+        "y": 10
       },
-      "id": 14,
+      "id": 20,
       "options": {
         "reduceOptions": {
           "calcs": [
@@ -968,16 +1906,16 @@
           "fields": "",
           "values": false
         },
-        "textMode": "auto",
+        "textMode": "value_and_name",
         "colorMode": "background",
-        "graphMode": "area",
+        "graphMode": "none",
         "justifyMode": "center",
+        "orientation": "horizontal",
         "text": {
           "titleSize": 13,
           "valueSize": 34
         }
       },
-      "pluginVersion": "10.4.1",
       "targets": [
         {
           "datasource": {
@@ -985,14 +1923,24 @@
             "uid": "prometheus-demo"
           },
           "expr": "app_uptime_ratio{app=\"hims-api\"}",
-          "legendFormat": "Uptime"
+          "legendFormat": "Uptime",
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus-demo"
+          },
+          "expr": "app_uptime_ratio{app=\"hims-api\"}",
+          "legendFormat": "Status",
+          "refId": "B"
         }
       ],
-      "title": "\ud83c\udfe5  HIMS API",
+      "title": "🏥 HIMS API",
       "type": "stat",
       "links": [
         {
-          "title": "Open Analytics \u2192",
+          "title": "Open Analytics →",
           "url": "/d/demo-monitoring-v1?var-app=hims-api",
           "targetBlank": false
         }
@@ -1025,27 +1973,142 @@
               }
             ]
           },
-          "unit": "percentunit",
+          "noValue": "No data",
           "min": 0,
           "max": 1,
-          "noValue": "No data",
           "links": [
             {
-              "title": "Open Analytics \u2192",
+              "title": "Open Analytics →",
               "url": "/d/demo-monitoring-v1?var-app=ecrs-api",
               "targetBlank": false
             }
           ]
         },
-        "overrides": []
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Uptime"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "percentunit"
+              },
+              {
+                "id": "decimals",
+                "value": 1
+              },
+              {
+                "id": "mappings",
+                "value": []
+              },
+              {
+                "id": "custom.displayName",
+                "value": "Uptime"
+              },
+              {
+                "id": "color",
+                "value": {
+                  "mode": "thresholds"
+                }
+              },
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "red",
+                      "value": null
+                    },
+                    {
+                      "color": "yellow",
+                      "value": 0.95
+                    },
+                    {
+                      "color": "green",
+                      "value": 0.99
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Status"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "none"
+              },
+              {
+                "id": "decimals",
+                "value": 0
+              },
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "type": "range",
+                    "options": {
+                      "from": 0,
+                      "to": 0.9499,
+                      "result": {
+                        "text": "⬇ DOWN",
+                        "color": "red"
+                      }
+                    }
+                  },
+                  {
+                    "type": "range",
+                    "options": {
+                      "from": 0.95,
+                      "to": 1,
+                      "result": {
+                        "text": "⬆ UP",
+                        "color": "green"
+                      }
+                    }
+                  }
+                ]
+              },
+              {
+                "id": "color",
+                "value": {
+                  "mode": "thresholds"
+                }
+              },
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "red",
+                      "value": null
+                    },
+                    {
+                      "color": "green",
+                      "value": 0.95
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        ]
       },
       "gridPos": {
         "h": 6,
         "w": 6,
         "x": 18,
-        "y": 24
+        "y": 10
       },
-      "id": 15,
+      "id": 22,
       "options": {
         "reduceOptions": {
           "calcs": [
@@ -1054,16 +2117,16 @@
           "fields": "",
           "values": false
         },
-        "textMode": "auto",
+        "textMode": "value_and_name",
         "colorMode": "background",
-        "graphMode": "area",
+        "graphMode": "none",
         "justifyMode": "center",
+        "orientation": "horizontal",
         "text": {
           "titleSize": 13,
           "valueSize": 34
         }
       },
-      "pluginVersion": "10.4.1",
       "targets": [
         {
           "datasource": {
@@ -1071,162 +2134,28 @@
             "uid": "prometheus-demo"
           },
           "expr": "app_uptime_ratio{app=\"ecrs-api\"}",
-          "legendFormat": "Uptime"
+          "legendFormat": "Uptime",
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus-demo"
+          },
+          "expr": "app_uptime_ratio{app=\"ecrs-api\"}",
+          "legendFormat": "Status",
+          "refId": "B"
         }
       ],
-      "title": "\ud83d\udccb  ECRS API",
+      "title": "📋 ECRS API",
       "type": "stat",
       "links": [
         {
-          "title": "Open Analytics \u2192",
+          "title": "Open Analytics →",
           "url": "/d/demo-monitoring-v1?var-app=ecrs-api",
           "targetBlank": false
         }
       ]
-    },
-    {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "prometheus-demo"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "lineWidth": 1,
-            "fillOpacity": 12,
-            "spanNulls": true
-          },
-          "unit": "s"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 7,
-        "w": 12,
-        "x": 0,
-        "y": 30
-      },
-      "id": 16,
-      "options": {
-        "tooltip": {
-          "mode": "multi"
-        },
-        "legend": {
-          "displayMode": "list",
-          "placement": "bottom"
-        }
-      },
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "prometheus-demo"
-          },
-          "expr": "histogram_quantile(0.99, sum by(le) (rate(http_request_duration_seconds_bucket{app=\"auth-api\"}[$__rate_interval])))",
-          "legendFormat": "auth-api"
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "prometheus-demo"
-          },
-          "expr": "histogram_quantile(0.99, sum by(le) (rate(http_request_duration_seconds_bucket{app=\"card-api\"}[$__rate_interval])))",
-          "legendFormat": "card-api"
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "prometheus-demo"
-          },
-          "expr": "histogram_quantile(0.99, sum by(le) (rate(http_request_duration_seconds_bucket{app=\"hims-api\"}[$__rate_interval])))",
-          "legendFormat": "hims-api"
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "prometheus-demo"
-          },
-          "expr": "histogram_quantile(0.99, sum by(le) (rate(http_request_duration_seconds_bucket{app=\"ecrs-api\"}[$__rate_interval])))",
-          "legendFormat": "ecrs-api"
-        }
-      ],
-      "title": "APIs \u2014 Latency p99",
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "prometheus-demo"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "lineWidth": 1,
-            "fillOpacity": 12,
-            "spanNulls": true
-          },
-          "unit": "reqps"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 7,
-        "w": 12,
-        "x": 12,
-        "y": 30
-      },
-      "id": 17,
-      "options": {
-        "tooltip": {
-          "mode": "multi"
-        },
-        "legend": {
-          "displayMode": "list",
-          "placement": "bottom"
-        }
-      },
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "prometheus-demo"
-          },
-          "expr": "sum(rate(http_requests_total{app=\"auth-api\"}[$__rate_interval]))",
-          "legendFormat": "auth-api"
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "prometheus-demo"
-          },
-          "expr": "sum(rate(http_requests_total{app=\"card-api\"}[$__rate_interval]))",
-          "legendFormat": "card-api"
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "prometheus-demo"
-          },
-          "expr": "sum(rate(http_requests_total{app=\"hims-api\"}[$__rate_interval]))",
-          "legendFormat": "hims-api"
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "prometheus-demo"
-          },
-          "expr": "sum(rate(http_requests_total{app=\"ecrs-api\"}[$__rate_interval]))",
-          "legendFormat": "ecrs-api"
-        }
-      ],
-      "title": "APIs \u2014 Request Rate (RPS)",
-      "type": "timeseries"
     },
     {
       "collapsed": false,
@@ -1234,10 +2163,10 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 37
+        "y": 15
       },
-      "id": 18,
-      "title": "\ud83d\udcc8  Portfolio-Wide Signals",
+      "id": 24,
+      "title": "📈  Portfolio-Wide Signals",
       "type": "row"
     },
     {
@@ -1274,12 +2203,12 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 9,
-        "w": 12,
+        "h": 10,
+        "w": 24,
         "x": 0,
-        "y": 38
+        "y": 16
       },
-      "id": 19,
+      "id": 25,
       "options": {
         "reduceOptions": {
           "calcs": [
@@ -1292,133 +2221,34 @@
         "displayMode": "gradient",
         "showUnfilled": true,
         "valueMode": "color",
-        "namePlacement": "auto"
+        "namePlacement": "auto",
+        "text": {}
       },
-      "targets": [
+      "transformations": [
         {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "prometheus-demo"
-          },
-          "expr": "app_uptime_ratio",
-          "legendFormat": "{{app}}"
-        }
-      ],
-      "title": "All Applications \u2014 Uptime Ratio",
-      "type": "bargauge"
-    },
-    {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "prometheus-demo"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "lineWidth": 2,
-            "fillOpacity": 6,
-            "spanNulls": true
-          },
-          "unit": "s"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 9,
-        "w": 12,
-        "x": 12,
-        "y": 38
-      },
-      "id": 20,
-      "options": {
-        "tooltip": {
-          "mode": "multi"
-        },
-        "legend": {
-          "displayMode": "list",
-          "placement": "bottom"
-        }
-      },
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "prometheus-demo"
-          },
-          "expr": "histogram_quantile(0.99, sum by(app, le) (rate(http_request_duration_seconds_bucket[$__rate_interval])))",
-          "legendFormat": "{{app}}"
-        }
-      ],
-      "title": "All Applications \u2014 Latency p99",
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "prometheus-demo"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "lineWidth": 2,
-            "fillOpacity": 8,
-            "spanNulls": true
-          },
-          "unit": "percentunit",
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
+          "id": "sortBy",
+          "options": {
+            "fields": [
               {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "yellow",
-                "value": 0.01
-              },
-              {
-                "color": "red",
-                "value": 0.05
+                "desc": false,
+                "displayName": "Value"
               }
             ]
           }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 24,
-        "x": 0,
-        "y": 47
-      },
-      "id": 21,
-      "options": {
-        "tooltip": {
-          "mode": "multi"
-        },
-        "legend": {
-          "displayMode": "list",
-          "placement": "bottom"
         }
-      },
+      ],
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
             "uid": "prometheus-demo"
           },
-          "expr": "sum by(app) (rate(http_requests_total{status=~\"5..\"}[$__rate_interval])) / sum by(app) (rate(http_requests_total[$__rate_interval]))",
+          "expr": "sort_desc(app_uptime_ratio)",
           "legendFormat": "{{app}}"
         }
       ],
-      "title": "All Applications \u2014 5xx Error Rate Comparison",
-      "type": "timeseries"
+      "title": "All Applications — Uptime Ratio (worst first ↑)",
+      "type": "bargauge"
     }
   ],
   "refresh": "15s",
