@@ -172,7 +172,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 9
+        "y": 1
       },
       "id": 11,
       "options": {
@@ -251,7 +251,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 17
+        "y": 9
       },
       "id": 12,
       "targets": [
@@ -281,18 +281,24 @@
         "type": "prometheus",
         "uid": "prometheus-demo"
       },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 9
+      },
+      "id": 13,
+      "title": "Saturation — DB Connections / CPU / Memory",
+      "description": "**Resource saturation for the three most common bottlenecks.**\n\nAll values are normalised to 0–100% so they share the same axis:\n\n- **DB Connections:** `active_connections / max_connections` per app. Pool exhaustion causes 'too many connections' errors.\n- **CPU:** Average CPU utilisation across all cores on the host (from `node_exporter`).\n- **Memory:** Used RAM as a % of total (`MemAvailable` method, includes reclaimable cache).\n\n**Thresholds (shared):** Warn > 70% · Critical > 90%.",
+      "type": "bargauge",
       "fieldConfig": {
         "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "lineWidth": 2,
-            "fillOpacity": 15
-          },
           "unit": "percentunit",
           "min": 0,
           "max": 1,
+          "color": {
+            "mode": "thresholds"
+          },
           "thresholds": {
             "mode": "absolute",
             "steps": [
@@ -309,24 +315,31 @@
                 "value": 0.9
               }
             ]
+          },
+          "custom": {
+            "fillOpacity": 80
           }
         },
         "overrides": []
       },
-      "gridPos": {
-        "h": 8,
-        "w": 12,
-        "x": 12,
-        "y": 25
-      },
-      "id": 13,
       "options": {
         "reduceOptions": {
           "calcs": [
             "lastNotNull"
-          ]
+          ],
+          "fields": "",
+          "values": false
         },
-        "orientation": "auto"
+        "orientation": "horizontal",
+        "displayMode": "gradient",
+        "showUnfilled": true,
+        "valueMode": "color",
+        "text": {
+          "titleSize": 13,
+          "valueSize": 18
+        },
+        "minVizWidth": 0,
+        "minVizHeight": 10
       },
       "targets": [
         {
@@ -334,13 +347,32 @@
             "type": "prometheus",
             "uid": "prometheus-demo"
           },
-          "expr": "pg_stat_activity_count{app=\"$app\"} / pg_settings_max_connections{app=\"$app\"}",
-          "legendFormat": "{{datname}} conn %"
+          "expr": "avg(pg_stat_activity_count{app=\"$app\"} / pg_settings_max_connections{app=\"$app\"})",
+          "legendFormat": "DB Connections",
+          "refId": "A",
+          "instant": false
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus-demo"
+          },
+          "expr": "(100 - avg(rate(node_cpu_seconds_total{mode=\"idle\"}[$__rate_interval])) * 100) / 100",
+          "legendFormat": "CPU",
+          "refId": "B",
+          "instant": false
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus-demo"
+          },
+          "expr": "1 - (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes)",
+          "legendFormat": "Memory",
+          "refId": "C",
+          "instant": false
         }
-      ],
-      "title": "Saturation — DB Connection Pool %",
-      "type": "gauge",
-      "description": "**What it measures:** Active database connections as a percentage of max_connections.\n\n**Source:** `pg_stat_activity_count / pg_settings_max_connections` from the fake exporter.\n\n**Thresholds:** Warn > 70% · Critical > 90%. Pool exhaustion causes connection-wait latency spikes."
+      ]
     },
     {
       "collapsed": true,
