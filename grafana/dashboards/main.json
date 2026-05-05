@@ -39,7 +39,7 @@
       "version": ""
     }
   ],
-  "description": "Centralized Application Monitoring — 6-Layer Observability (Demo Stack)",
+  "description": "Centralized Application Monitoring — 5-Layer Observability (Demo Stack)",
   "editable": true,
   "graphTooltip": 1,
   "panels": [
@@ -95,7 +95,24 @@
               "targetBlank": false
             }
           ]
-        }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "p99"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "red"
+                }
+              }
+            ]
+          }
+        ]
       },
       "gridPos": {
         "h": 8,
@@ -383,7 +400,7 @@
         "y": 33
       },
       "id": 2,
-      "title": "🟢  Layer 2 — Infrastructure & Host (node_exporter — real host data)",
+      "title": "🟢  Layer 2 — Infrastructure & Host",
       "type": "row",
       "panels": [
         {
@@ -1281,7 +1298,7 @@
                 "type": "prometheus",
                 "uid": "prometheus-demo"
               },
-              "expr": "sum by(handler) (rate(http_request_duration_seconds_sum{app=\"$app\"}[$__rate_interval])) / sum by(handler) (rate(http_request_duration_seconds_count{app=\"$app\"}[$__rate_interval]))",
+              "expr": "sum by(handler) (rate(http_request_duration_seconds_sum{app=\"$app\"}[$__range])) / sum by(handler) (rate(http_request_duration_seconds_count{app=\"$app\"}[$__range]))",
               "legendFormat": "{{handler}}",
               "instant": true,
               "refId": "A",
@@ -1292,7 +1309,7 @@
                 "type": "prometheus",
                 "uid": "prometheus-demo"
               },
-              "expr": "sum by(handler) (increase(http_requests_total{app=\"$app\"}[$__rate_interval]))",
+              "expr": "sum by(handler) (increase(http_requests_total{app=\"$app\"}[$__range]))",
               "legendFormat": "{{handler}}",
               "instant": true,
               "refId": "B",
@@ -1408,6 +1425,10 @@
                         }
                       ]
                     }
+                  },
+                  {
+                    "id": "decimals",
+                    "value": 0
                   }
                 ]
               },
@@ -1457,7 +1478,7 @@
                 "type": "prometheus",
                 "uid": "prometheus-demo"
               },
-              "expr": "sum by(handler) (increase(http_requests_total{app=\"$app\", status=~\"[45]..\"}[$__rate_interval]))",
+              "expr": "sum by(handler) (increase(http_requests_total{app=\"$app\", status=~\"[45]..\"}[$__range]))",
               "legendFormat": "{{handler}}",
               "instant": true,
               "refId": "A",
@@ -1468,7 +1489,7 @@
                 "type": "prometheus",
                 "uid": "prometheus-demo"
               },
-              "expr": "sum by(handler) (rate(http_request_duration_seconds_sum{app=\"$app\"}[$__rate_interval])) / sum by(handler) (rate(http_request_duration_seconds_count{app=\"$app\"}[$__rate_interval]))",
+              "expr": "sum by(handler) (rate(http_request_duration_seconds_sum{app=\"$app\"}[$__range])) / sum by(handler) (rate(http_request_duration_seconds_count{app=\"$app\"}[$__range]))",
               "legendFormat": "{{handler}}",
               "instant": true,
               "refId": "B",
@@ -1652,7 +1673,7 @@
   },
   "timepicker": {},
   "timezone": "browser",
-  "title": "Centralized Monitoring — 6-Layer Observability (Demo)",
+  "title": "Centralized Monitoring — 5-Layer Observability (Demo)",
   "uid": "demo-monitoring-v1",
   "version": 1,
   "templating": {

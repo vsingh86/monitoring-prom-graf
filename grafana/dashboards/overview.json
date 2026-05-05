@@ -1,5 +1,5 @@
 {
-  "description": "Application Portfolio Overview — click any card to open the full 6-layer analytics dashboard.",
+  "description": "Application Portfolio Overview \u2014 click any card to open the full 5-layer analytics dashboard.",
   "editable": true,
   "graphTooltip": 1,
   "panels": [
@@ -16,7 +16,7 @@
       },
       "id": 1,
       "options": {
-        "content": "<div style=\"font-family:'DM Sans',Arial,sans-serif;display:flex;align-items:center;justify-content:space-between;padding:14px 20px;background:linear-gradient(135deg,#0f172a 0%,#1e293b 60%,#0f2744 100%);border-radius:10px;border:1px solid #1e3a5f\">\n  <div style=\"display:flex;align-items:center;gap:14px\">\n    <div style=\"width:10px;height:10px;border-radius:50%;background:#22c55e;box-shadow:0 0 8px #22c55e\"></div>\n    <div>\n      <div style=\"color:#f1f5f9;font-size:18px;font-weight:700;letter-spacing:0.01em\">Application Portfolio Overview</div>\n      <div style=\"color:#64748b;font-size:12px;margin-top:2px\">10 applications monitored &nbsp;·&nbsp; Click any card to open the full 6-layer analytics dashboard</div>\n    </div>\n  </div>\n  <div style=\"display:flex;gap:24px;align-items:center\">\n    <div style=\"text-align:center\"><div style=\"color:#22c55e;font-size:11px;font-weight:600\">WEB APPS</div><div style=\"color:#94a3b8;font-size:11px\">6 services</div></div>\n    <div style=\"width:1px;height:28px;background:#334155\"></div>\n    <div style=\"text-align:center\"><div style=\"color:#60a5fa;font-size:11px;font-weight:600\">APIs</div><div style=\"color:#94a3b8;font-size:11px\">4 services</div></div>\n  </div>\n</div>",
+        "content": "<div style=\"font-family:'DM Sans',Arial,sans-serif;display:flex;align-items:center;justify-content:space-between;padding:14px 20px;background:linear-gradient(135deg,#0f172a 0%,#1e293b 60%,#0f2744 100%);border-radius:10px;border:1px solid #1e3a5f\">\n  <div style=\"display:flex;align-items:center;gap:14px\">\n    <div style=\"width:10px;height:10px;border-radius:50%;background:#22c55e;box-shadow:0 0 8px #22c55e\"></div>\n    <div>\n      <div style=\"color:#f1f5f9;font-size:18px;font-weight:700;letter-spacing:0.01em\">Application Portfolio Overview</div>\n      <div style=\"color:#64748b;font-size:12px;margin-top:2px\">10 applications monitored &nbsp;\u00b7&nbsp; Click any card to open the full 6-layer analytics dashboard</div>\n    </div>\n  </div>\n  <div style=\"display:flex;gap:24px;align-items:center\">\n    <div style=\"text-align:center\"><div style=\"color:#22c55e;font-size:11px;font-weight:600\">WEB APPS</div><div style=\"color:#94a3b8;font-size:11px\">6 services</div></div>\n    <div style=\"width:1px;height:28px;background:#334155\"></div>\n    <div style=\"text-align:center\"><div style=\"color:#60a5fa;font-size:11px;font-weight:600\">APIs</div><div style=\"color:#94a3b8;font-size:11px\">4 services</div></div>\n  </div>\n</div>",
         "mode": "html"
       },
       "title": "",
@@ -32,7 +32,7 @@
         "y": 3
       },
       "id": 2,
-      "title": "🌐  Web Applications",
+      "title": "\ud83c\udf10  Web Applications",
       "type": "row"
     },
     {
@@ -67,7 +67,7 @@
           "max": 1,
           "links": [
             {
-              "title": "Open Analytics →",
+              "title": "Open Analytics \u2192",
               "url": "/d/demo-monitoring-v1?var-app=CCMS",
               "targetBlank": false
             }
@@ -145,12 +145,12 @@
                     "type": "value",
                     "options": {
                       "0": {
-                        "text": "⬇ DOWN",
+                        "text": "\u2b07 DOWN",
                         "color": "red",
                         "index": 0
                       },
                       "1": {
-                        "text": "⬆ UP",
+                        "text": "\u2b06 UP",
                         "color": "green",
                         "index": 1
                       }
@@ -229,11 +229,11 @@
           "refId": "B"
         }
       ],
-      "title": "🗂️ Content & Case Mgmt (CCMS)",
+      "title": "\ud83d\uddc2\ufe0f Content & Case Mgmt (CCMS)",
       "type": "stat",
       "links": [
         {
-          "title": "Open Analytics →",
+          "title": "Open Analytics \u2192",
           "url": "/d/demo-monitoring-v1?var-app=CCMS",
           "targetBlank": false
         }
@@ -271,7 +271,7 @@
           "max": 1,
           "links": [
             {
-              "title": "Open Analytics →",
+              "title": "Open Analytics \u2192",
               "url": "/d/demo-monitoring-v1?var-app=ECRS",
               "targetBlank": false
             }
@@ -349,12 +349,12 @@
                     "type": "value",
                     "options": {
                       "0": {
-                        "text": "⬇ DOWN",
+                        "text": "\u2b07 DOWN",
                         "color": "red",
                         "index": 0
                       },
                       "1": {
-                        "text": "⬆ UP",
+                        "text": "\u2b06 UP",
                         "color": "green",
                         "index": 1
                       }
@@ -433,11 +433,11 @@
           "refId": "B"
         }
       ],
-      "title": "📋 Electronic Claims (ECRS)",
+      "title": "\ud83d\udccb Electronic Claims (ECRS)",
       "type": "stat",
       "links": [
         {
-          "title": "Open Analytics →",
+          "title": "Open Analytics \u2192",
           "url": "/d/demo-monitoring-v1?var-app=ECRS",
           "targetBlank": false
         }
@@ -475,7 +475,7 @@
           "max": 1,
           "links": [
             {
-              "title": "Open Analytics →",
+              "title": "Open Analytics \u2192",
               "url": "/d/demo-monitoring-v1?var-app=HIMS",
               "targetBlank": false
             }
@@ -553,12 +553,12 @@
                     "type": "value",
                     "options": {
                       "0": {
-                        "text": "⬇ DOWN",
+                        "text": "\u2b07 DOWN",
                         "color": "red",
                         "index": 0
                       },
                       "1": {
-                        "text": "⬆ UP",
+                        "text": "\u2b06 UP",
                         "color": "green",
                         "index": 1
                       }
@@ -637,11 +637,11 @@
           "refId": "B"
         }
       ],
-      "title": "🏥 Health Info Mgmt (HIMS)",
+      "title": "\ud83c\udfe5 Health Info Mgmt (HIMS)",
       "type": "stat",
       "links": [
         {
-          "title": "Open Analytics →",
+          "title": "Open Analytics \u2192",
           "url": "/d/demo-monitoring-v1?var-app=HIMS",
           "targetBlank": false
         }
@@ -679,7 +679,7 @@
           "max": 1,
           "links": [
             {
-              "title": "Open Analytics →",
+              "title": "Open Analytics \u2192",
               "url": "/d/demo-monitoring-v1?var-app=ESS",
               "targetBlank": false
             }
@@ -757,12 +757,12 @@
                     "type": "value",
                     "options": {
                       "0": {
-                        "text": "⬇ DOWN",
+                        "text": "\u2b07 DOWN",
                         "color": "red",
                         "index": 0
                       },
                       "1": {
-                        "text": "⬆ UP",
+                        "text": "\u2b06 UP",
                         "color": "green",
                         "index": 1
                       }
@@ -841,11 +841,11 @@
           "refId": "B"
         }
       ],
-      "title": "👤 Employee Self-Service (ESS)",
+      "title": "\ud83d\udc64 Employee Self-Service (ESS)",
       "type": "stat",
       "links": [
         {
-          "title": "Open Analytics →",
+          "title": "Open Analytics \u2192",
           "url": "/d/demo-monitoring-v1?var-app=ESS",
           "targetBlank": false
         }
@@ -883,7 +883,7 @@
           "max": 1,
           "links": [
             {
-              "title": "Open Analytics →",
+              "title": "Open Analytics \u2192",
               "url": "/d/demo-monitoring-v1?var-app=MARS",
               "targetBlank": false
             }
@@ -961,12 +961,12 @@
                     "type": "value",
                     "options": {
                       "0": {
-                        "text": "⬇ DOWN",
+                        "text": "\u2b07 DOWN",
                         "color": "red",
                         "index": 0
                       },
                       "1": {
-                        "text": "⬆ UP",
+                        "text": "\u2b06 UP",
                         "color": "green",
                         "index": 1
                       }
@@ -1045,11 +1045,11 @@
           "refId": "B"
         }
       ],
-      "title": "📊 Management & Reporting (MARS)",
+      "title": "\ud83d\udcca Management & Reporting (MARS)",
       "type": "stat",
       "links": [
         {
-          "title": "Open Analytics →",
+          "title": "Open Analytics \u2192",
           "url": "/d/demo-monitoring-v1?var-app=MARS",
           "targetBlank": false
         }
@@ -1087,7 +1087,7 @@
           "max": 1,
           "links": [
             {
-              "title": "Open Analytics →",
+              "title": "Open Analytics \u2192",
               "url": "/d/demo-monitoring-v1?var-app=SELF",
               "targetBlank": false
             }
@@ -1165,12 +1165,12 @@
                     "type": "value",
                     "options": {
                       "0": {
-                        "text": "⬇ DOWN",
+                        "text": "\u2b07 DOWN",
                         "color": "red",
                         "index": 0
                       },
                       "1": {
-                        "text": "⬆ UP",
+                        "text": "\u2b06 UP",
                         "color": "green",
                         "index": 1
                       }
@@ -1249,11 +1249,11 @@
           "refId": "B"
         }
       ],
-      "title": "🔑 Self-Service Portal (SELF)",
+      "title": "\ud83d\udd11 Self-Service Portal (SELF)",
       "type": "stat",
       "links": [
         {
-          "title": "Open Analytics →",
+          "title": "Open Analytics \u2192",
           "url": "/d/demo-monitoring-v1?var-app=SELF",
           "targetBlank": false
         }
@@ -1268,7 +1268,7 @@
         "y": 9
       },
       "id": 15,
-      "title": "⚡  APIs",
+      "title": "\u26a1  APIs",
       "type": "row"
     },
     {
@@ -1303,7 +1303,7 @@
           "max": 1,
           "links": [
             {
-              "title": "Open Analytics →",
+              "title": "Open Analytics \u2192",
               "url": "/d/demo-monitoring-v1?var-app=auth-api",
               "targetBlank": false
             }
@@ -1381,12 +1381,12 @@
                     "type": "value",
                     "options": {
                       "0": {
-                        "text": "⬇ DOWN",
+                        "text": "\u2b07 DOWN",
                         "color": "red",
                         "index": 0
                       },
                       "1": {
-                        "text": "⬆ UP",
+                        "text": "\u2b06 UP",
                         "color": "green",
                         "index": 1
                       }
@@ -1465,11 +1465,11 @@
           "refId": "B"
         }
       ],
-      "title": "🔐 Auth API",
+      "title": "\ud83d\udd10 Auth API",
       "type": "stat",
       "links": [
         {
-          "title": "Open Analytics →",
+          "title": "Open Analytics \u2192",
           "url": "/d/demo-monitoring-v1?var-app=auth-api",
           "targetBlank": false
         }
@@ -1507,7 +1507,7 @@
           "max": 1,
           "links": [
             {
-              "title": "Open Analytics →",
+              "title": "Open Analytics \u2192",
               "url": "/d/demo-monitoring-v1?var-app=card-api",
               "targetBlank": false
             }
@@ -1585,12 +1585,12 @@
                     "type": "value",
                     "options": {
                       "0": {
-                        "text": "⬇ DOWN",
+                        "text": "\u2b07 DOWN",
                         "color": "red",
                         "index": 0
                       },
                       "1": {
-                        "text": "⬆ UP",
+                        "text": "\u2b06 UP",
                         "color": "green",
                         "index": 1
                       }
@@ -1669,11 +1669,11 @@
           "refId": "B"
         }
       ],
-      "title": "💳 CARD API",
+      "title": "\ud83d\udcb3 CARD API",
       "type": "stat",
       "links": [
         {
-          "title": "Open Analytics →",
+          "title": "Open Analytics \u2192",
           "url": "/d/demo-monitoring-v1?var-app=card-api",
           "targetBlank": false
         }
@@ -1711,7 +1711,7 @@
           "max": 1,
           "links": [
             {
-              "title": "Open Analytics →",
+              "title": "Open Analytics \u2192",
               "url": "/d/demo-monitoring-v1?var-app=hims-api",
               "targetBlank": false
             }
@@ -1789,12 +1789,12 @@
                     "type": "value",
                     "options": {
                       "0": {
-                        "text": "⬇ DOWN",
+                        "text": "\u2b07 DOWN",
                         "color": "red",
                         "index": 0
                       },
                       "1": {
-                        "text": "⬆ UP",
+                        "text": "\u2b06 UP",
                         "color": "green",
                         "index": 1
                       }
@@ -1873,11 +1873,11 @@
           "refId": "B"
         }
       ],
-      "title": "🏥 HIMS API",
+      "title": "\ud83c\udfe5 HIMS API",
       "type": "stat",
       "links": [
         {
-          "title": "Open Analytics →",
+          "title": "Open Analytics \u2192",
           "url": "/d/demo-monitoring-v1?var-app=hims-api",
           "targetBlank": false
         }
@@ -1915,7 +1915,7 @@
           "max": 1,
           "links": [
             {
-              "title": "Open Analytics →",
+              "title": "Open Analytics \u2192",
               "url": "/d/demo-monitoring-v1?var-app=ecrs-api",
               "targetBlank": false
             }
@@ -1993,12 +1993,12 @@
                     "type": "value",
                     "options": {
                       "0": {
-                        "text": "⬇ DOWN",
+                        "text": "\u2b07 DOWN",
                         "color": "red",
                         "index": 0
                       },
                       "1": {
-                        "text": "⬆ UP",
+                        "text": "\u2b06 UP",
                         "color": "green",
                         "index": 1
                       }
@@ -2077,11 +2077,11 @@
           "refId": "B"
         }
       ],
-      "title": "📋 ECRS API",
+      "title": "\ud83d\udccb ECRS API",
       "type": "stat",
       "links": [
         {
-          "title": "Open Analytics →",
+          "title": "Open Analytics \u2192",
           "url": "/d/demo-monitoring-v1?var-app=ecrs-api",
           "targetBlank": false
         }
@@ -2096,7 +2096,7 @@
         "y": 15
       },
       "id": 24,
-      "title": "📈  Portfolio-Wide Signals",
+      "title": "\ud83d\udcc8  Portfolio-Wide Signals",
       "type": "row"
     },
     {
@@ -2154,30 +2154,20 @@
         "namePlacement": "auto",
         "text": {}
       },
-      "transformations": [
-        {
-          "id": "sortBy",
-          "options": {
-            "fields": [
-              {
-                "desc": false,
-                "displayName": "Value"
-              }
-            ]
-          }
-        }
-      ],
+      "transformations": [],
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
             "uid": "prometheus-demo"
           },
-          "expr": "sort_desc(app_uptime_ratio)",
-          "legendFormat": "{{app}}"
+          "expr": "sort(app_uptime_ratio)",
+          "legendFormat": "{{app}}",
+          "format": "time_series",
+          "instant": true
         }
       ],
-      "title": "All Applications — Uptime Ratio (worst first ↑)",
+      "title": "All Applications \u2014 Uptime Ratio (worst first \u2191)",
       "type": "bargauge"
     }
   ],
