@@ -113,7 +113,7 @@ docker run -it --rm -v "${PWD}:/app" -w /app python:3.9 python stress_demo.py
 > *"One more thing — every single chart has built-in documentation."*
 
 **Click the ⓘ info icon on any panel:**
-> *"Click the information icon on any panel and you get a plain-English explanation of what this metric means, why it matters, how it's collected, what the thresholds are, and what the common causes of problems are. This is built into the dashboard — your team doesn't need to be a Prometheus expert to use it. The knowledge is embedded in the tool."*
+> *"Click the information icon on any panel and you get a plain-English explanation of what this metric means, why it matters, how it's collected, what the thresholds are, and what the common causes of problems are. The knowledge is embedded in the tool."*
 
 ---
 
@@ -126,6 +126,8 @@ docker run -it --rm -v "${PWD}:/app" -w /app python:3.9 python stress_demo.py
 > *"This is the foundation of everything we want to build in centralized monitoring."*
 
 > Finally, I want to give as huge shoutout to Ryan Large in our team for all the help in exploring, learning, developing and setting up this new monitoring tools. 
+
+> Thank you Ryan and thank you all for your time.
 
 ---
 
