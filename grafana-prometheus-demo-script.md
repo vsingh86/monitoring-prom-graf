@@ -21,7 +21,7 @@ Disclaimer - This is a demo environment, all data is simulated.*
 
 **1. Point to the app cards (60 seconds)**
 
-> *"This is an example of our team's application portfolio — 10 systems, two tiers: web applications and APIs. Every card shows you two things instantly: the uptime percentage over selected period, and whether that application is UP or DOWN right now. "*
+> *"This is an example of our team's application portfolio — 10 applications are being monitored, which is a fraction of our application portfolio. 6 web apps and 4 apis.  Every card shows you two things instantly: the uptime percentage over selected period, and whether that application is UP or DOWN right now. "*
 
 - Point to a **green card** → *"Green means healthy — uptime above 99%. "*
 - If any card is **yellow or red** → *"This is exactly what we want to catch before users call the helpdesk."*
