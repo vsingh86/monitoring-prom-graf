@@ -3,14 +3,14 @@
 
 ---
 
-> **Before you start:** Stack running? Open two browser tabs — **Overview dashboard** and **6-Layer Observability dashboard**. Set time range to **Last 30 minutes**, auto-refresh **15s**. Incidents fire every 90–180 seconds — let it run 5 minutes before the demo so there is already history in the graphs.
-
----
+> Hi everyone, I’m Vik Singh. I supervise the HR and Finance team, and today I’m excited to show you how we are trying to achive observability using Grafana & Prometheus. Let’s dive in.
 
 ## The One-Line Hook *(say this first)*
+> *Disclaimer - What I am going to show  you is a demo environment, all data is simulated.
 
-> *"Every minute your team spends guessing why something is broken is a minute your users are experiencing it. What I'm about to show you is how we eliminate that guessing — across every application in our portfolio, from a single screen." 
-Disclaimer - This is a demo environment, all data is simulated.*
+
+> *"Every minute your team spends guessing why something is broken is a minute your users are experiencing it. What I'm about to show you is the attempt how we eliminate that guessing — across every application in our portfolio, from a single screen." 
+*
 
 ---
 
@@ -21,15 +21,15 @@ Disclaimer - This is a demo environment, all data is simulated.*
 
 **1. Point to the app cards (60 seconds)**
 
-> *"This is an example of our team's application portfolio — 10 applications are being monitored, which is a fraction of our application portfolio. 6 web apps and 4 apis.  Every card shows you two things instantly: the uptime percentage over selected period, and whether that application is UP or DOWN right now. "*
+> *"This is an example of our team's application portfolio — 10 applications are being monitored, which is a fraction of our application portfolio. 6 web apps and 4 apis.  Every application card shows you two things instantly: the uptime percentage over selected period, and whether that application is UP or DOWN right now. "*
 
-- Point to a **green card** → *"Green means healthy — uptime above 99%. "*
-- If any card is **yellow or red** → *"This is exactly what we want to catch before users call the helpdesk."*
+- **green card** → *"Green means healthy — uptime above 99%. "*
+- **yellow or red** → *"This is exactly what we want to catch before users call the helpdesk."*
 - Click the card's background → *"And if I want to investigate any application, one click takes me straight into the deep analytics. We'll do that in a moment."*
 
 **2. Scroll to the Uptime Bargauge (45 seconds)**
 
-> *"Down here is the portfolio health summary — every application ranked by uptime, worst performers at the top. In a real incident, this tells the on-call engineer in under three seconds which system needs attention."*
+> *"Down here is the portfolio health summary — every application ranked by uptime, worst performers at the top."*
 
 - Point to the bar lengths and colours → *"The colour coding is automatic. Green is healthy, yellow is degraded, red is down."*
 - Point to sorting → *"It's sorted ascending — the most problematic applications surface to the top automatically."*
@@ -127,7 +127,7 @@ docker run -it --rm -v "${PWD}:/app" -w /app python:3.9 python stress_demo.py
 
 > Finally, I want to give as huge shoutout to Ryan Large in our team for all the help in exploring, learning, developing and setting up this new monitoring tools. 
 
-> Thank you Ryan and thank you all for your time.
+> Thank you Ryan and thank you all for listening.
 
 ---
 
