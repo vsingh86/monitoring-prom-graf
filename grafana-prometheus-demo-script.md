@@ -121,13 +121,11 @@ docker run -it --rm -v "${PWD}:/app" -w /app python:3.9 python stress_demo.py
 
 > *"What you've seen in the last few minutes is a single pane of glass across our entire application portfolio — from a high-level portfolio health view down to individual database queries and API endpoints, all connected, all real-time, all with built-in context."*
 
-> *"The alternative is what most teams do today: waiting for users to report problems, then spending hours SSHing into servers, reading log files, and piecing together what happened. This platform changes that. We see problems forming before users feel them — and when something does go wrong, we know exactly where to look within seconds."*
-
 > *"This is the foundation of everything we want to build in centralized monitoring."*
 
-> Finally, I want to give as huge shoutout to Ryan Large in our team for all the help in exploring, learning, developing and setting up this new monitoring tools. 
+> Finally, I want to give as huge shoutout to Ryan Large in our team for all the help in exploring, learning, developing and setting up these tools. 
 
-> Thank you Ryan and thank you all for listening.
+> Thank you Ryan, Thank you leadership for giving us this opportunity to present and thank you all for listening.
 
 ---
 
