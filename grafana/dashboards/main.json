@@ -39,7 +39,7 @@
       "version": ""
     }
   ],
-  "description": "Centralized Application Monitoring — 5-Layer Observability (Demo Stack)",
+  "description": "Centralized Application Monitoring — 4-Layer Observability (Demo Stack)",
   "editable": true,
   "graphTooltip": 1,
   "panels": [
@@ -844,7 +844,7 @@
               "legendFormat": "{{type}}"
             }
           ],
-          "title": "Business Transactions Rate (orders / payments / logins)",
+          "title": "Business Transactions Rate (logins)",
           "type": "timeseries",
           "description": "**What it measures:** Domain-specific event counts — transactions completed, logins, report generations, or any meaningful business action — expressed as a rate per second.\n\n**Why it matters:** A system can be technically healthy (zero 5xx, low latency) and still fail to deliver business value. Business transaction metrics catch silent failures — for example, a payment form that always returns 200 OK but never actually processes the payment.\n\n**How collected:** Explicit `Counter` increments at each business event in application code. Named after the action: `business_transactions_total{type='transaction_completed'}`.\n\n**Alert pattern:** Alert on percentage drops from rolling baseline (`< baseline * 0.5`) rather than fixed numbers. A drop in transaction rate is often the first symptom of a broken user journey."
         },
@@ -897,7 +897,7 @@
         "y": 115
       },
       "id": 5,
-      "title": "🔵  Layer 5 — Database & Storage",
+      "title": "🔵  Layer 4 — Database & Storage",
       "type": "row",
       "panels": [
         {
@@ -1673,7 +1673,7 @@
   },
   "timepicker": {},
   "timezone": "browser",
-  "title": "Centralized Monitoring — 5-Layer Observability (Demo)",
+  "title": "Centralized Monitoring — 4-Layer Observability (Demo)",
   "uid": "demo-monitoring-v1",
   "version": 1,
   "templating": {

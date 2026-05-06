@@ -34,7 +34,7 @@ APPS = {
     "ecrs-api": { "base_rps": 85,  "base_lat": 0.10, "err": 0.003, "risk": 0.23, "phase": 5.85 },
 }
 
-ENDPOINTS = ["/api/v1/list", "/api/v1/get", "/api/v1/create", "/api/v1/update", "/health"]
+ENDPOINTS = ["/api/emp/list", "/api/emp/get", "/api/emp/create", "/api/emp/update", "/health"]
 UPSTREAMS = ["database", "cache", "external-api", "message-queue"]
 
 # ── Per-app incident simulator ─────────────────────────────────────────────────

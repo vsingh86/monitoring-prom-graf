@@ -1,5 +1,5 @@
 {
-  "description": "Application Portfolio Overview \u2014 click any card to open the full 5-layer analytics dashboard.",
+  "description": "HR and Finance - Application Portfolio Overview \u2014 click any card to open the full 4-layer analytics dashboard.",
   "editable": true,
   "graphTooltip": 1,
   "panels": [
@@ -16,7 +16,7 @@
       },
       "id": 1,
       "options": {
-        "content": "<div style=\"font-family:'DM Sans',Arial,sans-serif;display:flex;align-items:center;justify-content:space-between;padding:14px 20px;background:linear-gradient(135deg,#0f172a 0%,#1e293b 60%,#0f2744 100%);border-radius:10px;border:1px solid #1e3a5f\">\n  <div style=\"display:flex;align-items:center;gap:14px\">\n    <div style=\"width:10px;height:10px;border-radius:50%;background:#22c55e;box-shadow:0 0 8px #22c55e\"></div>\n    <div>\n      <div style=\"color:#f1f5f9;font-size:18px;font-weight:700;letter-spacing:0.01em\">Application Portfolio Overview</div>\n      <div style=\"color:#64748b;font-size:12px;margin-top:2px\">10 applications monitored &nbsp;\u00b7&nbsp; Click any card to open the full 6-layer analytics dashboard</div>\n    </div>\n  </div>\n  <div style=\"display:flex;gap:24px;align-items:center\">\n    <div style=\"text-align:center\"><div style=\"color:#22c55e;font-size:11px;font-weight:600\">WEB APPS</div><div style=\"color:#94a3b8;font-size:11px\">6 services</div></div>\n    <div style=\"width:1px;height:28px;background:#334155\"></div>\n    <div style=\"text-align:center\"><div style=\"color:#60a5fa;font-size:11px;font-weight:600\">APIs</div><div style=\"color:#94a3b8;font-size:11px\">4 services</div></div>\n  </div>\n</div>",
+        "content": "<div style=\"font-family:'DM Sans',Arial,sans-serif;display:flex;align-items:center;justify-content:space-between;padding:14px 20px;background:linear-gradient(135deg,#0f172a 0%,#1e293b 60%,#0f2744 100%);border-radius:10px;border:1px solid #1e3a5f\">\n  <div style=\"display:flex;align-items:center;gap:14px\">\n    <div style=\"width:10px;height:10px;border-radius:50%;background:#22c55e;box-shadow:0 0 8px #22c55e\"></div>\n    <div>\n      <div style=\"color:#f1f5f9;font-size:18px;font-weight:700;letter-spacing:0.01em\">HR and Finance - Application Portfolio Overview</div>\n      <div style=\"color:#64748b;font-size:12px;margin-top:2px\">10 applications monitored &nbsp;\u00b7&nbsp; Click any card to open the full 4-layer analytics dashboard</div>\n    </div>\n  </div>\n  <div style=\"display:flex;gap:24px;align-items:center\">\n    <div style=\"text-align:center\"><div style=\"color:#22c55e;font-size:11px;font-weight:600\">WEB APPS</div><div style=\"color:#94a3b8;font-size:11px\">6 services</div></div>\n    <div style=\"width:1px;height:28px;background:#334155\"></div>\n    <div style=\"text-align:center\"><div style=\"color:#60a5fa;font-size:11px;font-weight:600\">APIs</div><div style=\"color:#94a3b8;font-size:11px\">4 services</div></div>\n  </div>\n</div>",
         "mode": "html"
       },
       "title": "",
@@ -229,7 +229,7 @@
           "refId": "B"
         }
       ],
-      "title": "\ud83d\uddc2\ufe0f Content & Case Mgmt (CCMS)",
+      "title": "\ud83d\uddc2\ufe0f CCMS",
       "type": "stat",
       "links": [
         {
@@ -433,7 +433,7 @@
           "refId": "B"
         }
       ],
-      "title": "\ud83d\udccb Electronic Claims (ECRS)",
+      "title": "\ud83d\udccb ECRS",
       "type": "stat",
       "links": [
         {
@@ -637,7 +637,7 @@
           "refId": "B"
         }
       ],
-      "title": "\ud83c\udfe5 Health Info Mgmt (HIMS)",
+      "title": "\ud83c\udfe5 HIMS",
       "type": "stat",
       "links": [
         {
@@ -841,7 +841,7 @@
           "refId": "B"
         }
       ],
-      "title": "\ud83d\udc64 Employee Self-Service (ESS)",
+      "title": "\ud83d\udc64 ESS",
       "type": "stat",
       "links": [
         {
@@ -1045,7 +1045,7 @@
           "refId": "B"
         }
       ],
-      "title": "\ud83d\udcca Management & Reporting (MARS)",
+      "title": "\ud83d\udcca MARS",
       "type": "stat",
       "links": [
         {
@@ -1249,7 +1249,7 @@
           "refId": "B"
         }
       ],
-      "title": "\ud83d\udd11 Self-Service Portal (SELF)",
+      "title": "\ud83d\udd11 SELF",
       "type": "stat",
       "links": [
         {
@@ -2184,7 +2184,7 @@
   },
   "timepicker": {},
   "timezone": "browser",
-  "title": "Application Portfolio Overview",
+  "title": "HR and Finance - Application Portfolio Overview",
   "uid": "app-portfolio-overview",
   "version": 1
 }
