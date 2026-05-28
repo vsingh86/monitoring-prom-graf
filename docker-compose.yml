@@ -47,6 +47,7 @@ services:
       - grafana_data:/var/lib/grafana
       - ./grafana/provisioning:/etc/grafana/provisioning:ro
       - ./grafana/dashboards:/var/lib/grafana/dashboards:ro
+      - ./grafana/dashboards/real-apps:/var/lib/grafana/dashboards/real-apps:ro
     ports:
       - "3000:3000"
     depends_on:

@@ -23,3 +23,14 @@ scrape_configs:
   - job_name: fake-apps
     static_configs:
       - targets: ["fake-exporter:9999"]
+
+  # ── Real Applications ────────────────────────────────────────────────────
+  - job_name: authapi
+    metrics_path: /api/auth/metrics
+    scheme: https
+    scrape_interval: 30s
+    static_configs:
+      - targets: ["api.hris-stage.adc.seattle.gov"]
+        labels:
+          app: AuthApi
+          environment: staging
