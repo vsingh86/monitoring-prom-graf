@@ -59,7 +59,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheus-demo"
+        "uid": "prometheus"
       },
       "fieldConfig": {
         "defaults": {
@@ -135,7 +135,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus-demo"
+            "uid": "prometheus"
           },
           "expr": "histogram_quantile(0.50, sum(rate(http_request_duration_seconds_bucket{app=\"$app\"}[$__rate_interval])) by (le))",
           "legendFormat": "p50"
@@ -143,7 +143,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus-demo"
+            "uid": "prometheus"
           },
           "expr": "histogram_quantile(0.95, sum(rate(http_request_duration_seconds_bucket{app=\"$app\"}[$__rate_interval])) by (le))",
           "legendFormat": "p95"
@@ -151,7 +151,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus-demo"
+            "uid": "prometheus"
           },
           "expr": "histogram_quantile(0.99, sum(rate(http_request_duration_seconds_bucket{app=\"$app\"}[$__rate_interval])) by (le))",
           "legendFormat": "p99"
@@ -164,7 +164,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheus-demo"
+        "uid": "prometheus"
       },
       "fieldConfig": {
         "defaults": {
@@ -205,7 +205,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus-demo"
+            "uid": "prometheus"
           },
           "expr": "sum(rate(http_requests_total{app=\"$app\"}[$__rate_interval]))",
           "legendFormat": "Total RPS"
@@ -213,7 +213,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus-demo"
+            "uid": "prometheus"
           },
           "expr": "sum(rate(http_requests_total{app=\"$app\",status=\"200\"}[$__rate_interval]))",
           "legendFormat": "2xx RPS"
@@ -226,7 +226,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheus-demo"
+        "uid": "prometheus"
       },
       "fieldConfig": {
         "defaults": {
@@ -275,7 +275,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus-demo"
+            "uid": "prometheus"
           },
           "expr": "sum(increase(http_requests_total{app=\"$app\", status=~\"5..\"}[$__rate_interval]))",
           "legendFormat": "5xx errors (count)"
@@ -283,7 +283,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus-demo"
+            "uid": "prometheus"
           },
           "expr": "sum(increase(http_requests_total{app=\"$app\", status=~\"4..\"}[$__rate_interval]))",
           "legendFormat": "4xx errors (count)"
@@ -296,7 +296,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheus-demo"
+        "uid": "prometheus"
       },
       "gridPos": {
         "h": 8,
@@ -362,7 +362,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus-demo"
+            "uid": "prometheus"
           },
           "expr": "avg(pg_stat_activity_count{app=\"$app\"} / pg_settings_max_connections{app=\"$app\"})",
           "legendFormat": "DB Connections",
@@ -372,7 +372,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus-demo"
+            "uid": "prometheus"
           },
           "expr": "(100 - avg(rate(node_cpu_seconds_total{mode=\"idle\"}[$__rate_interval])) * 100) / 100",
           "legendFormat": "CPU",
@@ -382,7 +382,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus-demo"
+            "uid": "prometheus"
           },
           "expr": "1 - (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes)",
           "legendFormat": "Memory",
@@ -406,7 +406,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus-demo"
+            "uid": "prometheus"
           },
           "fieldConfig": {
             "defaults": {
@@ -448,7 +448,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "prometheus-demo"
+                "uid": "prometheus"
               },
               "expr": "100 - (avg by(instance) (rate(node_cpu_seconds_total{mode=\"idle\"}[$__rate_interval])) * 100)",
               "legendFormat": "{{instance}} CPU %"
@@ -461,7 +461,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus-demo"
+            "uid": "prometheus"
           },
           "fieldConfig": {
             "defaults": {
@@ -486,7 +486,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "prometheus-demo"
+                "uid": "prometheus"
               },
               "expr": "node_memory_MemTotal_bytes - node_memory_MemAvailable_bytes",
               "legendFormat": "Used"
@@ -494,7 +494,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "prometheus-demo"
+                "uid": "prometheus"
               },
               "expr": "node_memory_MemAvailable_bytes",
               "legendFormat": "Available"
@@ -507,7 +507,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus-demo"
+            "uid": "prometheus"
           },
           "fieldConfig": {
             "defaults": {
@@ -532,7 +532,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "prometheus-demo"
+                "uid": "prometheus"
               },
               "expr": "node_memory_SwapTotal_bytes - node_memory_SwapFree_bytes",
               "legendFormat": "Swap used"
@@ -545,7 +545,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus-demo"
+            "uid": "prometheus"
           },
           "fieldConfig": {
             "defaults": {
@@ -570,7 +570,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "prometheus-demo"
+                "uid": "prometheus"
               },
               "expr": "rate(node_disk_read_bytes_total[$__rate_interval])",
               "legendFormat": "{{device}} read"
@@ -578,7 +578,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "prometheus-demo"
+                "uid": "prometheus"
               },
               "expr": "rate(node_disk_written_bytes_total[$__rate_interval])",
               "legendFormat": "{{device}} write"
@@ -591,7 +591,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus-demo"
+            "uid": "prometheus"
           },
           "fieldConfig": {
             "defaults": {
@@ -639,7 +639,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "prometheus-demo"
+                "uid": "prometheus"
               },
               "expr": "1 - (node_filesystem_avail_bytes{fstype!~\"tmpfs|overlay\"} / node_filesystem_size_bytes{fstype!~\"tmpfs|overlay\"})",
               "legendFormat": "{{mountpoint}}"
@@ -652,7 +652,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus-demo"
+            "uid": "prometheus"
           },
           "fieldConfig": {
             "defaults": {
@@ -677,7 +677,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "prometheus-demo"
+                "uid": "prometheus"
               },
               "expr": "rate(node_network_receive_bytes_total{device!~\"lo\"}[$__rate_interval])",
               "legendFormat": "{{device}} rx"
@@ -685,7 +685,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "prometheus-demo"
+                "uid": "prometheus"
               },
               "expr": "rate(node_network_transmit_bytes_total{device!~\"lo\"}[$__rate_interval])",
               "legendFormat": "{{device}} tx"
@@ -712,7 +712,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus-demo"
+            "uid": "prometheus"
           },
           "fieldConfig": {
             "defaults": {
@@ -737,7 +737,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "prometheus-demo"
+                "uid": "prometheus"
               },
               "expr": "sum by(handler) (rate(http_requests_total{app=\"$app\"}[$__rate_interval]))",
               "legendFormat": "{{handler}}"
@@ -750,7 +750,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus-demo"
+            "uid": "prometheus"
           },
           "fieldConfig": {
             "defaults": {
@@ -783,7 +783,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "prometheus-demo"
+                "uid": "prometheus"
               },
               "expr": "sum by(status) (increase(http_requests_total{app=\"$app\", status=~\"5..\"}[$__rate_interval]))",
               "legendFormat": "{{status}} (server error)"
@@ -791,7 +791,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "prometheus-demo"
+                "uid": "prometheus"
               },
               "expr": "sum by(status) (increase(http_requests_total{app=\"$app\", status=~\"4..\"}[$__rate_interval]))",
               "legendFormat": "{{status}} (client error)"
@@ -813,7 +813,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus-demo"
+            "uid": "prometheus"
           },
           "fieldConfig": {
             "defaults": {
@@ -838,7 +838,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "prometheus-demo"
+                "uid": "prometheus"
               },
               "expr": "sum by(type) (rate(business_transactions_total{app=\"$app\"}[$__rate_interval]))",
               "legendFormat": "{{type}}"
@@ -851,7 +851,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus-demo"
+            "uid": "prometheus"
           },
           "fieldConfig": {
             "defaults": {
@@ -876,7 +876,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "prometheus-demo"
+                "uid": "prometheus"
               },
               "expr": "histogram_quantile(0.95, sum by(upstream, le) (rate(http_client_request_duration_seconds_bucket{app=\"$app\"}[$__rate_interval])))",
               "legendFormat": "{{upstream}} p95"
@@ -903,7 +903,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus-demo"
+            "uid": "prometheus"
           },
           "fieldConfig": {
             "defaults": {
@@ -945,7 +945,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "prometheus-demo"
+                "uid": "prometheus"
               },
               "expr": "histogram_quantile(0.95, rate(pg_stat_statements_total_exec_time_bucket{app=\"$app\"}[$__rate_interval]))",
               "legendFormat": "Query latency p95"
@@ -953,7 +953,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "prometheus-demo"
+                "uid": "prometheus"
               },
               "expr": "histogram_quantile(0.99, rate(pg_stat_statements_total_exec_time_bucket{app=\"$app\"}[$__rate_interval]))",
               "legendFormat": "Query latency p99"
@@ -966,7 +966,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus-demo"
+            "uid": "prometheus"
           },
           "fieldConfig": {
             "defaults": {
@@ -1014,7 +1014,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "prometheus-demo"
+                "uid": "prometheus"
               },
               "expr": "pg_stat_activity_count / pg_settings_max_connections{app=\"$app\"}",
               "legendFormat": "{{datname}}"
@@ -1027,7 +1027,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus-demo"
+            "uid": "prometheus"
           },
           "fieldConfig": {
             "defaults": {
@@ -1069,7 +1069,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "prometheus-demo"
+                "uid": "prometheus"
               },
               "expr": "pg_replication_lag{app=\"$app\"}",
               "legendFormat": "{{instance}}"
@@ -1082,7 +1082,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus-demo"
+            "uid": "prometheus"
           },
           "fieldConfig": {
             "defaults": {
@@ -1107,7 +1107,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "prometheus-demo"
+                "uid": "prometheus"
               },
               "expr": "pg_locks_count{app=\"$app\"}",
               "legendFormat": "{{datname}} {{mode}}"
@@ -1115,7 +1115,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "prometheus-demo"
+                "uid": "prometheus"
               },
               "expr": "rate(mysql_global_status_innodb_deadlocks[$__rate_interval])",
               "legendFormat": "MySQL deadlocks/s"
@@ -1128,7 +1128,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus-demo"
+            "uid": "prometheus"
           },
           "fieldConfig": {
             "defaults": {
@@ -1153,7 +1153,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "prometheus-demo"
+                "uid": "prometheus"
               },
               "expr": "pg_database_size_bytes{app=\"$app\"}",
               "legendFormat": "{{datname}}"
@@ -1180,7 +1180,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus-demo"
+            "uid": "prometheus"
           },
           "gridPos": {
             "h": 14,
@@ -1296,7 +1296,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "prometheus-demo"
+                "uid": "prometheus"
               },
               "expr": "sum by(handler) (rate(http_request_duration_seconds_sum{app=\"$app\"}[$__range])) / sum by(handler) (rate(http_request_duration_seconds_count{app=\"$app\"}[$__range]))",
               "legendFormat": "{{handler}}",
@@ -1307,7 +1307,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "prometheus-demo"
+                "uid": "prometheus"
               },
               "expr": "sum by(handler) (increase(http_requests_total{app=\"$app\"}[$__range]))",
               "legendFormat": "{{handler}}",
@@ -1356,7 +1356,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus-demo"
+            "uid": "prometheus"
           },
           "gridPos": {
             "h": 14,
@@ -1476,7 +1476,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "prometheus-demo"
+                "uid": "prometheus"
               },
               "expr": "sum by(handler) (increase(http_requests_total{app=\"$app\", status=~\"[45]..\"}[$__range]))",
               "legendFormat": "{{handler}}",
@@ -1487,7 +1487,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "prometheus-demo"
+                "uid": "prometheus"
               },
               "expr": "sum by(handler) (rate(http_request_duration_seconds_sum{app=\"$app\"}[$__range])) / sum by(handler) (rate(http_request_duration_seconds_count{app=\"$app\"}[$__range]))",
               "legendFormat": "{{handler}}",
@@ -1536,7 +1536,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus-demo"
+            "uid": "prometheus"
           },
           "gridPos": {
             "h": 10,
@@ -1631,7 +1631,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "prometheus-demo"
+                "uid": "prometheus"
               },
               "expr": "sum(increase(http_requests_total{app=\"$app\", handler=\"$handler\", status=~\"[45]..\"}[$__rate_interval]))",
               "legendFormat": "Error Count",
@@ -1640,7 +1640,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "prometheus-demo"
+                "uid": "prometheus"
               },
               "expr": "sum(rate(http_requests_total{app=\"$app\", handler=\"$handler\"}[$__rate_interval]))",
               "legendFormat": "Total RPS",
@@ -1649,7 +1649,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "prometheus-demo"
+                "uid": "prometheus"
               },
               "expr": "histogram_quantile(0.95, sum by(le) (rate(http_request_duration_seconds_bucket{app=\"$app\", handler=\"$handler\"}[$__rate_interval])))",
               "legendFormat": "p95 Latency",
@@ -1682,7 +1682,7 @@
         "current": {},
         "datasource": {
           "type": "prometheus",
-          "uid": "prometheus-demo"
+          "uid": "prometheus"
         },
         "definition": "label_values(app_uptime_ratio, app)",
         "hide": 0,
@@ -1703,7 +1703,7 @@
         "current": {},
         "datasource": {
           "type": "prometheus",
-          "uid": "prometheus-demo"
+          "uid": "prometheus"
         },
         "definition": "label_values(http_requests_total{app=\"$app\"}, handler)",
         "hide": 2,

@@ -6,7 +6,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheus-demo"
+        "uid": "prometheus"
       },
       "gridPos": {
         "h": 3,
@@ -38,7 +38,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheus-demo"
+        "uid": "prometheus"
       },
       "fieldConfig": {
         "defaults": {
@@ -213,7 +213,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus-demo"
+            "uid": "prometheus"
           },
           "expr": "avg_over_time(up{job=\"authapi\"}[$__range]))",
           "legendFormat": "Uptime",
@@ -222,7 +222,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus-demo"
+            "uid": "prometheus"
           },
           "expr": "up{job=\"authapi\"}",
           "legendFormat": "Status",
@@ -242,7 +242,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheus-demo"
+        "uid": "prometheus"
       },
       "fieldConfig": {
         "defaults": {
@@ -417,7 +417,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus-demo"
+            "uid": "prometheus"
           },
           "expr": "avg_over_time(up{job=\"authapi\"}[$__range])",
           "legendFormat": "Uptime",
@@ -426,7 +426,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus-demo"
+            "uid": "prometheus"
           },
           "expr": "up{job=\"authapi\"}",
           "legendFormat": "Status",
@@ -446,7 +446,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheus-demo"
+        "uid": "prometheus"
       },
       "fieldConfig": {
         "defaults": {
@@ -621,7 +621,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus-demo"
+            "uid": "prometheus"
           },
           "expr": "avg_over_time(up{job=\"authapi\"}[$__range])",
           "legendFormat": "Uptime",
@@ -630,7 +630,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus-demo"
+            "uid": "prometheus"
           },
           "expr": "up{job=\"authapi\"}",
           "legendFormat": "Status",
@@ -650,7 +650,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheus-demo"
+        "uid": "prometheus"
       },
       "fieldConfig": {
         "defaults": {
@@ -825,7 +825,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus-demo"
+            "uid": "prometheus"
           },
           "expr": "avg_over_time(up{job=\"authapi\"}[$__range])",
           "legendFormat": "Uptime",
@@ -834,7 +834,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus-demo"
+            "uid": "prometheus"
           },
           "expr": "up{job=\"authapi\"}",
           "legendFormat": "Status",
@@ -854,7 +854,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheus-demo"
+        "uid": "prometheus"
       },
       "fieldConfig": {
         "defaults": {
@@ -1029,7 +1029,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus-demo"
+            "uid": "prometheus"
           },
           "expr": "avg_over_time(up{job=\"authapi\"}[$__range])",
           "legendFormat": "Uptime",
@@ -1038,7 +1038,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus-demo"
+            "uid": "prometheus"
           },
           "expr": "up{job=\"authapi\"}",
           "legendFormat": "Status",
@@ -1058,7 +1058,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheus-demo"
+        "uid": "prometheus"
       },
       "fieldConfig": {
         "defaults": {
@@ -1233,7 +1233,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus-demo"
+            "uid": "prometheus"
           },
           "expr": "avg_over_time(up{job=\"authapi\"}[$__range])",
           "legendFormat": "Uptime",
@@ -1242,7 +1242,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus-demo"
+            "uid": "prometheus"
           },
           "expr": "up{job=\"authapi\"}",
           "legendFormat": "Status",
@@ -1262,7 +1262,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheus-demo"
+        "uid": "prometheus"
       },
       "fieldConfig": {
         "defaults": {
@@ -1437,7 +1437,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus-demo"
+            "uid": "prometheus"
           },
           "expr": "avg_over_time(up{job=\"authapi\"}[$__range])",
           "legendFormat": "Uptime",
@@ -1446,7 +1446,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus-demo"
+            "uid": "prometheus"
           },
           "expr": "up{job=\"authapi\"}",
           "legendFormat": "Status",
@@ -1466,7 +1466,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheus-demo"
+        "uid": "prometheus"
       },
       "fieldConfig": {
         "defaults": {
@@ -1641,7 +1641,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus-demo"
+            "uid": "prometheus"
           },
           "expr": "avg_over_time(up{job=\"authapi\"}[$__range])",
           "legendFormat": "Uptime",
@@ -1650,7 +1650,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus-demo"
+            "uid": "prometheus"
           },
           "expr": "up{job=\"authapi\"}",
           "legendFormat": "Status",
@@ -1670,7 +1670,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheus-demo"
+        "uid": "prometheus"
       },
       "fieldConfig": {
         "defaults": {
@@ -1845,7 +1845,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus-demo"
+            "uid": "prometheus"
           },
           "expr": "avg_over_time(up{job=\"authapi\"}[$__range])",
           "legendFormat": "Uptime",
@@ -1854,7 +1854,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus-demo"
+            "uid": "prometheus"
           },
           "expr": "up{job=\"authapi\"}",
           "legendFormat": "Status",
@@ -1874,7 +1874,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheus-demo"
+        "uid": "prometheus"
       },
       "fieldConfig": {
         "defaults": {
@@ -2049,7 +2049,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus-demo"
+            "uid": "prometheus"
           },
           "expr": "avg_over_time(up{job=\"authapi\"}[$__range])",
           "legendFormat": "Uptime",
@@ -2058,7 +2058,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus-demo"
+            "uid": "prometheus"
           },
           "expr": "up{job=\"authapi\"}",
           "legendFormat": "Status",

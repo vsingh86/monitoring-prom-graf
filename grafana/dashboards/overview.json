@@ -6,7 +6,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheus-demo"
+        "uid": "prometheus"
       },
       "gridPos": {
         "h": 3,
@@ -38,7 +38,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheus-demo"
+        "uid": "prometheus"
       },
       "fieldConfig": {
         "defaults": {
@@ -213,7 +213,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus-demo"
+            "uid": "prometheus"
           },
           "expr": "app_uptime_ratio{app=\"CCMS\"}",
           "legendFormat": "Uptime",
@@ -222,7 +222,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus-demo"
+            "uid": "prometheus"
           },
           "expr": "app_up{app=\"CCMS\"}",
           "legendFormat": "Status",
@@ -242,7 +242,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheus-demo"
+        "uid": "prometheus"
       },
       "fieldConfig": {
         "defaults": {
@@ -417,7 +417,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus-demo"
+            "uid": "prometheus"
           },
           "expr": "app_uptime_ratio{app=\"ECRS\"}",
           "legendFormat": "Uptime",
@@ -426,7 +426,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus-demo"
+            "uid": "prometheus"
           },
           "expr": "app_up{app=\"ECRS\"}",
           "legendFormat": "Status",
@@ -446,7 +446,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheus-demo"
+        "uid": "prometheus"
       },
       "fieldConfig": {
         "defaults": {
@@ -621,7 +621,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus-demo"
+            "uid": "prometheus"
           },
           "expr": "app_uptime_ratio{app=\"HIMS\"}",
           "legendFormat": "Uptime",
@@ -630,7 +630,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus-demo"
+            "uid": "prometheus"
           },
           "expr": "app_up{app=\"HIMS\"}",
           "legendFormat": "Status",
@@ -650,7 +650,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheus-demo"
+        "uid": "prometheus"
       },
       "fieldConfig": {
         "defaults": {
@@ -825,7 +825,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus-demo"
+            "uid": "prometheus"
           },
           "expr": "app_uptime_ratio{app=\"ESS\"}",
           "legendFormat": "Uptime",
@@ -834,7 +834,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus-demo"
+            "uid": "prometheus"
           },
           "expr": "app_up{app=\"ESS\"}",
           "legendFormat": "Status",
@@ -854,7 +854,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheus-demo"
+        "uid": "prometheus"
       },
       "fieldConfig": {
         "defaults": {
@@ -1029,7 +1029,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus-demo"
+            "uid": "prometheus"
           },
           "expr": "app_uptime_ratio{app=\"MARS\"}",
           "legendFormat": "Uptime",
@@ -1038,7 +1038,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus-demo"
+            "uid": "prometheus"
           },
           "expr": "app_up{app=\"MARS\"}",
           "legendFormat": "Status",
@@ -1058,7 +1058,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheus-demo"
+        "uid": "prometheus"
       },
       "fieldConfig": {
         "defaults": {
@@ -1233,7 +1233,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus-demo"
+            "uid": "prometheus"
           },
           "expr": "app_uptime_ratio{app=\"SELF\"}",
           "legendFormat": "Uptime",
@@ -1242,7 +1242,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus-demo"
+            "uid": "prometheus"
           },
           "expr": "app_up{app=\"SELF\"}",
           "legendFormat": "Status",
@@ -1274,7 +1274,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheus-demo"
+        "uid": "prometheus"
       },
       "fieldConfig": {
         "defaults": {
@@ -1449,7 +1449,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus-demo"
+            "uid": "prometheus"
           },
           "expr": "app_uptime_ratio{app=\"auth-api\"}",
           "legendFormat": "Uptime",
@@ -1458,7 +1458,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus-demo"
+            "uid": "prometheus"
           },
           "expr": "app_up{app=\"auth-api\"}",
           "legendFormat": "Status",
@@ -1478,7 +1478,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheus-demo"
+        "uid": "prometheus"
       },
       "fieldConfig": {
         "defaults": {
@@ -1653,7 +1653,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus-demo"
+            "uid": "prometheus"
           },
           "expr": "app_uptime_ratio{app=\"card-api\"}",
           "legendFormat": "Uptime",
@@ -1662,7 +1662,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus-demo"
+            "uid": "prometheus"
           },
           "expr": "app_up{app=\"card-api\"}",
           "legendFormat": "Status",
@@ -1682,7 +1682,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheus-demo"
+        "uid": "prometheus"
       },
       "fieldConfig": {
         "defaults": {
@@ -1857,7 +1857,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus-demo"
+            "uid": "prometheus"
           },
           "expr": "app_uptime_ratio{app=\"hims-api\"}",
           "legendFormat": "Uptime",
@@ -1866,7 +1866,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus-demo"
+            "uid": "prometheus"
           },
           "expr": "app_up{app=\"hims-api\"}",
           "legendFormat": "Status",
@@ -1886,7 +1886,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheus-demo"
+        "uid": "prometheus"
       },
       "fieldConfig": {
         "defaults": {
@@ -2061,7 +2061,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus-demo"
+            "uid": "prometheus"
           },
           "expr": "app_uptime_ratio{app=\"ecrs-api\"}",
           "legendFormat": "Uptime",
@@ -2070,7 +2070,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus-demo"
+            "uid": "prometheus"
           },
           "expr": "app_up{app=\"ecrs-api\"}",
           "legendFormat": "Status",
@@ -2102,7 +2102,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheus-demo"
+        "uid": "prometheus"
       },
       "fieldConfig": {
         "defaults": {
@@ -2159,7 +2159,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus-demo"
+            "uid": "prometheus"
           },
           "expr": "sort(app_uptime_ratio)",
           "legendFormat": "{{app}}",
