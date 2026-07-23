@@ -1,0 +1,86 @@
+groups:
+  - name: dotnet_normalization
+    interval: 15s
+    rules:
+      # app_type="dotnet" is set as a static label on each .NET scrape job in prometheus.yml.
+      # Assumes OpenTelemetry ASP.NET Core instrumentation (OpenTelemetry.Instrumentation.AspNetCore),
+      # which emits http_server_request_duration_seconds with labels:
+      #   http_route, http_request_method, http_response_status_code
+      # label_replace maps these to the normalized schema labels: route, status_code.
+      #
+      # For .NET Framework apps (pre-.NET-Core) that can't use OTel ASP.NET Core
+      # auto-instrumentation, see app_type="dotnet-framework" in dotnet_framework.yml
+      # instead — it assumes manual `prometheus-net` instrumentation with different
+      # native metric names (http_requests_total, http_request_duration_seconds).
+
+      - record: app:http_requests_total
+        expr: |
+          label_replace(
+            label_replace(
+              http_server_request_duration_seconds_count{app_type="dotnet"},
+              "route", "$1", "http_route", "(.*)"
+            ),
+            "status_code", "$1", "http_response_status_code", "(.*)"
+          )
+
+      - record: app:http_request_duration_seconds_bucket
+        expr: |
+          label_replace(
+            label_replace(
+              http_server_request_duration_seconds_bucket{app_type="dotnet"},
+              "route", "$1", "http_route", "(.*)"
+            ),
+            "status_code", "$1", "http_response_status_code", "(.*)"
+          )
+
+      - record: app:http_request_duration_seconds_count
+        expr: |
+          label_replace(
+            label_replace(
+              http_server_request_duration_seconds_count{app_type="dotnet"},
+              "route", "$1", "http_route", "(.*)"
+            ),
+            "status_code", "$1", "http_response_status_code", "(.*)"
+          )
+
+      - record: app:http_request_duration_seconds_sum
+        expr: |
+          label_replace(
+            label_replace(
+              http_server_request_duration_seconds_sum{app_type="dotnet"},
+              "route", "$1", "http_route", "(.*)"
+            ),
+            "status_code", "$1", "http_response_status_code", "(.*)"
+          )
+
+      # Outbound HTTP: OpenTelemetry emits http_client_request_duration_seconds
+      # with labels http_server_address (used as upstream) and http_response_status_code.
+      - record: app:http_client_request_duration_seconds_bucket
+        expr: |
+          label_replace(
+            label_replace(
+              http_client_request_duration_seconds_bucket{app_type="dotnet"},
+              "upstream", "$1", "http_server_address", "(.*)"
+            ),
+            "status_code", "$1", "http_response_status_code", "(.*)"
+          )
+
+      - record: app:http_client_request_duration_seconds_count
+        expr: |
+          label_replace(
+            label_replace(
+              http_client_request_duration_seconds_count{app_type="dotnet"},
+              "upstream", "$1", "http_server_address", "(.*)"
+            ),
+            "status_code", "$1", "http_response_status_code", "(.*)"
+          )
+
+      - record: app:http_client_request_duration_seconds_sum
+        expr: |
+          label_replace(
+            label_replace(
+              http_client_request_duration_seconds_sum{app_type="dotnet"},
+              "upstream", "$1", "http_server_address", "(.*)"
+            ),
+            "status_code", "$1", "http_response_status_code", "(.*)"
+          )

@@ -1,0 +1,178 @@
+groups:
+  - name: hims_web_service_alerts
+    interval: 15s
+    rules:
+      - alert: HIMSWebService5xxErrorRateWarning
+        expr: |
+          (
+            sum(rate(http_requests_total{job="hims-app-web-service-dev", status=~"5.."}[5m]))
+            /
+            clamp_min(sum(rate(http_requests_total{job="hims-app-web-service-dev"}[5m])), 0.001)
+          ) * 100 > 1
+        for: 5m
+        labels:
+          severity: warning
+          component: hims-web-service
+          app: hris-hims
+        annotations:
+          summary: "HIMS Web Service — 5xx error rate warning"
+          description: "5xx error rate is {{ $value | printf \"%.2f\" }}% (warning threshold: 1%) over the last 5 minutes."
+
+      - alert: HIMSWebService5xxErrorRateCritical
+        expr: |
+          (
+            sum(rate(http_requests_total{job="hims-app-web-service-dev", status=~"5.."}[5m]))
+            /
+            clamp_min(sum(rate(http_requests_total{job="hims-app-web-service-dev"}[5m])), 0.001)
+          ) * 100 > 5
+        for: 5m
+        labels:
+          severity: critical
+          component: hims-web-service
+          app: hris-hims
+        annotations:
+          summary: "HIMS Web Service — 5xx error rate critical"
+          description: "5xx error rate is {{ $value | printf \"%.2f\" }}% (critical threshold: 5%) over the last 5 minutes."
+
+      - alert: HIMSWebService4xxErrorRateWarning
+        expr: |
+          (
+            sum(rate(http_requests_total{job="hims-app-web-service-dev", status=~"4.."}[5m]))
+            /
+            clamp_min(sum(rate(http_requests_total{job="hims-app-web-service-dev"}[5m])), 0.001)
+          ) * 100 > 1
+        for: 5m
+        labels:
+          severity: warning
+          component: hims-web-service
+          app: hris-hims
+        annotations:
+          summary: "HIMS Web Service — 4xx error rate warning"
+          description: "4xx error rate is {{ $value | printf \"%.2f\" }}% (warning threshold: 1%) over the last 5 minutes."
+
+      - alert: HIMSWebService4xxErrorRateCritical
+        expr: |
+          (
+            sum(rate(http_requests_total{job="hims-app-web-service-dev", status=~"4.."}[5m]))
+            /
+            clamp_min(sum(rate(http_requests_total{job="hims-app-web-service-dev"}[5m])), 0.001)
+          ) * 100 > 5
+        for: 5m
+        labels:
+          severity: critical
+          component: hims-web-service
+          app: hris-hims
+        annotations:
+          summary: "HIMS Web Service — 4xx error rate critical"
+          description: "4xx error rate is {{ $value | printf \"%.2f\" }}% (critical threshold: 5%) over the last 5 minutes."
+
+      - alert: HIMSWebServiceEndpointTrafficDeviationWarning
+        expr: |
+          (
+            abs(
+              sum by (endpoint) (rate(http_requests_total{job="hims-app-web-service-dev", endpoint!=""}[5m]))
+              -
+              avg_over_time(sum by (endpoint) (rate(http_requests_total{job="hims-app-web-service-dev", endpoint!=""}[5m]))[1h:])
+            )
+            /
+            clamp_min(avg_over_time(sum by (endpoint) (rate(http_requests_total{job="hims-app-web-service-dev", endpoint!=""}[5m]))[1h:]), 0.01)
+          ) > 0.30
+          and on (endpoint)
+          avg_over_time(sum by (endpoint) (rate(http_requests_total{job="hims-app-web-service-dev", endpoint!=""}[5m]))[1h:]) > 0.05
+        for: 10m
+        labels:
+          severity: warning
+          component: hims-web-service
+          app: hris-hims
+        annotations:
+          summary: "HIMS Web Service — endpoint traffic deviation warning"
+          description: "Endpoint {{ $labels.endpoint }} traffic deviates by more than 30% from 1h baseline (current value: {{ $value | printf \"%.2f\" }})."
+
+      - alert: HIMSWebServiceEndpointTrafficDeviationCritical
+        expr: |
+          (
+            abs(
+              sum by (endpoint) (rate(http_requests_total{job="hims-app-web-service-dev", endpoint!=""}[5m]))
+              -
+              avg_over_time(sum by (endpoint) (rate(http_requests_total{job="hims-app-web-service-dev", endpoint!=""}[5m]))[1h:])
+            )
+            /
+            clamp_min(avg_over_time(sum by (endpoint) (rate(http_requests_total{job="hims-app-web-service-dev", endpoint!=""}[5m]))[1h:]), 0.01)
+          ) > 0.60
+          and on (endpoint)
+          avg_over_time(sum by (endpoint) (rate(http_requests_total{job="hims-app-web-service-dev", endpoint!=""}[5m]))[1h:]) > 0.05
+        for: 10m
+        labels:
+          severity: critical
+          component: hims-web-service
+          app: hris-hims
+        annotations:
+          summary: "HIMS Web Service — endpoint traffic deviation critical"
+          description: "Endpoint {{ $labels.endpoint }} traffic deviates by more than 60% from 1h baseline (current value: {{ $value | printf \"%.2f\" }})."
+
+      - alert: HIMSHighLatencyP95
+        expr: |
+          histogram_quantile(0.95,
+            sum(rate(http_request_duration_seconds_bucket{job="hims-app-web-service-dev"}[5m])) by (le)
+          ) > 2
+        for: 5m
+        labels:
+          severity: critical
+          component: hims-web-service
+          app: hris-hims
+        annotations:
+          summary: "HIMS Web Service — P95 latency exceeds 2 s"
+          description: "95th-percentile latency is {{ $value | printf \"%.2f\" }}s (threshold: 2s)."
+
+      - alert: HIMSHighLatencyP99Warning
+        expr: |
+          histogram_quantile(0.99,
+            sum(rate(http_request_duration_seconds_bucket{job="hims-app-web-service-dev"}[5m])) by (le)
+          ) > 1
+        for: 5m
+        labels:
+          severity: warning
+          component: hims-web-service
+          app: hris-hims
+        annotations:
+          summary: "HIMS Web Service — P99 latency warning"
+          description: "99th-percentile latency is {{ $value | printf \"%.2f\" }}s (warning threshold: 1s)."
+
+      - alert: HIMSHighLatencyP99Critical
+        expr: |
+          histogram_quantile(0.99,
+            sum(rate(http_request_duration_seconds_bucket{job="hims-app-web-service-dev"}[5m])) by (le)
+          ) > 3
+        for: 5m
+        labels:
+          severity: critical
+          component: hims-web-service
+          app: hris-hims
+        annotations:
+          summary: "HIMS Web Service — P99 latency critical"
+          description: "99th-percentile latency is {{ $value | printf \"%.2f\" }}s (critical threshold: 3s)."
+
+      - alert: HIMSExceptionTypeSpike
+        expr: |
+          sum by (exception_type) (
+            rate(http_errors_total{job="hims-app-web-service-dev", exception_type!="none"}[5m])
+          ) > 0.5
+        for: 3m
+        labels:
+          severity: warning
+          component: hims-web-service
+          app: hris-hims
+        annotations:
+          summary: "HIMS Web Service — {{ $labels.exception_type }} spike"
+          description: "{{ $labels.exception_type }} error rate is {{ $value | printf \"%.2f\" }}/s for the last 3 minutes (threshold: 0.5/s)."
+
+      - alert: HIMSWebServiceDown
+        expr: up{job="hims-app-web-service-dev"} == 0
+        for: 1m
+        labels:
+          severity: critical
+          component: hims-web-service
+          app: hris-hims
+        annotations:
+          summary: "HIMS Web Service is down"
+          description: "The hims-app-web-service-dev scrape target has been unreachable for more than 1 minute."

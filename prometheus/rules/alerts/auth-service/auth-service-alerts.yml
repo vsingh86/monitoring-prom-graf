@@ -1,0 +1,30 @@
+groups:
+  - name: auth_service_alerts
+    interval: 15s
+    rules:
+      - alert: AuthHighErrorRate
+        expr: |
+          (
+            sum(rate(auth_failures_total{job="auth-service"}[5m])) by (operation)
+            /
+            sum(rate(auth_operations_total{job="auth-service"}[5m])) by (operation)
+          ) > 0.10
+        for: 3m
+        labels:
+          severity: warning
+          component: auth-service
+          app: hris-api-auth
+        annotations:
+          summary: "Auth service high error rate on {{ $labels.operation }}"
+          description: "Operation '{{ $labels.operation }}' failure rate is {{ $value | humanizePercentage }} over the last 5 minutes (threshold: 10%)."
+
+      - alert: AuthServiceDown
+        expr: up{job="auth-service"} == 0
+        for: 1m
+        labels:
+          severity: critical
+          component: auth-service
+          app: hris-api-auth
+        annotations:
+          summary: "Auth service is down"
+          description: "The auth-service scrape target has been unreachable for more than 1 minute."

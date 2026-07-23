@@ -1,0 +1,62 @@
+groups:
+  - name: db_mysql_normalization
+    interval: 15s
+    rules:
+      # db_type="mysql" is set as a static label on each mysqld_exporter scrape job.
+      # Assumes prometheus-community/mysqld_exporter with performance_schema enabled
+      # (--collect.perf_schema.eventsstatements) for query duration histograms.
+
+      # Query duration histogram from performance_schema.events_statements_summary_by_digest.
+      # Requires --collect.perf_schema.eventsstatements flag on mysqld_exporter.
+      - record: db:query_duration_seconds_bucket
+        expr: mysql_perf_schema_events_statements_seconds_bucket{db_type="mysql"}
+
+      - record: db:query_duration_seconds_count
+        expr: mysql_perf_schema_events_statements_seconds_count{db_type="mysql"}
+
+      - record: db:query_duration_seconds_sum
+        expr: mysql_perf_schema_events_statements_seconds_sum{db_type="mysql"}
+
+      # Current open connections (global, no per-database breakdown in MySQL).
+      # Stored as "database" label with value "mysql" for dashboard consistency.
+      - record: db:connections_active
+        expr: |
+          label_replace(
+            mysql_global_status_threads_connected{db_type="mysql"},
+            "database", "mysql", "__name__", ".*"
+          )
+
+      - record: db:connections_max
+        expr: |
+          label_replace(
+            mysql_global_variables_max_connections{db_type="mysql"},
+            "database", "mysql", "__name__", ".*"
+          )
+
+      # Replication lag in seconds from replica status.
+      # Requires --collect.slave_status flag on mysqld_exporter.
+      - record: db:replication_lag_seconds
+        expr: mysql_slave_status_seconds_behind_master{db_type="mysql"}
+
+      # Current InnoDB row-level lock waits (gauge).
+      - record: db:locks_total
+        expr: |
+          label_replace(
+            mysql_global_status_innodb_current_row_locks{db_type="mysql"},
+            "database", "mysql", "__name__", ".*"
+          )
+
+      # Cumulative InnoDB deadlock counter.
+      - record: db:deadlocks_total
+        expr: mysql_global_status_innodb_deadlocks{db_type="mysql"}
+
+      # Per-schema data size in bytes.
+      # Requires --collect.info_schema.tables flag on mysqld_exporter.
+      # "schema_name" label normalized to "database".
+      - record: db:size_bytes
+        expr: |
+          label_replace(
+            mysql_info_schema_table_size_data_length{db_type="mysql"}
+            + mysql_info_schema_table_size_index_length{db_type="mysql"},
+            "database", "$1", "schema_name", "(.*)"
+          )

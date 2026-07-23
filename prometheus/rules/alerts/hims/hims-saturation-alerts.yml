@@ -1,0 +1,259 @@
+groups:
+  - name: hims_saturation_alerts
+    interval: 15s
+    rules:
+      - alert: HIMSHighCPUUtilizationWarning
+        expr: |
+          100 - (avg by(instance) (rate(node_cpu_seconds_total{job="hims-app-server-dev", mode="idle"}[5m])) * 100) > 70
+        for: 5m
+        labels:
+          severity: warning
+          component: hims-app-server
+          app: hris-hims
+        annotations:
+          summary: "HIMS saturation — high CPU utilisation (warning)"
+          description: "CPU utilisation is {{ $value | printf \"%.1f\" }}% on {{ $labels.instance }} (warning threshold: 70%)."
+
+      - alert: HIMSHighCPUUtilizationCritical
+        expr: |
+          100 - (avg by(instance) (rate(node_cpu_seconds_total{job="hims-app-server-dev", mode="idle"}[5m])) * 100) > 85
+        for: 5m
+        labels:
+          severity: critical
+          component: hims-app-server
+          app: hris-hims
+        annotations:
+          summary: "HIMS saturation — high CPU utilisation (critical)"
+          description: "CPU utilisation is {{ $value | printf \"%.1f\" }}% on {{ $labels.instance }} (critical threshold: 85%)."
+
+      - alert: HIMSLowMemoryAvailableWarning
+        expr: |
+          (
+            node_memory_MemAvailable_bytes{job="hims-app-server-dev"}
+            /
+            clamp_min(node_memory_MemTotal_bytes{job="hims-app-server-dev"}, 1)
+          ) < 0.20
+        for: 5m
+        labels:
+          severity: warning
+          component: hims-app-server
+          app: hris-hims
+        annotations:
+          summary: "HIMS saturation — low memory available (warning)"
+          description: "Memory available ratio is {{ $value | humanizePercentage }} on {{ $labels.instance }} (warning threshold: 20% free)."
+
+      - alert: HIMSLowMemoryAvailableCritical
+        expr: |
+          (
+            node_memory_MemAvailable_bytes{job="hims-app-server-dev"}
+            /
+            clamp_min(node_memory_MemTotal_bytes{job="hims-app-server-dev"}, 1)
+          ) < 0.10
+        for: 5m
+        labels:
+          severity: critical
+          component: hims-app-server
+          app: hris-hims
+        annotations:
+          summary: "HIMS saturation — low memory available (critical)"
+          description: "Memory available ratio is {{ $value | humanizePercentage }} on {{ $labels.instance }} (critical threshold: 10% free)."
+
+      - alert: HIMSDiskSpaceLowWarning
+        expr: |
+          (
+            node_filesystem_avail_bytes{job="hims-app-server-dev", fstype!~"tmpfs|overlay"}
+            /
+            clamp_min(node_filesystem_size_bytes{job="hims-app-server-dev", fstype!~"tmpfs|overlay"}, 1)
+          ) < 0.20
+        for: 10m
+        labels:
+          severity: warning
+          component: hims-app-server
+          app: hris-hims
+        annotations:
+          summary: "HIMS saturation — low disk free space (warning)"
+          description: "Disk free ratio is {{ $value | humanizePercentage }} on {{ $labels.instance }} {{ $labels.mountpoint }} (warning threshold: 20% free)."
+
+      - alert: HIMSDiskSpaceLowCritical
+        expr: |
+          (
+            node_filesystem_avail_bytes{job="hims-app-server-dev", fstype!~"tmpfs|overlay"}
+            /
+            clamp_min(node_filesystem_size_bytes{job="hims-app-server-dev", fstype!~"tmpfs|overlay"}, 1)
+          ) < 0.10
+        for: 10m
+        labels:
+          severity: critical
+          component: hims-app-server
+          app: hris-hims
+        annotations:
+          summary: "HIMS saturation — low disk free space (critical)"
+          description: "Disk free ratio is {{ $value | humanizePercentage }} on {{ $labels.instance }} {{ $labels.mountpoint }} (critical threshold: 10% free)."
+
+      - alert: HIMSNetworkTransmitDropRateWarning
+        expr: |
+          (
+            rate(node_network_transmit_drop_total{job="hims-app-server-dev", device!~"lo"}[5m])
+            /
+            clamp_min(rate(node_network_transmit_packets_total{job="hims-app-server-dev", device!~"lo"}[5m]), 0.001)
+          ) * 100 > 0.1
+        for: 5m
+        labels:
+          severity: warning
+          component: hims-app-server
+          app: hris-hims
+        annotations:
+          summary: "HIMS saturation — network transmit drop rate warning"
+          description: "Transmit packet drop rate is {{ $value | printf \"%.3f\" }}% on {{ $labels.instance }} {{ $labels.device }} (warning threshold: 0.1%)."
+
+      - alert: HIMSNetworkReceiveDropRateWarning
+        expr: |
+          (
+            rate(node_network_receive_drop_total{job="hims-app-server-dev", device!~"lo"}[5m])
+            /
+            clamp_min(rate(node_network_receive_packets_total{job="hims-app-server-dev", device!~"lo"}[5m]), 0.001)
+          ) * 100 > 0.1
+        for: 5m
+        labels:
+          severity: warning
+          component: hims-app-server
+          app: hris-hims
+        annotations:
+          summary: "HIMS saturation — network receive drop rate warning"
+          description: "Receive packet drop rate is {{ $value | printf \"%.3f\" }}% on {{ $labels.instance }} {{ $labels.device }} (warning threshold: 0.1%)."
+
+      - alert: HIMSDBSessionPressureWarning
+        expr: |
+          (
+            sum(oracle_sessions_custom{job="oracle-custom-exporter", status="ACTIVE"})
+            /
+            clamp_min(sum(oracle_sessions_custom{job="oracle-custom-exporter"}), 1)
+          ) > 0.95
+        for: 5m
+        labels:
+          severity: warning
+          component: hims-database
+          app: hris-hims
+        annotations:
+          summary: "HIMS saturation — Oracle session pressure high (warning)"
+          description: "Active Oracle sessions are {{ $value | humanizePercentage }} of total sessions (warning threshold: 95%)."
+
+      - alert: HIMSDBSessionPressureCritical
+        expr: |
+          (
+            sum(oracle_sessions_custom{job="oracle-custom-exporter", status="ACTIVE"})
+            /
+            clamp_min(sum(oracle_sessions_custom{job="oracle-custom-exporter"}), 1)
+          ) > 0.98
+        for: 5m
+        labels:
+          severity: critical
+          component: hims-database
+          app: hris-hims
+        annotations:
+          summary: "HIMS saturation — Oracle session pressure critical"
+          description: "Active Oracle sessions are {{ $value | humanizePercentage }} of total sessions (critical threshold: 98%)."
+
+      - alert: HIMSDBSQLLatencyP99Warning
+        expr: |
+          oracle_sql_latency_ms{job="oracle-custom-exporter", quantile="p99"} > 100
+        for: 10m
+        labels:
+          severity: warning
+          component: hims-database
+          app: hris-hims
+        annotations:
+          summary: "HIMS saturation — Oracle SQL p99 latency high (warning)"
+          description: "Oracle SQL p99 latency is {{ $value | printf \"%.1f\" }}ms (warning threshold: 100ms)."
+
+      - alert: HIMSDBSQLLatencyP99Critical
+        expr: |
+          oracle_sql_latency_ms{job="oracle-custom-exporter", quantile="p99"} > 500
+        for: 10m
+        labels:
+          severity: critical
+          component: hims-database
+          app: hris-hims
+        annotations:
+          summary: "HIMS saturation — Oracle SQL p99 latency critical"
+          description: "Oracle SQL p99 latency is {{ $value | printf \"%.1f\" }}ms (critical threshold: 500ms)."
+
+      - alert: HIMSDBSlowQueryRatioWarning
+        expr: |
+          (
+            oracle_sql_latency_slow_queries{job="oracle-custom-exporter"}
+            /
+            clamp_min(oracle_sql_latency_observed_queries{job="oracle-custom-exporter"}, 1)
+          ) > 0.20
+        for: 10m
+        labels:
+          severity: warning
+          component: hims-database
+          app: hris-hims
+        annotations:
+          summary: "HIMS saturation — Oracle slow query ratio high (warning)"
+          description: "Slow Oracle queries are {{ $value | humanizePercentage }} of observed statements (warning threshold: 20%)."
+
+      - alert: HIMSDBSlowQueryRatioCritical
+        expr: |
+          (
+            oracle_sql_latency_slow_queries{job="oracle-custom-exporter"}
+            /
+            clamp_min(oracle_sql_latency_observed_queries{job="oracle-custom-exporter"}, 1)
+          ) > 0.40
+        for: 10m
+        labels:
+          severity: critical
+          component: hims-database
+          app: hris-hims
+        annotations:
+          summary: "HIMS saturation — Oracle slow query ratio critical"
+          description: "Slow Oracle queries are {{ $value | humanizePercentage }} of observed statements (critical threshold: 40%)."
+
+      - alert: HIMSDBTablespaceUsageWarning
+        expr: |
+          oracle_tablespace_used_percent_custom{job="oracle-custom-exporter", type!="TEMPORARY"} > 85
+        for: 10m
+        labels:
+          severity: warning
+          component: hims-database
+          app: hris-hims
+        annotations:
+          summary: "HIMS saturation — Oracle tablespace usage high (warning)"
+          description: "Oracle tablespace {{ $labels.tablespace }} ({{ $labels.type }}) usage is {{ $value | printf \"%.1f\" }}% (warning threshold: 85%)."
+
+      - alert: HIMSDBTablespaceUsageCritical
+        expr: |
+          oracle_tablespace_used_percent_custom{job="oracle-custom-exporter", type!="TEMPORARY"} > 95
+        for: 10m
+        labels:
+          severity: critical
+          component: hims-database
+          app: hris-hims
+        annotations:
+          summary: "HIMS saturation — Oracle tablespace usage critical"
+          description: "Oracle tablespace {{ $labels.tablespace }} ({{ $labels.type }}) usage is {{ $value | printf \"%.1f\" }}% (critical threshold: 95%)."
+
+      - alert: HIMSDBExporterDown
+        expr: |
+          oracle_monitor_up{job="oracle-custom-exporter"} == 0
+        for: 5m
+        labels:
+          severity: critical
+          component: hims-database
+          app: hris-hims
+        annotations:
+          summary: "HIMS saturation — Oracle metrics exporter down"
+          description: "Oracle exporter has failed to scrape the database for at least 5 minutes."
+
+      - alert: HIMSDBMetricsStale
+        expr: |
+          time() - oracle_monitor_last_success_unixtime{job="oracle-custom-exporter"} > 300
+        for: 5m
+        labels:
+          severity: warning
+          component: hims-database
+          app: hris-hims
+        annotations:
+          summary: "HIMS saturation — Oracle metrics are stale"
+          description: "Last successful Oracle metrics scrape was more than 5 minutes ago."

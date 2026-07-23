@@ -1,0 +1,61 @@
+groups:
+  - name: db_sqlserver_normalization
+    interval: 15s
+    rules:
+      # db_type="sqlserver" is set as a static label on each sql_exporter scrape job.
+      # Assumes prometheus-community/sql_exporter configured with the standard
+      # Microsoft SQL Server collector (mssql_standard.collector.yml).
+      # Metric names below match the standard collector's output.
+      # Reference: https://github.com/prometheus-community/sql_exporter
+
+      # Query duration histogram from sys.dm_exec_query_stats.
+      # Exposed by the mssql_standard collector's "mssql_query_execution" job.
+      - record: db:query_duration_seconds_bucket
+        expr: mssql_query_execution_seconds_bucket{db_type="sqlserver"}
+
+      - record: db:query_duration_seconds_count
+        expr: mssql_query_execution_seconds_count{db_type="sqlserver"}
+
+      - record: db:query_duration_seconds_sum
+        expr: mssql_query_execution_seconds_sum{db_type="sqlserver"}
+
+      # Active user connections from sys.dm_exec_sessions.
+      # "db" label normalized to "database".
+      - record: db:connections_active
+        expr: |
+          label_replace(
+            mssql_connections{db_type="sqlserver"},
+            "database", "$1", "db", "(.*)"
+          )
+
+      # Maximum connections from sys.configurations (max connections = 0 means unlimited;
+      # the exporter typically resolves this to the effective limit).
+      - record: db:connections_max
+        expr: mssql_max_connections{db_type="sqlserver"}
+
+      # Availability Group replication send-queue lag, converted from bytes to seconds
+      # using the log send rate. Exposed by the AG health collector.
+      # If AGs are not in use this metric will not exist — the panel shows "No data".
+      - record: db:replication_lag_seconds
+        expr: mssql_availability_group_log_send_queue_seconds{db_type="sqlserver"}
+
+      # Current lock waits from sys.dm_os_wait_stats (LCK_* wait types).
+      - record: db:locks_total
+        expr: |
+          label_replace(
+            mssql_lock_waits{db_type="sqlserver"},
+            "database", "$1", "db", "(.*)"
+          )
+
+      # Deadlocks per second from SQL Server performance counters.
+      - record: db:deadlocks_total
+        expr: mssql_deadlocks_per_second{db_type="sqlserver"}
+
+      # Database file sizes in bytes from sys.master_files.
+      # "db" label normalized to "database".
+      - record: db:size_bytes
+        expr: |
+          label_replace(
+            mssql_database_size_bytes{db_type="sqlserver"},
+            "database", "$1", "db", "(.*)"
+          )

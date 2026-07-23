@@ -1,0 +1,62 @@
+apiVersion: 1
+
+providers:
+  # # Dashboards for proof-of-concept and local Oracle monitoring
+  # - name: 'poc'
+  #   orgId: 1
+  #   folder: 'POC'
+  #   folderUid: 'folder-poc'
+  #   type: file
+  #   disableDeletion: false
+  #   updateIntervalSeconds: 10
+  #   allowUiUpdates: true
+  #   options:
+  #     path: /var/lib/grafana/dashboards/poc
+
+  # # Dashboards for the demo observability stack
+  # - name: 'demo'
+  #   orgId: 1
+  #   folder: 'Demo'
+  #   folderUid: 'folder-demo'
+  #   type: file
+  #   disableDeletion: false
+  #   updateIntervalSeconds: 10
+  #   allowUiUpdates: true
+  #   options:
+  #     path: /var/lib/grafana/dashboards/demo
+
+  # # Dashboards for the HIMS application suite
+  # - name: 'hims'
+  #   orgId: 1
+  #   folder: 'HIMS'
+  #   folderUid: 'folder-hims'
+  #   type: file
+  #   disableDeletion: false
+  #   updateIntervalSeconds: 10
+  #   allowUiUpdates: true
+  #   options:
+  #     path: /var/lib/grafana/dashboards/hr-finance/hims
+
+  # Dashboards for the Auth Service
+  - name: 'hr-finance'
+    orgId: 1
+    folder: 'HR and Finance'
+    folderUid: 'folder-hr-finance'
+    type: file
+    disableDeletion: false
+    updateIntervalSeconds: 10
+    allowUiUpdates: false
+    options:
+      path: /etc/grafana/provisioning/dashboards/hr-finance/core
+
+  # # Dashboards for the OH Card API (Loki log analytics)
+  # - name: 'oh-card-api'
+  #   orgId: 1
+  #   folder: 'OH Card API'
+  #   folderUid: 'folder-oh-card-api'
+  #   type: file
+  #   disableDeletion: false
+  #   updateIntervalSeconds: 10
+  #   allowUiUpdates: true
+  #   options:
+  #     path: /var/lib/grafana/dashboards/oh-card-api

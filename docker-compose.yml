@@ -1,55 +1,142 @@
-version: "3.8"
-
-networks:
-  monitoring:
-    driver: bridge
-
-volumes:
-  prometheus_data: {}
-  grafana_data: {}
-
 services:
-
-  # ── Prometheus ─────────────────────────────────────────────────────────────
+  # Prometheus - metrics collection and storage
   prometheus:
     image: prom/prometheus:latest
     container_name: prometheus
-    restart: unless-stopped
-    command:
-      - --config.file=/etc/prometheus/prometheus.yml
-      - --storage.tsdb.path=/prometheus
-      - --storage.tsdb.retention.time=15d
-      - --web.enable-lifecycle
-    volumes:
-      - ./prometheus:/etc/prometheus:ro
-      - prometheus_data:/prometheus
     ports:
-      - "9090:9090"
+      - "127.0.0.1:9090:9090"
+    environment:
+      - HRIS_AUTH_API_METRICS_TOKEN=${HRIS_AUTH_API_METRICS_TOKEN}
+      - HRIS_CARD_API_DEV_METRICS_TOKEN=${HRIS_CARD_API_DEV_METRICS_TOKEN}
+      - HIMS_WEB_DEV_METRICS_TOKEN=${HIMS_WEB_DEV_METRICS_TOKEN}
+      - HIMS_WEBSERVICE_DEV_METRICS_TOKEN=${HIMS_WEBSERVICE_DEV_METRICS_TOKEN}
+      - PROMETHEUS_SERVER=${PROMETHEUS_SERVER:-http://localhost:9090}
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - ./prometheus/rules:/etc/prometheus/rules:ro
+      - ./prometheus/certs:/etc/prometheus/certs:ro
+      - ./prometheus/start-prometheus.sh:/etc/prometheus/start-prometheus.sh:ro
+      - prometheus_data:/prometheus
+    entrypoint:
+      - /bin/sh
+      - -c
+    command:
+      - |
+        set -eu
+        if [ -z "${HRIS_AUTH_API_METRICS_TOKEN:-}" ]; then
+          echo "HRIS_AUTH_API_METRICS_TOKEN is required for auth-service metrics scrape" >&2
+          exit 1
+        fi
+        if [ -z "${HRIS_CARD_API_DEV_METRICS_TOKEN:-}" ]; then
+          echo "HRIS_CARD_API_DEV_METRICS_TOKEN is required for card-service metrics scrape" >&2
+          exit 1
+        fi
+        if [ -z "${HIMS_WEB_DEV_METRICS_TOKEN:-}" ]; then
+          echo "HIMS_WEB_DEV_METRICS_TOKEN is required for HIMS web metrics scrape" >&2
+          exit 1
+        fi
+        if [ -z "${HIMS_WEBSERVICE_DEV_METRICS_TOKEN:-}" ]; then
+          echo "HIMS_WEBSERVICE_DEV_METRICS_TOKEN is required for HIMS webservice metrics scrape" >&2
+          exit 1
+        fi
+        printf '%s' "$HRIS_CARD_API_DEV_METRICS_TOKEN" > /tmp/hris_card_api_dev_metrics_token
+        printf '%s' "$HRIS_AUTH_API_METRICS_TOKEN" > /tmp/hris_auth_api_metrics_token
+        printf '%s' "$HIMS_WEB_DEV_METRICS_TOKEN" > /tmp/hims_web_dev_metrics_token
+        printf '%s' "$HIMS_WEBSERVICE_DEV_METRICS_TOKEN" > /tmp/hims_webservice_dev_metrics_token
+        exec /bin/prometheus \
+          --config.file=/etc/prometheus/prometheus.yml \
+          --storage.tsdb.path=/prometheus \
+          --web.external-url=${PROMETHEUS_SERVER}/prometheus/ \
+          --web.route-prefix=/prometheus/ \
+          --web.enable-lifecycle \
+          --storage.tsdb.retention.time=30d
     networks:
       - monitoring
+    restart: unless-stopped
 
-  # ── Grafana ────────────────────────────────────────────────────────────────
+  # # Alertmanager - alert management
+  # alertmanager:
+  #   image: prom/alertmanager:latest
+  #   container_name: alertmanager
+  #   ports:
+  #     - "127.0.0.1:9093:9093"
+  #   volumes:
+  #     - ./prometheus/alertmanager.yml:/etc/alertmanager/alertmanager.yml:ro
+  #   command:
+  #     - '--config.file=/etc/alertmanager/alertmanager.yml'
+  #     - '--storage.path=/alertmanager'
+  #   depends_on:
+  #     - alert-relay
+  #   networks:
+  #     - monitoring
+  #   restart: unless-stopped
+
+  # # Alert webhook relay - injects Lambda passcode header for Alertmanager webhooks
+  # alert-relay:
+  #   build: ./alert-relay
+  #   container_name: alert-relay
+  #   ports:
+  #     - "127.0.0.1:9094:9094"
+  #   environment:
+  #     - PORT=9094
+  #     - ALERT_WEBHOOK_PASSCODE=${ALERT_WEBHOOK_PASSCODE}
+  #     - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+  #     - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+  #   networks:
+  #     - monitoring
+  #   restart: unless-stopped
+
+  # Grafana - metrics visualization
   grafana:
     image: grafana/grafana:latest
     container_name: grafana
-    restart: unless-stopped
-    environment:
-      GF_SECURITY_ADMIN_USER: admin
-      GF_SECURITY_ADMIN_PASSWORD: admin
-      GF_USERS_ALLOW_SIGN_UP: "false"
-    volumes:
-      - grafana_data:/var/lib/grafana
-      - ./grafana/provisioning:/etc/grafana/provisioning:ro
-      - ./grafana/dashboards:/var/lib/grafana/dashboards:ro
     ports:
-      - "3000:3000"
-    depends_on:
-      - prometheus
+      - "127.0.0.1:3001:3000"
+    volumes:
+      - ./grafana/grafana.ini:/etc/grafana/grafana.ini:ro
+      - ./grafana/provisioning:/etc/grafana/provisioning:ro
+      - grafana_data:/var/lib/grafana      
+    environment:
+      - GF_SERVER_DOMAIN=${GF_SERVER_DOMAIN:-localhost}
+      - GF_SERVER_ROOT_URL=${GF_SERVER_ROOT_URL:-http://localhost:3001/}
+      - GF_SERVER_SERVE_FROM_SUB_PATH=${GF_SERVER_SERVE_FROM_SUB_PATH:-false}
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_ADMIN_PASSWORD:-byteme}
     networks:
       - monitoring
+    depends_on:
+      - prometheus
+      # - loki
+    restart: unless-stopped
+
+  # # Loki - log aggregation backend
+  # loki:
+  #   image: grafana/loki:2.9.8
+  #   container_name: loki
+  #   ports:
+  #     - "127.0.0.1:3100:3100"
+  #   volumes:
+  #     - ./loki/loki-config.yml:/etc/loki/loki-config.yml:ro
+  #     - loki_data:/loki
+  #   command: -config.file=/etc/loki/loki-config.yml
+  #   networks:
+  #     - monitoring
+  #   restart: unless-stopped
+
+  # oracle-custom-exporter:
+  #   build: ./oracle-custom-exporter
+  #   container_name: oracle-custom-exporter
+  #   ports: # Expose if you want to access metrics outside of Docker, otherwise Prometheus can scrape internally
+  #     - "${ORACLE_EXPORTER_CUSTOM_PORT:-9101}:9101"
+  #   environment:
+  #     - ORACLE_MONITOR_ENABLED=true
+  #     - ORACLE_MONITOR_DSN=${ORACLE_DSN}
+  #     - ORACLE_MONITOR_SCRAPE_INTERVAL_MS=${ORACLE_MONITOR_SCRAPE_INTERVAL_MS:-30000}
+  #   networks:
+  #     - monitoring
 
 
-  # ── DB Exporter (multi-database, blackbox-style) ─────────────────────────────
+# ── DB Exporter (multi-database, blackbox-style) ─────────────────────────────
   # One shared service scrapes Postgres/MySQL/SQL Server/Oracle. Prometheus
   # selects which database via GET /metrics?target=<name>, where <name> must
   # match a "name" entry in db-exporter/config.yaml. See db-exporter/README.md.
@@ -72,10 +159,20 @@ services:
       AUTHAPI_POSTGRES_PASSWORD: ${AUTHAPI_POSTGRES_PASSWORD:-}
       MYAPP_MYSQL_PASSWORD: ${MYAPP_MYSQL_PASSWORD:-}
       MYAPP_SQLSERVER_PASSWORD: ${MYAPP_SQLSERVER_PASSWORD:-}
-      MYAPP_ORACLE_PASSWORD: ${MYAPP_ORACLE_PASSWORD:-}
+      MYAPP_ORACLE_PASSWORD: ${ORACLE_PASSWORD:-}
     volumes:
       - ./db-exporter/config.yaml:/app/config.yaml:ro
     ports:
       - "9433:9433"
     networks:
       - monitoring
+
+
+networks:
+  monitoring:
+    driver: bridge
+
+volumes:
+  prometheus_data:
+  grafana_data:
+  loki_data:

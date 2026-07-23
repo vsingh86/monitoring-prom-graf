@@ -1,0 +1,25 @@
+global:
+  resolve_timeout: 5m
+
+# Route configuration
+route:
+  group_by: ['alertname', 'component', 'app']
+  group_wait: 10s
+  group_interval: 10s
+  repeat_interval: 1h
+  receiver: 'lambda-webhook'
+
+# Receiver — forwards Alertmanager payloads to Lambda Function URL
+receivers:
+  - name: 'lambda-webhook'
+    webhook_configs:
+      - url: 'http://alert-relay:9094/alerts'
+        send_resolved: true
+
+# Inhibition rules
+inhibit_rules:
+  - source_match:
+      severity: 'critical'
+    target_match:
+      severity: 'warning'
+    equal: ['alertname', 'component']

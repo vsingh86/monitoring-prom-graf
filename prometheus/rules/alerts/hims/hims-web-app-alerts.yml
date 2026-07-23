@@ -1,0 +1,31 @@
+groups:
+  - name: hims_web_app_alerts
+    interval: 15s
+    rules:
+      - alert: HIMSWebAppHighLatencyP99Warning
+        expr: |
+          histogram_quantile(0.99,
+            sum(rate(ui_page_load_seconds_bucket{job="hims-app-web-app-dev"}[5m])) by (le)
+          ) > 1
+        for: 5m
+        labels:
+          severity: warning
+          component: hims-web-app
+          app: hris-hims
+        annotations:
+          summary: "HIMS Web App — P99 latency warning"
+          description: "99th-percentile latency is {{ $value | printf \"%.2f\" }}s (warning threshold: 1s)."
+
+      - alert: HIMSWebAppHighLatencyP99Critical
+        expr: |
+          histogram_quantile(0.99,
+            sum(rate(ui_page_load_seconds_bucket{job="hims-app-web-app-dev"}[5m])) by (le)
+          ) > 3
+        for: 5m
+        labels:
+          severity: critical
+          component: hims-web-app
+          app: hris-hims
+        annotations:
+          summary: "HIMS Web App — P99 latency critical"
+          description: "99th-percentile latency is {{ $value | printf \"%.2f\" }}s (critical threshold: 3s)."
