@@ -419,7 +419,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "avg_over_time(up{job=\"authapi\"}[$__range])",
+          "expr": "avg_over_time(up{job=\"hris-hims-app-backend-dev\"}[$__range])",
           "legendFormat": "Uptime",
           "refId": "A"
         },
@@ -428,17 +428,17 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "up{job=\"authapi\"}",
+          "expr": "up{job=\"hris-hims-app-backend-dev\"}",
           "legendFormat": "Status",
           "refId": "B"
         }
       ],
-      "title": "📦 Placeholder App 1",
+      "title": "📦 HIMS",
       "type": "stat",
       "links": [
         {
           "title": "Open App Analytics →",
-          "url": "/d/app-analytics?var-job=authapi&${__url_time_range}",
+          "url": "/d/app-analytics?var-job=hris-hims-app-backend-dev&${__url_time_range}",
           "targetBlank": false
         }
       ]
