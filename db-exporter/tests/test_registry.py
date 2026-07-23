@@ -11,6 +11,21 @@ def _config_with(target: DatabaseTarget) -> Config:
     return Config(databases={target.name: target})
 
 
+def test_list_targets_returns_all_configured_databases_sorted_by_name():
+    config = Config(
+        databases={
+            "b": DatabaseTarget(name="b", db_type="mysql", host="h", port=1, username="u", password="p"),
+            "a": DatabaseTarget(name="a", db_type="postgres", host="h", port=1, username="u", password="p"),
+        }
+    )
+    registry = TargetRegistry(config)
+
+    targets = registry.list_targets()
+
+    assert [t.name for t in targets] == ["a", "b"]
+    assert [t.db_type for t in targets] == ["postgres", "mysql"]
+
+
 def test_unknown_target_raises_target_not_found():
     config = _config_with(
         DatabaseTarget(name="a", db_type="postgres", host="h", port=1, username="u", password="p")

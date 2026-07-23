@@ -44,6 +44,10 @@ class TargetRegistry:
             self._adapters[target.name] = adapter_cls(target)
         return self._adapters[target.name]
 
+    def list_targets(self) -> list[DatabaseTarget]:
+        """All configured databases, sorted by name, for the / index page."""
+        return sorted(self._config.databases.values(), key=lambda t: t.name)
+
     def scrape(self, target_name: str) -> CollectorRegistry:
         """Returns a CollectorRegistry for this target. Never raises for a
         down/timed-out database -- only for a genuinely unknown target name."""

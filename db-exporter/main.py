@@ -1,6 +1,7 @@
 """db-exporter entrypoint.
 
 Routes:
+  GET /                        -- HTML index of configured databases, linking to their metrics
   GET /metrics?target=<name>  -- vendor-native metrics for one configured database
   GET /metrics                -- exporter process metrics + self-health for all targets
   GET /health                 -- trivial liveness check
@@ -8,8 +9,9 @@ Routes:
 import logging
 import os
 import sys
+from html import escape
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
-from urllib.parse import parse_qs, urlparse
+from urllib.parse import parse_qs, quote, urlparse
 
 from prometheus_client import CONTENT_TYPE_LATEST, REGISTRY, generate_latest
 
@@ -50,6 +52,10 @@ class Handler(BaseHTTPRequestHandler):
     def do_GET(self):
         parsed = urlparse(self.path)
 
+        if parsed.path == "/":
+            self._respond_html(200, self._render_index())
+            return
+
         if parsed.path == "/health":
             self._respond_text(200, "OK")
             return
@@ -72,6 +78,32 @@ class Handler(BaseHTTPRequestHandler):
             return
 
         self._respond_metrics(generate_latest(registry))
+
+    def _render_index(self) -> str:
+        targets = target_registry.list_targets()
+        if not targets:
+            rows = "<p>No databases configured in config.yaml.</p>"
+        else:
+            items = "\n".join(
+                f'<li><a href="/metrics?target={quote(t.name)}">{escape(t.name)}</a> '
+                f"<span class=\"db-type\">({escape(t.db_type)})</span></li>"
+                for t in targets
+            )
+            rows = f"<ul>\n{items}\n</ul>"
+        return (
+            "<!doctype html><html><head><title>db-exporter</title>"
+            "<style>body{font-family:sans-serif;margin:2rem}"
+            "li{margin:0.3rem 0}.db-type{color:#666}</style></head><body>"
+            f"<h1>db-exporter</h1>{rows}</body></html>"
+        )
+
+    def _respond_html(self, status: int, html: str):
+        body = html.encode("utf-8")
+        self.send_response(status)
+        self.send_header("Content-Type", "text/html; charset=utf-8")
+        self.send_header("Content-Length", str(len(body)))
+        self.end_headers()
+        self.wfile.write(body)
 
     def _respond_metrics(self, body: bytes):
         self.send_response(200)
