@@ -1,0 +1,79 @@
+groups:
+  - name: db_oracle_normalization
+    interval: 15s
+    rules:
+      # db_type="oracle" is set as a static label on each Oracle scrape job.
+      # These metric names are produced by ../../db-exporter (see its README),
+      # NOT by a default community exporter -- no default oracledb_exporter
+      # build exposes a per-query duration histogram, lock count, or deadlock
+      # count, so db-exporter implements them directly against V$SQLAREA,
+      # V$LOCK, and a documented proxy respectively (see
+      # db-exporter/src/collectors/oracle.py for exact queries and caveats,
+      # including the deadlock proxy limitation).
+
+      # Query duration: exact aggregates from V$SQLAREA (count/sum are plain
+      # sums, not approximated). Deliberately NO db:query_duration_seconds_max
+      # rule here -- V$SQLAREA has no per-call maximum column, and Oracle has
+      # no other free source for one (a true max needs licensed Diagnostics
+      # Pack features). Rather than fake it, the Grafana panel simply gets no
+      # data for Oracle's max series, same pattern as the AG/Data Guard lag
+      # metrics elsewhere in this file. See db-exporter/README.md's "Known
+      # limitations" for details.
+      - record: db:query_duration_seconds_count
+        expr: oracledb_query_duration_seconds_count{db_type="oracle"}
+
+      - record: db:query_duration_seconds_sum
+        expr: oracledb_query_duration_seconds_sum{db_type="oracle"}
+
+      # Active sessions from V$RESOURCE_LIMIT (resource_name="sessions"), exposed
+      # by oracledb_exporter's default-metrics.toml as oracledb_resource_current_utilization.
+      # Session limits are instance-wide (not per-schema/PDB), so — like MySQL's
+      # global connection count — "database" is set to a constant rather than
+      # renamed from a real per-database label.
+      - record: db:connections_active
+        expr: |
+          label_replace(
+            oracledb_resource_current_utilization{db_type="oracle", resource_name="sessions"},
+            "database", "oracle", "__name__", ".*"
+          )
+
+      # Session limit from V$RESOURCE_LIMIT (resource_name="sessions").
+      - record: db:connections_max
+        expr: |
+          label_replace(
+            oracledb_resource_limit_value{db_type="oracle", resource_name="sessions"},
+            "database", "oracle", "__name__", ".*"
+          )
+
+      # Data Guard apply lag in seconds, from V$DATAGUARD_STATS. db-exporter
+      # only emits this when the target is actually a physical standby;
+      # otherwise the panel shows "No data", same as the SQL Server AG lag metric.
+      - record: db:replication_lag_seconds
+        expr: oracledb_dataguard_apply_lag_seconds{db_type="oracle"}
+
+      # Current lock waits by mode, from V$LOCK. Instance-wide, so "database"
+      # is a constant (see db:connections_active above).
+      - record: db:locks_total
+        expr: |
+          label_replace(
+            oracledb_locks_total{db_type="oracle"},
+            "database", "oracle", "__name__", ".*"
+          )
+
+      # Deadlock count -- NOT a true cumulative ORA-00060 counter. Oracle
+      # exposes no such V$ view; db-exporter uses a documented proxy (sessions
+      # currently blocked on row lock contention). See db-exporter/README.md's
+      # "Known limitations" before alerting on this metric.
+      - record: db:deadlocks_total
+        expr: oracledb_deadlocks_total{db_type="oracle"}
+
+      # Tablespace size in bytes from V$TABLESPACE, exposed by oracledb_exporter's
+      # default-metrics.toml as oracledb_tablespace_bytes. "tablespace" label
+      # normalized to "database" for dashboard consistency (closest Oracle analog
+      # to MySQL/Postgres per-database size).
+      - record: db:size_bytes
+        expr: |
+          label_replace(
+            oracledb_tablespace_bytes{db_type="oracle"},
+            "database", "$1", "tablespace", "(.*)"
+          )

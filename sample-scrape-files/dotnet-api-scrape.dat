@@ -1,0 +1,327 @@
+# HELP dotnet_collection_count_total GC collection count
+# TYPE dotnet_collection_count_total counter
+dotnet_collection_count_total{generation="0"} 12
+dotnet_collection_count_total{generation="1"} 5
+dotnet_collection_count_total{generation="2"} 3
+# HELP process_start_time_seconds Start time of the process since unix epoch in seconds.
+# TYPE process_start_time_seconds gauge
+process_start_time_seconds 1783353700.69086
+# HELP process_cpu_seconds_total Total user and system CPU time spent in seconds.
+# TYPE process_cpu_seconds_total counter
+process_cpu_seconds_total 19.921875
+# HELP process_virtual_memory_bytes Virtual memory size in bytes.
+# TYPE process_virtual_memory_bytes gauge
+process_virtual_memory_bytes 888532992
+# HELP process_working_set_bytes Process working set
+# TYPE process_working_set_bytes gauge
+process_working_set_bytes 198750208
+# HELP process_private_memory_bytes Process private memory size
+# TYPE process_private_memory_bytes gauge
+process_private_memory_bytes 205647872
+# HELP process_open_handles Number of open handles
+# TYPE process_open_handles gauge
+process_open_handles 1292
+# HELP process_num_threads Total number of threads
+# TYPE process_num_threads gauge
+process_num_threads 39
+# HELP dotnet_total_memory_bytes Total known allocated memory
+# TYPE dotnet_total_memory_bytes gauge
+dotnet_total_memory_bytes 26711712
+# HELP prometheus_net_metric_families Number of metric families currently registered.
+# TYPE prometheus_net_metric_families gauge
+prometheus_net_metric_families{metric_type="counter"} 5
+prometheus_net_metric_families{metric_type="gauge"} 10
+prometheus_net_metric_families{metric_type="summary"} 0
+prometheus_net_metric_families{metric_type="histogram"} 1
+# HELP prometheus_net_metric_instances Number of metric instances currently registered across all metric families.
+# TYPE prometheus_net_metric_instances gauge
+prometheus_net_metric_instances{metric_type="counter"} 24
+prometheus_net_metric_instances{metric_type="gauge"} 19
+prometheus_net_metric_instances{metric_type="summary"} 0
+prometheus_net_metric_instances{metric_type="histogram"} 18
+# HELP prometheus_net_metric_timeseries Number of metric timeseries currently generated from all metric instances.
+# TYPE prometheus_net_metric_timeseries gauge
+prometheus_net_metric_timeseries{metric_type="counter"} 24
+prometheus_net_metric_timeseries{metric_type="gauge"} 19
+prometheus_net_metric_timeseries{metric_type="summary"} 0
+prometheus_net_metric_timeseries{metric_type="histogram"} 252
+# HELP prometheus_net_exemplars_recorded_total Number of exemplars that were accepted into in-memory storage in the prometheus-net SDK.
+# TYPE prometheus_net_exemplars_recorded_total counter
+prometheus_net_exemplars_recorded_total 0
+# HELP http_requests_total Total number of HTTP requests processed.
+# TYPE http_requests_total counter
+http_requests_total{method="POST",endpoint="GetProjects",status_code="200"} 7
+http_requests_total{method="POST",endpoint="GetProjectQualifiers",status_code="200"} 6
+http_requests_total{method="POST",endpoint="GetProject",status_code="200"} 22
+http_requests_total{method="POST",endpoint="GetProjectPerformances",status_code="200"} 3
+http_requests_total{method="POST",endpoint="GetProjectPerformancesTotals",status_code="200"} 3
+http_requests_total{method="POST",endpoint="IsHCP_Project",status_code="200"} 3
+http_requests_total{method="POST",endpoint="GetProjectActivities",status_code="200"} 1
+http_requests_total{method="POST",endpoint="GetProjectCommitments",status_code="200"} 2
+http_requests_total{method="POST",endpoint="GetProjectAnnualCommitments",status_code="200"} 2
+http_requests_total{method="POST",endpoint="GetProjectChanges",status_code="200"} 2
+http_requests_total{method="POST",endpoint="GetProjectChange",status_code="200"} 1
+http_requests_total{method="POST",endpoint="GetProjectComments",status_code="200"} 1
+http_requests_total{method="POST",endpoint="IsElectronicallyFed",status_code="200"} 1
+http_requests_total{method="POST",endpoint="IsProjectValid",status_code="200"} 1
+http_requests_total{method="POST",endpoint="UpdateProject",status_code="500"} 1
+http_requests_total{method="POST",endpoint="GetAdHocGroups",status_code="200"} 1
+http_requests_total{method="POST",endpoint="GetProgramCategories",status_code="200"} 1
+http_requests_total{method="POST",endpoint="GetInflationFactors",status_code="200"} 1
+# HELP http_request_duration_seconds Duration of HTTP requests in seconds.
+# TYPE http_request_duration_seconds histogram
+http_request_duration_seconds_sum{method="POST",endpoint="GetProjects"} 9.359388
+http_request_duration_seconds_count{method="POST",endpoint="GetProjects"} 7
+http_request_duration_seconds_bucket{method="POST",endpoint="GetProjects",le="0.005"} 0
+http_request_duration_seconds_bucket{method="POST",endpoint="GetProjects",le="0.01"} 0
+http_request_duration_seconds_bucket{method="POST",endpoint="GetProjects",le="0.025"} 0
+http_request_duration_seconds_bucket{method="POST",endpoint="GetProjects",le="0.05"} 0
+http_request_duration_seconds_bucket{method="POST",endpoint="GetProjects",le="0.1"} 0
+http_request_duration_seconds_bucket{method="POST",endpoint="GetProjects",le="0.25"} 6
+http_request_duration_seconds_bucket{method="POST",endpoint="GetProjects",le="0.5"} 6
+http_request_duration_seconds_bucket{method="POST",endpoint="GetProjects",le="1"} 6
+http_request_duration_seconds_bucket{method="POST",endpoint="GetProjects",le="2.5"} 6
+http_request_duration_seconds_bucket{method="POST",endpoint="GetProjects",le="5"} 6
+http_request_duration_seconds_bucket{method="POST",endpoint="GetProjects",le="10"} 7
+http_request_duration_seconds_bucket{method="POST",endpoint="GetProjects",le="+Inf"} 7
+http_request_duration_seconds_sum{method="POST",endpoint="GetProjectQualifiers"} 0.5116343
+http_request_duration_seconds_count{method="POST",endpoint="GetProjectQualifiers"} 6
+http_request_duration_seconds_bucket{method="POST",endpoint="GetProjectQualifiers",le="0.005"} 0
+http_request_duration_seconds_bucket{method="POST",endpoint="GetProjectQualifiers",le="0.01"} 0
+http_request_duration_seconds_bucket{method="POST",endpoint="GetProjectQualifiers",le="0.025"} 0
+http_request_duration_seconds_bucket{method="POST",endpoint="GetProjectQualifiers",le="0.05"} 0
+http_request_duration_seconds_bucket{method="POST",endpoint="GetProjectQualifiers",le="0.1"} 5
+http_request_duration_seconds_bucket{method="POST",endpoint="GetProjectQualifiers",le="0.25"} 6
+http_request_duration_seconds_bucket{method="POST",endpoint="GetProjectQualifiers",le="0.5"} 6
+http_request_duration_seconds_bucket{method="POST",endpoint="GetProjectQualifiers",le="1"} 6
+http_request_duration_seconds_bucket{method="POST",endpoint="GetProjectQualifiers",le="2.5"} 6
+http_request_duration_seconds_bucket{method="POST",endpoint="GetProjectQualifiers",le="5"} 6
+http_request_duration_seconds_bucket{method="POST",endpoint="GetProjectQualifiers",le="10"} 6
+http_request_duration_seconds_bucket{method="POST",endpoint="GetProjectQualifiers",le="+Inf"} 6
+http_request_duration_seconds_sum{method="POST",endpoint="GetProject"} 0.2641716
+http_request_duration_seconds_count{method="POST",endpoint="GetProject"} 22
+http_request_duration_seconds_bucket{method="POST",endpoint="GetProject",le="0.005"} 6
+http_request_duration_seconds_bucket{method="POST",endpoint="GetProject",le="0.01"} 18
+http_request_duration_seconds_bucket{method="POST",endpoint="GetProject",le="0.025"} 21
+http_request_duration_seconds_bucket{method="POST",endpoint="GetProject",le="0.05"} 21
+http_request_duration_seconds_bucket{method="POST",endpoint="GetProject",le="0.1"} 21
+http_request_duration_seconds_bucket{method="POST",endpoint="GetProject",le="0.25"} 22
+http_request_duration_seconds_bucket{method="POST",endpoint="GetProject",le="0.5"} 22
+http_request_duration_seconds_bucket{method="POST",endpoint="GetProject",le="1"} 22
+http_request_duration_seconds_bucket{method="POST",endpoint="GetProject",le="2.5"} 22
+http_request_duration_seconds_bucket{method="POST",endpoint="GetProject",le="5"} 22
+http_request_duration_seconds_bucket{method="POST",endpoint="GetProject",le="10"} 22
+http_request_duration_seconds_bucket{method="POST",endpoint="GetProject",le="+Inf"} 22
+http_request_duration_seconds_sum{method="POST",endpoint="GetProjectPerformances"} 0.4910929
+http_request_duration_seconds_count{method="POST",endpoint="GetProjectPerformances"} 3
+http_request_duration_seconds_bucket{method="POST",endpoint="GetProjectPerformances",le="0.005"} 0
+http_request_duration_seconds_bucket{method="POST",endpoint="GetProjectPerformances",le="0.01"} 0
+http_request_duration_seconds_bucket{method="POST",endpoint="GetProjectPerformances",le="0.025"} 1
+http_request_duration_seconds_bucket{method="POST",endpoint="GetProjectPerformances",le="0.05"} 1
+http_request_duration_seconds_bucket{method="POST",endpoint="GetProjectPerformances",le="0.1"} 1
+http_request_duration_seconds_bucket{method="POST",endpoint="GetProjectPerformances",le="0.25"} 2
+http_request_duration_seconds_bucket{method="POST",endpoint="GetProjectPerformances",le="0.5"} 3
+http_request_duration_seconds_bucket{method="POST",endpoint="GetProjectPerformances",le="1"} 3
+http_request_duration_seconds_bucket{method="POST",endpoint="GetProjectPerformances",le="2.5"} 3
+http_request_duration_seconds_bucket{method="POST",endpoint="GetProjectPerformances",le="5"} 3
+http_request_duration_seconds_bucket{method="POST",endpoint="GetProjectPerformances",le="10"} 3
+http_request_duration_seconds_bucket{method="POST",endpoint="GetProjectPerformances",le="+Inf"} 3
+http_request_duration_seconds_sum{method="POST",endpoint="GetProjectPerformancesTotals"} 0.1574331
+http_request_duration_seconds_count{method="POST",endpoint="GetProjectPerformancesTotals"} 3
+http_request_duration_seconds_bucket{method="POST",endpoint="GetProjectPerformancesTotals",le="0.005"} 0
+http_request_duration_seconds_bucket{method="POST",endpoint="GetProjectPerformancesTotals",le="0.01"} 1
+http_request_duration_seconds_bucket{method="POST",endpoint="GetProjectPerformancesTotals",le="0.025"} 1
+http_request_duration_seconds_bucket{method="POST",endpoint="GetProjectPerformancesTotals",le="0.05"} 1
+http_request_duration_seconds_bucket{method="POST",endpoint="GetProjectPerformancesTotals",le="0.1"} 3
+http_request_duration_seconds_bucket{method="POST",endpoint="GetProjectPerformancesTotals",le="0.25"} 3
+http_request_duration_seconds_bucket{method="POST",endpoint="GetProjectPerformancesTotals",le="0.5"} 3
+http_request_duration_seconds_bucket{method="POST",endpoint="GetProjectPerformancesTotals",le="1"} 3
+http_request_duration_seconds_bucket{method="POST",endpoint="GetProjectPerformancesTotals",le="2.5"} 3
+http_request_duration_seconds_bucket{method="POST",endpoint="GetProjectPerformancesTotals",le="5"} 3
+http_request_duration_seconds_bucket{method="POST",endpoint="GetProjectPerformancesTotals",le="10"} 3
+http_request_duration_seconds_bucket{method="POST",endpoint="GetProjectPerformancesTotals",le="+Inf"} 3
+http_request_duration_seconds_sum{method="POST",endpoint="IsHCP_Project"} 0.0919005
+http_request_duration_seconds_count{method="POST",endpoint="IsHCP_Project"} 3
+http_request_duration_seconds_bucket{method="POST",endpoint="IsHCP_Project",le="0.005"} 1
+http_request_duration_seconds_bucket{method="POST",endpoint="IsHCP_Project",le="0.01"} 1
+http_request_duration_seconds_bucket{method="POST",endpoint="IsHCP_Project",le="0.025"} 1
+http_request_duration_seconds_bucket{method="POST",endpoint="IsHCP_Project",le="0.05"} 3
+http_request_duration_seconds_bucket{method="POST",endpoint="IsHCP_Project",le="0.1"} 3
+http_request_duration_seconds_bucket{method="POST",endpoint="IsHCP_Project",le="0.25"} 3
+http_request_duration_seconds_bucket{method="POST",endpoint="IsHCP_Project",le="0.5"} 3
+http_request_duration_seconds_bucket{method="POST",endpoint="IsHCP_Project",le="1"} 3
+http_request_duration_seconds_bucket{method="POST",endpoint="IsHCP_Project",le="2.5"} 3
+http_request_duration_seconds_bucket{method="POST",endpoint="IsHCP_Project",le="5"} 3
+http_request_duration_seconds_bucket{method="POST",endpoint="IsHCP_Project",le="10"} 3
+http_request_duration_seconds_bucket{method="POST",endpoint="IsHCP_Project",le="+Inf"} 3
+http_request_duration_seconds_sum{method="POST",endpoint="GetProjectActivities"} 0.0391794
+http_request_duration_seconds_count{method="POST",endpoint="GetProjectActivities"} 1
+http_request_duration_seconds_bucket{method="POST",endpoint="GetProjectActivities",le="0.005"} 0
+http_request_duration_seconds_bucket{method="POST",endpoint="GetProjectActivities",le="0.01"} 0
+http_request_duration_seconds_bucket{method="POST",endpoint="GetProjectActivities",le="0.025"} 0
+http_request_duration_seconds_bucket{method="POST",endpoint="GetProjectActivities",le="0.05"} 1
+http_request_duration_seconds_bucket{method="POST",endpoint="GetProjectActivities",le="0.1"} 1
+http_request_duration_seconds_bucket{method="POST",endpoint="GetProjectActivities",le="0.25"} 1
+http_request_duration_seconds_bucket{method="POST",endpoint="GetProjectActivities",le="0.5"} 1
+http_request_duration_seconds_bucket{method="POST",endpoint="GetProjectActivities",le="1"} 1
+http_request_duration_seconds_bucket{method="POST",endpoint="GetProjectActivities",le="2.5"} 1
+http_request_duration_seconds_bucket{method="POST",endpoint="GetProjectActivities",le="5"} 1
+http_request_duration_seconds_bucket{method="POST",endpoint="GetProjectActivities",le="10"} 1
+http_request_duration_seconds_bucket{method="POST",endpoint="GetProjectActivities",le="+Inf"} 1
+http_request_duration_seconds_sum{method="POST",endpoint="GetProjectCommitments"} 0.0418833
+http_request_duration_seconds_count{method="POST",endpoint="GetProjectCommitments"} 2
+http_request_duration_seconds_bucket{method="POST",endpoint="GetProjectCommitments",le="0.005"} 1
+http_request_duration_seconds_bucket{method="POST",endpoint="GetProjectCommitments",le="0.01"} 1
+http_request_duration_seconds_bucket{method="POST",endpoint="GetProjectCommitments",le="0.025"} 1
+http_request_duration_seconds_bucket{method="POST",endpoint="GetProjectCommitments",le="0.05"} 2
+http_request_duration_seconds_bucket{method="POST",endpoint="GetProjectCommitments",le="0.1"} 2
+http_request_duration_seconds_bucket{method="POST",endpoint="GetProjectCommitments",le="0.25"} 2
+http_request_duration_seconds_bucket{method="POST",endpoint="GetProjectCommitments",le="0.5"} 2
+http_request_duration_seconds_bucket{method="POST",endpoint="GetProjectCommitments",le="1"} 2
+http_request_duration_seconds_bucket{method="POST",endpoint="GetProjectCommitments",le="2.5"} 2
+http_request_duration_seconds_bucket{method="POST",endpoint="GetProjectCommitments",le="5"} 2
+http_request_duration_seconds_bucket{method="POST",endpoint="GetProjectCommitments",le="10"} 2
+http_request_duration_seconds_bucket{method="POST",endpoint="GetProjectCommitments",le="+Inf"} 2
+http_request_duration_seconds_sum{method="POST",endpoint="GetProjectAnnualCommitments"} 0.0911975
+http_request_duration_seconds_count{method="POST",endpoint="GetProjectAnnualCommitments"} 2
+http_request_duration_seconds_bucket{method="POST",endpoint="GetProjectAnnualCommitments",le="0.005"} 0
+http_request_duration_seconds_bucket{method="POST",endpoint="GetProjectAnnualCommitments",le="0.01"} 1
+http_request_duration_seconds_bucket{method="POST",endpoint="GetProjectAnnualCommitments",le="0.025"} 1
+http_request_duration_seconds_bucket{method="POST",endpoint="GetProjectAnnualCommitments",le="0.05"} 1
+http_request_duration_seconds_bucket{method="POST",endpoint="GetProjectAnnualCommitments",le="0.1"} 2
+http_request_duration_seconds_bucket{method="POST",endpoint="GetProjectAnnualCommitments",le="0.25"} 2
+http_request_duration_seconds_bucket{method="POST",endpoint="GetProjectAnnualCommitments",le="0.5"} 2
+http_request_duration_seconds_bucket{method="POST",endpoint="GetProjectAnnualCommitments",le="1"} 2
+http_request_duration_seconds_bucket{method="POST",endpoint="GetProjectAnnualCommitments",le="2.5"} 2
+http_request_duration_seconds_bucket{method="POST",endpoint="GetProjectAnnualCommitments",le="5"} 2
+http_request_duration_seconds_bucket{method="POST",endpoint="GetProjectAnnualCommitments",le="10"} 2
+http_request_duration_seconds_bucket{method="POST",endpoint="GetProjectAnnualCommitments",le="+Inf"} 2
+http_request_duration_seconds_sum{method="POST",endpoint="GetProjectChanges"} 0.0184273
+http_request_duration_seconds_count{method="POST",endpoint="GetProjectChanges"} 2
+http_request_duration_seconds_bucket{method="POST",endpoint="GetProjectChanges",le="0.005"} 1
+http_request_duration_seconds_bucket{method="POST",endpoint="GetProjectChanges",le="0.01"} 1
+http_request_duration_seconds_bucket{method="POST",endpoint="GetProjectChanges",le="0.025"} 2
+http_request_duration_seconds_bucket{method="POST",endpoint="GetProjectChanges",le="0.05"} 2
+http_request_duration_seconds_bucket{method="POST",endpoint="GetProjectChanges",le="0.1"} 2
+http_request_duration_seconds_bucket{method="POST",endpoint="GetProjectChanges",le="0.25"} 2
+http_request_duration_seconds_bucket{method="POST",endpoint="GetProjectChanges",le="0.5"} 2
+http_request_duration_seconds_bucket{method="POST",endpoint="GetProjectChanges",le="1"} 2
+http_request_duration_seconds_bucket{method="POST",endpoint="GetProjectChanges",le="2.5"} 2
+http_request_duration_seconds_bucket{method="POST",endpoint="GetProjectChanges",le="5"} 2
+http_request_duration_seconds_bucket{method="POST",endpoint="GetProjectChanges",le="10"} 2
+http_request_duration_seconds_bucket{method="POST",endpoint="GetProjectChanges",le="+Inf"} 2
+http_request_duration_seconds_sum{method="POST",endpoint="GetProjectChange"} 0.0241893
+http_request_duration_seconds_count{method="POST",endpoint="GetProjectChange"} 1
+http_request_duration_seconds_bucket{method="POST",endpoint="GetProjectChange",le="0.005"} 0
+http_request_duration_seconds_bucket{method="POST",endpoint="GetProjectChange",le="0.01"} 0
+http_request_duration_seconds_bucket{method="POST",endpoint="GetProjectChange",le="0.025"} 1
+http_request_duration_seconds_bucket{method="POST",endpoint="GetProjectChange",le="0.05"} 1
+http_request_duration_seconds_bucket{method="POST",endpoint="GetProjectChange",le="0.1"} 1
+http_request_duration_seconds_bucket{method="POST",endpoint="GetProjectChange",le="0.25"} 1
+http_request_duration_seconds_bucket{method="POST",endpoint="GetProjectChange",le="0.5"} 1
+http_request_duration_seconds_bucket{method="POST",endpoint="GetProjectChange",le="1"} 1
+http_request_duration_seconds_bucket{method="POST",endpoint="GetProjectChange",le="2.5"} 1
+http_request_duration_seconds_bucket{method="POST",endpoint="GetProjectChange",le="5"} 1
+http_request_duration_seconds_bucket{method="POST",endpoint="GetProjectChange",le="10"} 1
+http_request_duration_seconds_bucket{method="POST",endpoint="GetProjectChange",le="+Inf"} 1
+http_request_duration_seconds_sum{method="POST",endpoint="GetProjectComments"} 0.0243025
+http_request_duration_seconds_count{method="POST",endpoint="GetProjectComments"} 1
+http_request_duration_seconds_bucket{method="POST",endpoint="GetProjectComments",le="0.005"} 0
+http_request_duration_seconds_bucket{method="POST",endpoint="GetProjectComments",le="0.01"} 0
+http_request_duration_seconds_bucket{method="POST",endpoint="GetProjectComments",le="0.025"} 1
+http_request_duration_seconds_bucket{method="POST",endpoint="GetProjectComments",le="0.05"} 1
+http_request_duration_seconds_bucket{method="POST",endpoint="GetProjectComments",le="0.1"} 1
+http_request_duration_seconds_bucket{method="POST",endpoint="GetProjectComments",le="0.25"} 1
+http_request_duration_seconds_bucket{method="POST",endpoint="GetProjectComments",le="0.5"} 1
+http_request_duration_seconds_bucket{method="POST",endpoint="GetProjectComments",le="1"} 1
+http_request_duration_seconds_bucket{method="POST",endpoint="GetProjectComments",le="2.5"} 1
+http_request_duration_seconds_bucket{method="POST",endpoint="GetProjectComments",le="5"} 1
+http_request_duration_seconds_bucket{method="POST",endpoint="GetProjectComments",le="10"} 1
+http_request_duration_seconds_bucket{method="POST",endpoint="GetProjectComments",le="+Inf"} 1
+http_request_duration_seconds_sum{method="POST",endpoint="IsElectronicallyFed"} 0.0020269
+http_request_duration_seconds_count{method="POST",endpoint="IsElectronicallyFed"} 1
+http_request_duration_seconds_bucket{method="POST",endpoint="IsElectronicallyFed",le="0.005"} 1
+http_request_duration_seconds_bucket{method="POST",endpoint="IsElectronicallyFed",le="0.01"} 1
+http_request_duration_seconds_bucket{method="POST",endpoint="IsElectronicallyFed",le="0.025"} 1
+http_request_duration_seconds_bucket{method="POST",endpoint="IsElectronicallyFed",le="0.05"} 1
+http_request_duration_seconds_bucket{method="POST",endpoint="IsElectronicallyFed",le="0.1"} 1
+http_request_duration_seconds_bucket{method="POST",endpoint="IsElectronicallyFed",le="0.25"} 1
+http_request_duration_seconds_bucket{method="POST",endpoint="IsElectronicallyFed",le="0.5"} 1
+http_request_duration_seconds_bucket{method="POST",endpoint="IsElectronicallyFed",le="1"} 1
+http_request_duration_seconds_bucket{method="POST",endpoint="IsElectronicallyFed",le="2.5"} 1
+http_request_duration_seconds_bucket{method="POST",endpoint="IsElectronicallyFed",le="5"} 1
+http_request_duration_seconds_bucket{method="POST",endpoint="IsElectronicallyFed",le="10"} 1
+http_request_duration_seconds_bucket{method="POST",endpoint="IsElectronicallyFed",le="+Inf"} 1
+http_request_duration_seconds_sum{method="POST",endpoint="IsProjectValid"} 0.0031737
+http_request_duration_seconds_count{method="POST",endpoint="IsProjectValid"} 1
+http_request_duration_seconds_bucket{method="POST",endpoint="IsProjectValid",le="0.005"} 1
+http_request_duration_seconds_bucket{method="POST",endpoint="IsProjectValid",le="0.01"} 1
+http_request_duration_seconds_bucket{method="POST",endpoint="IsProjectValid",le="0.025"} 1
+http_request_duration_seconds_bucket{method="POST",endpoint="IsProjectValid",le="0.05"} 1
+http_request_duration_seconds_bucket{method="POST",endpoint="IsProjectValid",le="0.1"} 1
+http_request_duration_seconds_bucket{method="POST",endpoint="IsProjectValid",le="0.25"} 1
+http_request_duration_seconds_bucket{method="POST",endpoint="IsProjectValid",le="0.5"} 1
+http_request_duration_seconds_bucket{method="POST",endpoint="IsProjectValid",le="1"} 1
+http_request_duration_seconds_bucket{method="POST",endpoint="IsProjectValid",le="2.5"} 1
+http_request_duration_seconds_bucket{method="POST",endpoint="IsProjectValid",le="5"} 1
+http_request_duration_seconds_bucket{method="POST",endpoint="IsProjectValid",le="10"} 1
+http_request_duration_seconds_bucket{method="POST",endpoint="IsProjectValid",le="+Inf"} 1
+http_request_duration_seconds_sum{method="POST",endpoint="UpdateProject"} 0.6042834
+http_request_duration_seconds_count{method="POST",endpoint="UpdateProject"} 1
+http_request_duration_seconds_bucket{method="POST",endpoint="UpdateProject",le="0.005"} 0
+http_request_duration_seconds_bucket{method="POST",endpoint="UpdateProject",le="0.01"} 0
+http_request_duration_seconds_bucket{method="POST",endpoint="UpdateProject",le="0.025"} 0
+http_request_duration_seconds_bucket{method="POST",endpoint="UpdateProject",le="0.05"} 0
+http_request_duration_seconds_bucket{method="POST",endpoint="UpdateProject",le="0.1"} 0
+http_request_duration_seconds_bucket{method="POST",endpoint="UpdateProject",le="0.25"} 0
+http_request_duration_seconds_bucket{method="POST",endpoint="UpdateProject",le="0.5"} 0
+http_request_duration_seconds_bucket{method="POST",endpoint="UpdateProject",le="1"} 1
+http_request_duration_seconds_bucket{method="POST",endpoint="UpdateProject",le="2.5"} 1
+http_request_duration_seconds_bucket{method="POST",endpoint="UpdateProject",le="5"} 1
+http_request_duration_seconds_bucket{method="POST",endpoint="UpdateProject",le="10"} 1
+http_request_duration_seconds_bucket{method="POST",endpoint="UpdateProject",le="+Inf"} 1
+http_request_duration_seconds_sum{method="POST",endpoint="GetAdHocGroups"} 0.0469835
+http_request_duration_seconds_count{method="POST",endpoint="GetAdHocGroups"} 1
+http_request_duration_seconds_bucket{method="POST",endpoint="GetAdHocGroups",le="0.005"} 0
+http_request_duration_seconds_bucket{method="POST",endpoint="GetAdHocGroups",le="0.01"} 0
+http_request_duration_seconds_bucket{method="POST",endpoint="GetAdHocGroups",le="0.025"} 0
+http_request_duration_seconds_bucket{method="POST",endpoint="GetAdHocGroups",le="0.05"} 1
+http_request_duration_seconds_bucket{method="POST",endpoint="GetAdHocGroups",le="0.1"} 1
+http_request_duration_seconds_bucket{method="POST",endpoint="GetAdHocGroups",le="0.25"} 1
+http_request_duration_seconds_bucket{method="POST",endpoint="GetAdHocGroups",le="0.5"} 1
+http_request_duration_seconds_bucket{method="POST",endpoint="GetAdHocGroups",le="1"} 1
+http_request_duration_seconds_bucket{method="POST",endpoint="GetAdHocGroups",le="2.5"} 1
+http_request_duration_seconds_bucket{method="POST",endpoint="GetAdHocGroups",le="5"} 1
+http_request_duration_seconds_bucket{method="POST",endpoint="GetAdHocGroups",le="10"} 1
+http_request_duration_seconds_bucket{method="POST",endpoint="GetAdHocGroups",le="+Inf"} 1
+http_request_duration_seconds_sum{method="POST",endpoint="GetProgramCategories"} 0.032255
+http_request_duration_seconds_count{method="POST",endpoint="GetProgramCategories"} 1
+http_request_duration_seconds_bucket{method="POST",endpoint="GetProgramCategories",le="0.005"} 0
+http_request_duration_seconds_bucket{method="POST",endpoint="GetProgramCategories",le="0.01"} 0
+http_request_duration_seconds_bucket{method="POST",endpoint="GetProgramCategories",le="0.025"} 0
+http_request_duration_seconds_bucket{method="POST",endpoint="GetProgramCategories",le="0.05"} 1
+http_request_duration_seconds_bucket{method="POST",endpoint="GetProgramCategories",le="0.1"} 1
+http_request_duration_seconds_bucket{method="POST",endpoint="GetProgramCategories",le="0.25"} 1
+http_request_duration_seconds_bucket{method="POST",endpoint="GetProgramCategories",le="0.5"} 1
+http_request_duration_seconds_bucket{method="POST",endpoint="GetProgramCategories",le="1"} 1
+http_request_duration_seconds_bucket{method="POST",endpoint="GetProgramCategories",le="2.5"} 1
+http_request_duration_seconds_bucket{method="POST",endpoint="GetProgramCategories",le="5"} 1
+http_request_duration_seconds_bucket{method="POST",endpoint="GetProgramCategories",le="10"} 1
+http_request_duration_seconds_bucket{method="POST",endpoint="GetProgramCategories",le="+Inf"} 1
+http_request_duration_seconds_sum{method="POST",endpoint="GetInflationFactors"} 0.0455144
+http_request_duration_seconds_count{method="POST",endpoint="GetInflationFactors"} 1
+http_request_duration_seconds_bucket{method="POST",endpoint="GetInflationFactors",le="0.005"} 0
+http_request_duration_seconds_bucket{method="POST",endpoint="GetInflationFactors",le="0.01"} 0
+http_request_duration_seconds_bucket{method="POST",endpoint="GetInflationFactors",le="0.025"} 0
+http_request_duration_seconds_bucket{method="POST",endpoint="GetInflationFactors",le="0.05"} 1
+http_request_duration_seconds_bucket{method="POST",endpoint="GetInflationFactors",le="0.1"} 1
+http_request_duration_seconds_bucket{method="POST",endpoint="GetInflationFactors",le="0.25"} 1
+http_request_duration_seconds_bucket{method="POST",endpoint="GetInflationFactors",le="0.5"} 1
+http_request_duration_seconds_bucket{method="POST",endpoint="GetInflationFactors",le="1"} 1
+http_request_duration_seconds_bucket{method="POST",endpoint="GetInflationFactors",le="2.5"} 1
+http_request_duration_seconds_bucket{method="POST",endpoint="GetInflationFactors",le="5"} 1
+http_request_duration_seconds_bucket{method="POST",endpoint="GetInflationFactors",le="10"} 1
+http_request_duration_seconds_bucket{method="POST",endpoint="GetInflationFactors",le="+Inf"} 1
+# HELP http_errors_total Total HTTP errors with context for diagnostics.
+# TYPE http_errors_total counter
+http_errors_total{method="POST",endpoint="UpdateProject",status_code="500",exception_type="none"} 1

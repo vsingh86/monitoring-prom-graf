@@ -1,129 +1,112 @@
-# Centralized Monitoring Demo Stack
+# Centralized Monitoring
 
-A fully self-contained Prometheus + Grafana demo with realistic simulated
-metrics across all 6 observability layers — plus real host metrics from your
-own machine via node_exporter.
+Prometheus + Grafana stack for monitoring real applications and infrastructure.
 
-## Prerequisites
+## Layout
 
-- Docker Desktop (or Docker Engine + Compose plugin)
-- Ports 3000, 9090, 9100, 9999 free on localhost
-
----
-
-## Quick Start
-
-```bash
-# 1. Start the stack
-docker compose up -d --build
-
-# 2. Wait ~15 seconds for Prometheus to scrape the first samples
-
-# 3. Open Grafana
-open http://localhost:3000
-# Login: admin / demo1234
-# The dashboard loads automatically as the home screen
+```
+.
+├── docker-compose.yml
+├── .env.example                          # db-exporter DB passwords -- copy to .env at repo root
+├── prometheus/
+│   ├── prometheus.yml                    # scrape configs + rule_files references
+│   └── recording_rules/                  # native metrics -> app:*/db:*/host:* schema, per stack
+├── db-exporter/                          # multi-database Prometheus exporter (see its README)
+├── docs/
+│   └── onboarding-new-app.md             # full checklist for adding a new app
+└── grafana/
+    ├── provisioning/
+    │   ├── datasources/                  # Prometheus datasource (auto-provisioned)
+    │   └── dashboards/                   # dashboard provider config
+    └── dashboards/
+        ├── app-analytics.json            # generic per-app analytics dashboard
+        ├── authapi-analytics.json        # AuthApi-specific deep dive
+        ├── frontend-analytics.json       # frontend RUM dashboard
+        └── team-overview.json            # landing page linking to the above
 ```
 
----
+## Run it
 
-## What's Running
-
-| Container      | URL                          | Purpose                                |
-|----------------|------------------------------|----------------------------------------|
-| grafana        | http://localhost:3000        | Dashboard UI (auto-provisioned)        |
-| prometheus     | http://localhost:9090        | Metrics storage & query engine         |
-| node-exporter  | http://localhost:9100/metrics| Real CPU / memory / disk / network     |
-| fake-exporter  | http://localhost:9999/metrics| Simulated app metrics (all 6 layers)   |
-
----
-
-## Simulated Incident Patterns
-
-The fake exporter automatically injects realistic incidents every 1.5–3 minutes.
-Each lasts 2–5 minutes then recovers. Watch the dashboard for:
-
-| Incident           | What you'll see                                                   |
-|--------------------|-------------------------------------------------------------------|
-| `traffic_spike`    | RPS doubles, latency climbs, queue depth grows, connection pools fill |
-| `error_surge`      | 5xx rate jumps to 15%+, Stripe probe goes DOWN, webhook failures  |
-| `memory_pressure`  | JVM heap climbs toward max, Redis hit ratio drops to ~55%         |
-| `slow_query`       | DB query p99 spikes 10–40×, replication lag grows, exclusive locks increase |
-| `gc_storm`         | JVM GC pause p99 spikes above 1s, heap fluctuates wildly          |
-
-Set the dashboard time range to **Last 30 minutes** and refresh to **10s**
-for the best demo effect.
-
----
-
-## Layer-by-Layer Guide for Your Demo
-
-### 🟣 Layer 1 — Golden Signals (top of dashboard)
-- Point to the **latency p99** panel — show how the 99th percentile tells a
-  different story than the median during incidents
-- The **error rate** panel shows 4xx vs 5xx separately — different root causes
-- **Saturation** shows connection pool pressure, not just CPU
-
-### 🟢 Layer 2 — Infrastructure (real data from your machine)
-- These panels show **actual** CPU, memory, disk, and network from the host
-  running Docker — genuinely real data, not simulated
-- Great for showing that infrastructure monitoring is a baseline, not the full picture
-
-### 🟡 Layer 3 — Application
-- **Business transactions** panel shows orders/payments/logins — this is what
-  the business actually cares about
-- **Queue depth** climbs visibly during traffic_spike incidents
-- **Endpoint breakdown** shows which routes are under load
-
-### 🔴 Layer 4 — Runtime (JVM + Node.js)
-- **GC pause time** is invisible at the OS level — only visible here
-- **Heap %** shows memory_pressure incidents before they cause OOM
-- **Event loop lag** simulates a Node.js service running alongside the JVM app
-
-### 🔵 Layer 5 — Database
-- **Query latency** spikes dramatically during slow_query incidents
-- **Replication lag** is a leading indicator — watch it climb before the
-  application starts returning stale data
-- **Redis cache hit ratio** drops during memory_pressure (evictions increase)
-
-### ⚫ Layer 6 — SaaS / External
-- **Availability stat panel** turns RED when an error_surge hits Stripe
-- **Rate limit consumption** shows the quota draining and refilling — great
-  for showing the value of monitoring third-party dependencies
-
----
-
-## Customising the Simulated Metrics
-
-Edit `fake-exporter/main.py`:
-
-- **Change incident frequency**: adjust `time.sleep(random.uniform(90, 180))`
-- **Change baseline RPS**: adjust `sine_wave(3600, 60, 120)` (period, amplitude, offset)
-- **Add a new endpoint**: add it to the `ENDPOINTS` list with a weight
-- **Change metric names**: update both `main.py` and the Grafana dashboard JSON
-
-After editing, rebuild with:
-```bash
-docker compose up -d --build fake-exporter
+```powershell
+docker compose up -d
 ```
 
----
+- Prometheus: http://localhost:9090 (check **Status > Targets**)
+- Grafana: http://localhost:3000 (login: `admin` / `admin`)
 
-## Stopping the Stack
+This starts prometheus/grafana/node-exporter even with no setup. `db-exporter`
+(database metrics) needs its own config first — see
+[`db-exporter/README.md`](db-exporter/README.md); its passwords come from a
+repo-root `.env` (copy from `.env.example`), which is optional for everything
+else in this stack.
 
-```bash
-docker compose down          # stop containers, keep data volumes
-docker compose down -v       # stop containers AND delete data
+> Note: if `monitoring-prom-graf` is still running, stop it first (`docker compose down` in that directory) — both stacks use ports 9090/3000/9100.
+
+> **`docker compose down` tears down the whole project, not one service.**
+> To stop/remove just one container (e.g. while testing `db-exporter`), use
+> `docker compose stop <service>` / `docker compose rm -f <service>` instead —
+> `down` will also stop unrelated containers you didn't start this session.
+
+## What's scraped
+
+| Job            | Target                                  | Notes                                  |
+|----------------|------------------------------------------|----------------------------------------|
+| `prometheus`   | self                                       | Prometheus' own metrics                 |
+| `node-exporter`| `node-exporter:9100`                      | Host CPU/memory/disk/network            |
+| `authapi`      | `api.hris-stage.adc.seattle.gov` (https)  | Real app — AuthApi staging              |
+| `authapi-postgres` / `myapp-mysql` / `myapp-sqlserver` / `myapp-oracle` | `db-exporter:9433` (`params.target=<name>`) | Database metrics, via the shared [`db-exporter`](db-exporter/README.md) service |
+
+## Dashboard
+
+`Application Analytics` (`app-analytics`) is templated on a `job` variable
+(defaults to `authapi`). It covers:
+
+- **Layer 1 — Golden Signals**: latency (p50/p95/p99), traffic, errors, saturation
+- **Layer 2 — Infrastructure**: CPU, memory, swap, disk I/O, disk space, network (from `node-exporter`)
+- **Layer 3 — Application**: request rate by endpoint, error breakdown, business transactions, external dependency latency
+- **Layer 4 — Database**: query latency, connection saturation, replication lag, locks, DB size
+- **Drilldowns**: slowest endpoints, highest-error endpoints, per-operation detail
+
+Panels that need metrics this app doesn't expose (e.g. Postgres, business
+transaction counters) will simply show "No data" until that instrumentation
+is added.
+
+## Multi-stack support — how it works
+
+`app-analytics.json` queries a normalized `app:*` metric schema so the same
+dashboard works across Node.js, .NET, and Java apps without modification.
+Prometheus recording rules in `prometheus/recording_rules/` do the translation:
+
+| Tech stack | Native metric (inbound) | Native labels | Normalized to |
+|---|---|---|---|
+| Node.js (prom-client) | `http_requests_total` | `route`, `status_code` | `app:http_requests_total` |
+| Node.js (prom-client) | `http_request_duration_seconds` | `route`, `status_code` | `app:http_request_duration_seconds_*` |
+| .NET (OTel ASP.NET Core) | `http_server_request_duration_seconds` | `http_route`, `http_response_status_code` | `app:http_request_duration_seconds_*` |
+| .NET Framework (prometheus-net) | `http_requests_total` / `http_request_duration_seconds` | `endpoint` (or `page` for UI components) | `app:http_requests_total` / `app:http_request_duration_seconds_*` |
+| Java (Micrometer/Spring Boot) | `http_server_requests_seconds` | `uri`, `status` | `app:http_request_duration_seconds_*` |
+
+Rules are scoped by an `app_type` label (`nodejs` / `dotnet` / `dotnet-framework` /
+`java`) set as a static label on each scrape job — so adding a new app of an
+existing stack requires **only a scrape job entry**; no rule files or dashboard
+changes needed.
+
+> **`dotnet` vs `dotnet-framework`:** these are two distinct stacks with
+> incompatible native metric names, not two names for the same thing. `dotnet`
+> assumes modern .NET + OpenTelemetry ASP.NET Core auto-instrumentation.
+> `dotnet-framework` assumes classic .NET Framework (pre-.NET-Core) manually
+> instrumented with the `prometheus-net` library — see
+> `prometheus/recording_rules/dotnet_framework.yml` for the exact metric
+> mapping (derived from real scrape samples in `sample-scrape-files/`).
+
+## Adding another real app
+
+See [`docs/onboarding-new-app.md`](docs/onboarding-new-app.md) for the full
+checklist — application job, optional database/infra jobs, the shared `app`
+label convention that ties them together, and dashboard verification steps.
+
+## Stopping
+
+```powershell
+docker compose down          # stop containers, keep data
+docker compose down -v       # stop containers and delete data
 ```
-
----
-
-## Connecting Real Applications Later
-
-To add your real apps alongside the demo:
-
-1. Add a new scrape job to `prometheus/prometheus.yml`
-2. Run `curl -X POST http://localhost:9090/-/reload` to hot-reload Prometheus
-3. Build new panels in Grafana pointing at your real metric names
-
-No restart required.

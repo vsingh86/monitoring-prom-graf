@@ -1,0 +1,7 @@
+.claude/
+.env
+db-exporter/config.yaml
+db-exporter/.venv/
+db-exporter/.pytest_cache/
+__pycache__/
+*.pyc

@@ -1,5 +1,5 @@
 {
-  "description": "Real Applications \u2014 Production Monitoring Overview. Click any app card to drill into its full analytics dashboard.",
+  "description": "Team Applications — Monitoring Overview. Click any app card to drill into its full analytics dashboard.",
   "editable": true,
   "graphTooltip": 1,
   "panels": [
@@ -16,7 +16,7 @@
       },
       "id": 1,
       "options": {
-        "content": "<div style=\"font-family:'DM Sans',Arial,sans-serif;display:flex;align-items:center;justify-content:space-between;padding:14px 20px;background:linear-gradient(135deg,#0f172a 0%,#1e293b 60%,#0f2744 100%);border-radius:10px;border:1px solid #1e3a5f\">\n  <div style=\"display:flex;align-items:center;gap:14px\">\n    <div style=\"width:10px;height:10px;border-radius:50%;background:#22c55e;box-shadow:0 0 8px #22c55e\"></div>\n    <div>\n      <div style=\"color:#f1f5f9;font-size:18px;font-weight:700;letter-spacing:0.01em\">Real Applications \u2014 Production Monitoring</div>\n      <div style=\"color:#64748b;font-size:12px;margin-top:2px\">Live instrumented services &nbsp;\u00b7&nbsp; Click any card to open the full 4-layer analytics dashboard</div>\n    </div>\n  </div>\n  <div style=\"display:flex;gap:24px;align-items:center\">\n    <div style=\"text-align:center\"><div style=\"color:#22c55e;font-size:11px;font-weight:600\">WEB APPS</div><div style=\"color:#94a3b8;font-size:11px\">6 services</div></div>\n    <div style=\"width:1px;height:28px;background:#334155\"></div>\n    <div style=\"text-align:center\"><div style=\"color:#60a5fa;font-size:11px;font-weight:600\">APIs</div><div style=\"color:#94a3b8;font-size:11px\">4 services</div></div>\n  </div>\n</div>",
+        "content": "<div style=\"font-family:'DM Sans',Arial,sans-serif;display:flex;align-items:center;justify-content:space-between;padding:14px 20px;background:linear-gradient(135deg,#0f172a 0%,#1e293b 60%,#0f2744 100%);border-radius:10px;border:1px solid #1e3a5f\">\n  <div style=\"display:flex;align-items:center;gap:14px\">\n    <div style=\"width:10px;height:10px;border-radius:50%;background:#22c55e;box-shadow:0 0 8px #22c55e\"></div>\n    <div>\n      <div style=\"color:#f1f5f9;font-size:18px;font-weight:700;letter-spacing:0.01em\">Team Applications — Monitoring Overview</div>\n      <div style=\"color:#64748b;font-size:12px;margin-top:2px\">Apps supported by the team &nbsp;·&nbsp; Click any card to open its full analytics dashboard</div>\n    </div>\n  </div>\n  <div style=\"display:flex;gap:24px;align-items:center\">\n    <div style=\"text-align:center\"><div style=\"color:#22c55e;font-size:11px;font-weight:600\">APPS</div><div style=\"color:#94a3b8;font-size:11px\">10 services</div></div>\n  </div>\n</div>",
         "mode": "html"
       },
       "title": "",
@@ -32,7 +32,7 @@
         "y": 3
       },
       "id": 2,
-      "title": "\ud83d\udd10  Real Applications",
+      "title": "📡  Team Applications",
       "type": "row"
     },
     {
@@ -67,8 +67,8 @@
           "max": 1,
           "links": [
             {
-              "title": "Open App Analytics \u2192",
-              "url": "/d/real-app-analytics?var-job=authapi",
+              "title": "Open App Analytics →",
+              "url": "/d/app-analytics?var-job=authapi&var-specific_dashboard=authapi-analytics&${__url_time_range}",
               "targetBlank": false
             }
           ]
@@ -145,12 +145,12 @@
                     "type": "value",
                     "options": {
                       "0": {
-                        "text": "\u2b07 DOWN",
+                        "text": "⬇ DOWN",
                         "color": "red",
                         "index": 0
                       },
                       "1": {
-                        "text": "\u2b06 UP",
+                        "text": "⬆ UP",
                         "color": "green",
                         "index": 1
                       }
@@ -215,7 +215,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "avg_over_time(up{job=\"authapi\"}[$__range]))",
+          "expr": "avg_over_time(up{job=\"authapi\"}[$__range])",
           "legendFormat": "Uptime",
           "refId": "A"
         },
@@ -229,12 +229,12 @@
           "refId": "B"
         }
       ],
-      "title": "\ud83d\udd10 Auth API",
+      "title": "🔐 Auth API",
       "type": "stat",
       "links": [
         {
-          "title": "Open App Analytics \u2192",
-          "url": "/d/real-app-analytics?var-job=authapi",
+          "title": "Open App Analytics →",
+          "url": "/d/app-analytics?var-job=authapi&var-specific_dashboard=authapi-analytics&${__url_time_range}",
           "targetBlank": false
         }
       ]
@@ -271,8 +271,8 @@
           "max": 1,
           "links": [
             {
-              "title": "Open App Analytics \u2192",
-              "url": "/d/real-app-analytics?var-job=authapi",
+              "title": "Open App Analytics →",
+              "url": "/d/app-analytics?var-job=authapi&${__url_time_range}",
               "targetBlank": false
             }
           ]
@@ -349,12 +349,12 @@
                     "type": "value",
                     "options": {
                       "0": {
-                        "text": "\u2b07 DOWN",
+                        "text": "⬇ DOWN",
                         "color": "red",
                         "index": 0
                       },
                       "1": {
-                        "text": "\u2b06 UP",
+                        "text": "⬆ UP",
                         "color": "green",
                         "index": 1
                       }
@@ -433,12 +433,12 @@
           "refId": "B"
         }
       ],
-      "title": "\ud83d\udce6 Placeholder App 1",
+      "title": "📦 Placeholder App 1",
       "type": "stat",
       "links": [
         {
-          "title": "Open App Analytics \u2192",
-          "url": "/d/real-app-analytics?var-job=authapi",
+          "title": "Open App Analytics →",
+          "url": "/d/app-analytics?var-job=authapi&${__url_time_range}",
           "targetBlank": false
         }
       ]
@@ -475,8 +475,8 @@
           "max": 1,
           "links": [
             {
-              "title": "Open App Analytics \u2192",
-              "url": "/d/real-app-analytics?var-job=authapi",
+              "title": "Open App Analytics →",
+              "url": "/d/app-analytics?var-job=authapi&${__url_time_range}",
               "targetBlank": false
             }
           ]
@@ -553,12 +553,12 @@
                     "type": "value",
                     "options": {
                       "0": {
-                        "text": "\u2b07 DOWN",
+                        "text": "⬇ DOWN",
                         "color": "red",
                         "index": 0
                       },
                       "1": {
-                        "text": "\u2b06 UP",
+                        "text": "⬆ UP",
                         "color": "green",
                         "index": 1
                       }
@@ -637,12 +637,12 @@
           "refId": "B"
         }
       ],
-      "title": "\ud83d\udce6 Placeholder App 2",
+      "title": "📦 Placeholder App 2",
       "type": "stat",
       "links": [
         {
-          "title": "Open App Analytics \u2192",
-          "url": "/d/real-app-analytics?var-job=authapi",
+          "title": "Open App Analytics →",
+          "url": "/d/app-analytics?var-job=authapi&${__url_time_range}",
           "targetBlank": false
         }
       ]
@@ -679,8 +679,8 @@
           "max": 1,
           "links": [
             {
-              "title": "Open App Analytics \u2192",
-              "url": "/d/real-app-analytics?var-job=authapi",
+              "title": "Open App Analytics →",
+              "url": "/d/app-analytics?var-job=authapi&${__url_time_range}",
               "targetBlank": false
             }
           ]
@@ -757,12 +757,12 @@
                     "type": "value",
                     "options": {
                       "0": {
-                        "text": "\u2b07 DOWN",
+                        "text": "⬇ DOWN",
                         "color": "red",
                         "index": 0
                       },
                       "1": {
-                        "text": "\u2b06 UP",
+                        "text": "⬆ UP",
                         "color": "green",
                         "index": 1
                       }
@@ -841,12 +841,12 @@
           "refId": "B"
         }
       ],
-      "title": "\ud83d\udce6 Placeholder App 3",
+      "title": "📦 Placeholder App 3",
       "type": "stat",
       "links": [
         {
-          "title": "Open App Analytics \u2192",
-          "url": "/d/real-app-analytics?var-job=authapi",
+          "title": "Open App Analytics →",
+          "url": "/d/app-analytics?var-job=authapi&${__url_time_range}",
           "targetBlank": false
         }
       ]
@@ -883,8 +883,8 @@
           "max": 1,
           "links": [
             {
-              "title": "Open App Analytics \u2192",
-              "url": "/d/real-app-analytics?var-job=authapi",
+              "title": "Open App Analytics →",
+              "url": "/d/app-analytics?var-job=authapi&${__url_time_range}",
               "targetBlank": false
             }
           ]
@@ -961,12 +961,12 @@
                     "type": "value",
                     "options": {
                       "0": {
-                        "text": "\u2b07 DOWN",
+                        "text": "⬇ DOWN",
                         "color": "red",
                         "index": 0
                       },
                       "1": {
-                        "text": "\u2b06 UP",
+                        "text": "⬆ UP",
                         "color": "green",
                         "index": 1
                       }
@@ -1045,12 +1045,12 @@
           "refId": "B"
         }
       ],
-      "title": "\ud83d\udce6 Placeholder App 4",
+      "title": "📦 Placeholder App 4",
       "type": "stat",
       "links": [
         {
-          "title": "Open App Analytics \u2192",
-          "url": "/d/real-app-analytics?var-job=authapi",
+          "title": "Open App Analytics →",
+          "url": "/d/app-analytics?var-job=authapi&${__url_time_range}",
           "targetBlank": false
         }
       ]
@@ -1087,8 +1087,8 @@
           "max": 1,
           "links": [
             {
-              "title": "Open App Analytics \u2192",
-              "url": "/d/real-app-analytics?var-job=authapi",
+              "title": "Open App Analytics →",
+              "url": "/d/app-analytics?var-job=authapi&${__url_time_range}",
               "targetBlank": false
             }
           ]
@@ -1165,12 +1165,12 @@
                     "type": "value",
                     "options": {
                       "0": {
-                        "text": "\u2b07 DOWN",
+                        "text": "⬇ DOWN",
                         "color": "red",
                         "index": 0
                       },
                       "1": {
-                        "text": "\u2b06 UP",
+                        "text": "⬆ UP",
                         "color": "green",
                         "index": 1
                       }
@@ -1249,12 +1249,12 @@
           "refId": "B"
         }
       ],
-      "title": "\ud83d\udce6 Placeholder App 5",
+      "title": "📦 Placeholder App 5",
       "type": "stat",
       "links": [
         {
-          "title": "Open App Analytics \u2192",
-          "url": "/d/real-app-analytics?var-job=authapi",
+          "title": "Open App Analytics →",
+          "url": "/d/app-analytics?var-job=authapi&${__url_time_range}",
           "targetBlank": false
         }
       ]
@@ -1291,8 +1291,8 @@
           "max": 1,
           "links": [
             {
-              "title": "Open App Analytics \u2192",
-              "url": "/d/real-app-analytics?var-job=authapi",
+              "title": "Open App Analytics →",
+              "url": "/d/app-analytics?var-job=authapi&${__url_time_range}",
               "targetBlank": false
             }
           ]
@@ -1369,12 +1369,12 @@
                     "type": "value",
                     "options": {
                       "0": {
-                        "text": "\u2b07 DOWN",
+                        "text": "⬇ DOWN",
                         "color": "red",
                         "index": 0
                       },
                       "1": {
-                        "text": "\u2b06 UP",
+                        "text": "⬆ UP",
                         "color": "green",
                         "index": 1
                       }
@@ -1453,12 +1453,12 @@
           "refId": "B"
         }
       ],
-      "title": "\ud83d\udce6 Placeholder App 6",
+      "title": "📦 Placeholder App 6",
       "type": "stat",
       "links": [
         {
-          "title": "Open App Analytics \u2192",
-          "url": "/d/real-app-analytics?var-job=authapi",
+          "title": "Open App Analytics →",
+          "url": "/d/app-analytics?var-job=authapi&${__url_time_range}",
           "targetBlank": false
         }
       ]
@@ -1495,8 +1495,8 @@
           "max": 1,
           "links": [
             {
-              "title": "Open App Analytics \u2192",
-              "url": "/d/real-app-analytics?var-job=authapi",
+              "title": "Open App Analytics →",
+              "url": "/d/app-analytics?var-job=authapi&${__url_time_range}",
               "targetBlank": false
             }
           ]
@@ -1573,12 +1573,12 @@
                     "type": "value",
                     "options": {
                       "0": {
-                        "text": "\u2b07 DOWN",
+                        "text": "⬇ DOWN",
                         "color": "red",
                         "index": 0
                       },
                       "1": {
-                        "text": "\u2b06 UP",
+                        "text": "⬆ UP",
                         "color": "green",
                         "index": 1
                       }
@@ -1657,12 +1657,12 @@
           "refId": "B"
         }
       ],
-      "title": "\ud83d\udce6 Placeholder App 7",
+      "title": "📦 Placeholder App 7",
       "type": "stat",
       "links": [
         {
-          "title": "Open App Analytics \u2192",
-          "url": "/d/real-app-analytics?var-job=authapi",
+          "title": "Open App Analytics →",
+          "url": "/d/app-analytics?var-job=authapi&${__url_time_range}",
           "targetBlank": false
         }
       ]
@@ -1699,8 +1699,8 @@
           "max": 1,
           "links": [
             {
-              "title": "Open App Analytics \u2192",
-              "url": "/d/real-app-analytics?var-job=authapi",
+              "title": "Open App Analytics →",
+              "url": "/d/app-analytics?var-job=authapi&${__url_time_range}",
               "targetBlank": false
             }
           ]
@@ -1777,12 +1777,12 @@
                     "type": "value",
                     "options": {
                       "0": {
-                        "text": "\u2b07 DOWN",
+                        "text": "⬇ DOWN",
                         "color": "red",
                         "index": 0
                       },
                       "1": {
-                        "text": "\u2b06 UP",
+                        "text": "⬆ UP",
                         "color": "green",
                         "index": 1
                       }
@@ -1861,12 +1861,12 @@
           "refId": "B"
         }
       ],
-      "title": "\ud83d\udce6 Placeholder App 8",
+      "title": "📦 Placeholder App 8",
       "type": "stat",
       "links": [
         {
-          "title": "Open App Analytics \u2192",
-          "url": "/d/real-app-analytics?var-job=authapi",
+          "title": "Open App Analytics →",
+          "url": "/d/app-analytics?var-job=authapi&${__url_time_range}",
           "targetBlank": false
         }
       ]
@@ -1903,8 +1903,8 @@
           "max": 1,
           "links": [
             {
-              "title": "Open App Analytics \u2192",
-              "url": "/d/real-app-analytics?var-job=authapi",
+              "title": "Open App Analytics →",
+              "url": "/d/app-analytics?var-job=authapi&${__url_time_range}",
               "targetBlank": false
             }
           ]
@@ -1981,12 +1981,12 @@
                     "type": "value",
                     "options": {
                       "0": {
-                        "text": "\u2b07 DOWN",
+                        "text": "⬇ DOWN",
                         "color": "red",
                         "index": 0
                       },
                       "1": {
-                        "text": "\u2b06 UP",
+                        "text": "⬆ UP",
                         "color": "green",
                         "index": 1
                       }
@@ -2065,12 +2065,12 @@
           "refId": "B"
         }
       ],
-      "title": "\ud83d\udce6 Placeholder App 9",
+      "title": "📦 Placeholder App 9",
       "type": "stat",
       "links": [
         {
-          "title": "Open App Analytics \u2192",
-          "url": "/d/real-app-analytics?var-job=authapi",
+          "title": "Open App Analytics →",
+          "url": "/d/app-analytics?var-job=authapi&${__url_time_range}",
           "targetBlank": false
         }
       ]
@@ -2080,7 +2080,7 @@
   "schemaVersion": 38,
   "tags": [
     "overview",
-    "real-apps",
+    "team",
     "production"
   ],
   "time": {
@@ -2089,21 +2089,7 @@
   },
   "timepicker": {},
   "timezone": "browser",
-  "title": "Real Applications \u2014 Overview",
-  "uid": "real-apps-overview",
-  "version": 1,
-  "links": [
-    {
-      "asDropdown": false,
-      "icon": "arrow-left",
-      "includeVars": false,
-      "keepTime": true,
-      "tags": [],
-      "targetBlank": false,
-      "title": "\u2190 Demo Portfolio Overview",
-      "tooltip": "Back to Demo Application Portfolio Overview",
-      "type": "link",
-      "url": "/d/app-portfolio-overview"
-    }
-  ]
+  "title": "Team Applications — Overview",
+  "uid": "team-overview",
+  "version": 1
 }

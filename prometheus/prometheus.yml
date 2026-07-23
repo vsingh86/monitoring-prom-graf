@@ -2,35 +2,160 @@ global:
   scrape_interval: 15s
   evaluation_interval: 15s
   external_labels:
-    environment: demo
+    environment: production
 
+rule_files:
+  # Application HTTP metrics (normalized to app:* schema)
+  - recording_rules/nodejs.yml
+  - recording_rules/dotnet.yml
+  - recording_rules/dotnet_framework.yml
+  - recording_rules/java.yml
+  # Infrastructure / host metrics (normalized to host:* schema)
+  - recording_rules/infra_linux.yml
+  - recording_rules/infra_windows.yml
+  # Database metrics (normalized to db:* schema)
+  - recording_rules/db_postgres.yml
+  - recording_rules/db_mysql.yml
+  - recording_rules/db_sqlserver.yml
+  - recording_rules/db_oracle.yml
+
+# ── Onboarding a new app ─────────────────────────────────────────────────────
+# Every job that belongs to an app — its application job, database job(s), and
+# dedicated infra host job(s) — must carry the SAME `app: <Name>` static label.
+# This is the join key app-analytics.json uses to scope Layer 2 (Infra) and
+# Layer 4 (Database) to whichever app is selected via the $job dropdown; it
+# resolves automatically once the label is consistent, no dashboard edits
+# needed. See the per-section comments below for what else each job type needs
+# (app_type / db_type / host_type) to hook into the recording-rule normalization.
 scrape_configs:
 
   - job_name: prometheus
     static_configs:
       - targets: ["localhost:9090"]
 
+  # Shared/generic host, not owned by a single app — intentionally has no
+  # `app` label, so it won't appear in any app-scoped Layer 2 view in
+  # app-analytics.json. See the "app" label convention below.
   - job_name: node-exporter
     static_configs:
       - targets: ["node-exporter:9100"]
+        labels:
+          host_type: linux
     relabel_configs:
       - source_labels: [__address__]
         target_label: instance
         regex: "([^:]+):.*"
         replacement: "${1}"
 
-  # Single scrape — fake exporter emits per-app label on every metric
-  - job_name: fake-apps
+  # ── Windows hosts ────────────────────────────────────────────────────────────
+  # One entry per Windows server running windows_exporter (default port 9182).
+  # host_type: windows triggers infra_windows.yml recording rules which normalize
+  # windows_exporter metrics to the shared host:* schema.
+  #
+  # `app: <Name>` ties a host to a specific application (must match the same
+  # value used on that app's application job and database job(s) below) so
+  # app-analytics.json's Layer 2 (Infrastructure) panels can scope to the host(s)
+  # belonging to the currently selected app. Shared/multi-tenant hosts should
+  # omit `app` — they'll correctly show no data in any app-scoped view.
+  #
+  # - job_name: windows-exporter-web01
+  #   static_configs:
+  #     - targets: ["web01.example.com:9182"]
+  #       labels:
+  #         host_type: windows
+  #         environment: production
+  #         app: AuthApi
+  #
+  # - job_name: windows-exporter-web02
+  #   static_configs:
+  #     - targets: ["web02.example.com:9182"]
+  #       labels:
+  #         host_type: windows
+  #         environment: production
+  #         app: AuthApi
+
+  # ── Database exporters ───────────────────────────────────────────────────────
+  # All four db_types below are served by ONE shared "db-exporter" service
+  # (see db-exporter/README.md) rather than separate per-vendor community
+  # exporters. It's a blackbox_exporter-style multi-target design: Prometheus
+  # still has one job_name per database, but every job scrapes the same
+  # db-exporter:9433 address with a different params.target. That target
+  # value MUST exactly match a "name:" entry in db-exporter/config.yaml.
+  #
+  # db_type is still mandatory on every job — it drives the matching db_*.yml
+  # recording rule that normalizes the exporter's vendor-native metrics to the
+  # shared db:* schema (unchanged by the exporter's introduction). The
+  # relabel_configs step gives each job a readable instance label (the target
+  # name) instead of every job collapsing to the literal "db-exporter:9433".
+  #
+  # The job_name here is also what you select in the "Database Job" ($db_job)
+  # dropdown in Grafana to view Layer 4 (Database) panels for a specific app's
+  # database.
+
+  # PostgreSQL
+  - job_name: authapi-postgres
+    params:
+      target: ["authapi-postgres"]
     static_configs:
-      - targets: ["fake-exporter:9999"]
+      - targets: ["db-exporter:9433"]
+        labels:
+          db_type: postgres
+          app: AuthApi
+          environment: staging
+    relabel_configs:
+      - source_labels: [__param_target]
+        target_label: instance
+
+  # MySQL
+  - job_name: myapp-mysql
+    params:
+      target: ["myapp-mysql"]
+    static_configs:
+      - targets: ["db-exporter:9433"]
+        labels:
+          db_type: mysql
+          app: MyApp
+          environment: production
+    relabel_configs:
+      - source_labels: [__param_target]
+        target_label: instance
+
+  # SQL Server
+  - job_name: myapp-sqlserver
+    params:
+      target: ["myapp-sqlserver"]
+    static_configs:
+      - targets: ["db-exporter:9433"]
+        labels:
+          db_type: sqlserver
+          app: MyApp
+          environment: production
+    relabel_configs:
+      - source_labels: [__param_target]
+        target_label: instance
+
+  # Oracle
+  - job_name: myapp-oracle
+    params:
+      target: ["myapp-oracle"]
+    static_configs:
+      - targets: ["db-exporter:9433"]
+        labels:
+          db_type: oracle
+          app: MyApp
+          environment: production
+    relabel_configs:
+      - source_labels: [__param_target]
+        target_label: instance
 
   # ── Real Applications ────────────────────────────────────────────────────
   - job_name: authapi
     metrics_path: /api/auth/metrics
     scheme: https
-    scrape_interval: 30s
+    scrape_interval: 15s
     static_configs:
       - targets: ["api.hris-stage.adc.seattle.gov"]
         labels:
           app: AuthApi
           environment: staging
+          app_type: nodejs

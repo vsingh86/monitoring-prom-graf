@@ -1,47 +1,33 @@
 {
-  "__inputs": [
-    {
-      "name": "DS_PROMETHEUS",
-      "label": "Prometheus",
-      "type": "datasource",
-      "pluginId": "prometheus"
-    }
-  ],
-  "__requires": [
-    {
-      "type": "grafana",
-      "id": "grafana",
-      "name": "Grafana",
-      "version": "10.0.0"
-    },
-    {
-      "type": "datasource",
-      "id": "prometheus",
-      "name": "Prometheus",
-      "version": "1.0.0"
-    },
-    {
-      "type": "panel",
-      "id": "timeseries",
-      "name": "Time series",
-      "version": ""
-    },
-    {
-      "type": "panel",
-      "id": "gauge",
-      "name": "Gauge",
-      "version": ""
-    },
-    {
-      "type": "panel",
-      "id": "stat",
-      "name": "Stat",
-      "version": ""
-    }
-  ],
-  "description": "Centralized Application Monitoring — 4-Layer Observability (Demo Stack)",
+  "description": "Generic analytics dashboard for real applications. Features dynamic injection of application-specific panels at Layer 4+.",
   "editable": true,
   "graphTooltip": 1,
+  "links": [
+    {
+      "asDropdown": false,
+      "icon": "arrow-left",
+      "includeVars": false,
+      "keepTime": true,
+      "tags": [],
+      "targetBlank": false,
+      "title": "← Team Overview",
+      "tooltip": "Back to the Team Applications overview",
+      "type": "link",
+      "url": "/d/team-overview"
+    },
+    {
+      "asDropdown": false,
+      "icon": "external link",
+      "includeVars": false,
+      "keepTime": true,
+      "tags": [],
+      "targetBlank": false,
+      "title": "Frontend Dashboard →",
+      "tooltip": "Switch to the Frontend Analytics dashboard",
+      "type": "link",
+      "url": "/d/frontend-analytics"
+    }
+  ],
   "panels": [
     {
       "collapsed": false,
@@ -91,7 +77,7 @@
           "links": [
             {
               "title": "Performance Drilldown →",
-              "url": "/d/demo-monitoring-v1?var-app=$app&viewPanel=200",
+              "url": "/d/app-analytics?var-job=$job&viewPanel=200",
               "targetBlank": false
             }
           ]
@@ -137,7 +123,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "histogram_quantile(0.50, sum(rate(http_request_duration_seconds_bucket{app=\"$app\"}[$__rate_interval])) by (le))",
+          "expr": "histogram_quantile(0.50, sum(rate(app:http_request_duration_seconds_bucket{job=\"$job\"}[$__rate_interval])) by (le))",
           "legendFormat": "p50"
         },
         {
@@ -145,7 +131,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "histogram_quantile(0.95, sum(rate(http_request_duration_seconds_bucket{app=\"$app\"}[$__rate_interval])) by (le))",
+          "expr": "histogram_quantile(0.95, sum(rate(app:http_request_duration_seconds_bucket{job=\"$job\"}[$__rate_interval])) by (le))",
           "legendFormat": "p95"
         },
         {
@@ -153,13 +139,14 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "histogram_quantile(0.99, sum(rate(http_request_duration_seconds_bucket{app=\"$app\"}[$__rate_interval])) by (le))",
+          "expr": "histogram_quantile(0.99, sum(rate(app:http_request_duration_seconds_bucket{job=\"$job\"}[$__rate_interval])) by (le))",
           "legendFormat": "p99"
         }
       ],
       "title": "Request Latency — p50 / p95 / p99",
       "type": "timeseries",
-      "description": "**What it measures:** Time from when the service receives a request to when it sends the response, expressed as percentile distributions.\n\n**p50 (median):** Half of requests complete faster than this. Represents the typical user experience.\n\n**p95:** 1 in 20 requests is slower than this. A good SLA target for most APIs.\n\n**p99:** 1 in 100 requests is slower than this. Reveals tail latency that averages hide — the experience of your worst-affected users.\n\n**How collected:** Prometheus Histogram metric (`http_request_duration_seconds`). The application records the duration of every request. PromQL `histogram_quantile()` computes percentiles from the bucket counts.\n\n**Thresholds:** Warn p99 > 1s · Critical p99 > 3s. Tighten for payment or auth flows (Warn > 500ms).\n\n**Common causes of spikes:** Slow database queries, GC pauses, downstream dependency latency, thread pool saturation."
+      "description": "**What it measures:** Time from when the service receives a request to when it sends the response, expressed as percentile distributions.\n\n**p50 (median):** Half of requests complete faster than this. Represents the typical user experience.\n\n**p95:** 1 in 20 requests is slower than this. A good SLA target for most APIs.\n\n**p99:** 1 in 100 requests is slower than this. Reveals tail latency that averages hide — the experience of your worst-affected users.\n\n**How collected:** Prometheus Histogram metric (`http_request_duration_seconds`). The application records the duration of every request. PromQL `histogram_quantile()` computes percentiles from the bucket counts.\n\n**Thresholds:** Warn p99 > 1s · Critical p99 > 3s. Tighten for payment or auth flows (Warn > 500ms).\n\n**Common causes of spikes:** Slow database queries, GC pauses, downstream dependency latency, thread pool saturation.",
+      "interval": "1m"
     },
     {
       "datasource": {
@@ -168,7 +155,7 @@
       },
       "fieldConfig": {
         "defaults": {
-          "unit": "reqps",
+          "unit": "reqpm",
           "color": {
             "mode": "palette-classic"
           },
@@ -179,7 +166,7 @@
           "links": [
             {
               "title": "Performance Drilldown →",
-              "url": "/d/demo-monitoring-v1?var-app=$app&viewPanel=200",
+              "url": "/d/app-analytics?var-job=$job&viewPanel=200",
               "targetBlank": false
             }
           ]
@@ -207,7 +194,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "sum(rate(http_requests_total{app=\"$app\"}[$__rate_interval]))",
+          "expr": "(sum(rate(app:http_requests_total{job=\"$job\"}[$__rate_interval]))) * 60",
           "legendFormat": "Total RPS"
         },
         {
@@ -215,13 +202,14 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "sum(rate(http_requests_total{app=\"$app\",status=\"200\"}[$__rate_interval]))",
+          "expr": "(sum(rate(app:http_requests_total{job=\"$job\",status_code=~\"2..\"}[$__rate_interval]))) * 60",
           "legendFormat": "2xx RPS"
         }
       ],
-      "title": "Traffic — Requests per Second",
+      "title": "Traffic — Requests per Minute",
       "type": "timeseries",
-      "description": "**What it measures:** The volume of requests your application is processing per second, broken down by HTTP status class.\n\n**Why it matters:** Traffic is your baseline. All other metrics must be interpreted relative to it. A 1% error rate means very different things at 10 RPS vs 10,000 RPS.\n\n**How collected:** Prometheus Counter (`http_requests_total`) incremented on every request. PromQL `rate()` converts the cumulative counter into a per-second rate over a sliding window.\n\n**What to watch:** Sudden drops (traffic fell away — routing issue?) are as important as spikes. Compare to same time yesterday using `offset 1d` in PromQL.\n\n**Thresholds:** Alert on deviation > 3× from rolling baseline rather than a fixed number."
+      "description": "**What it measures:** The volume of requests your application is processing per second, broken down by HTTP status class.\n\n**Why it matters:** Traffic is your baseline. All other metrics must be interpreted relative to it. A 1% error rate means very different things at 10 RPS vs 10,000 RPS.\n\n**How collected:** Prometheus Counter (`app:http_requests_total`) incremented on every request. PromQL `rate()` converts the cumulative counter into a per-second rate over a sliding window.\n\n**What to watch:** Sudden drops (traffic fell away — routing issue?) are as important as spikes. Compare to same time yesterday using `offset 1d` in PromQL.\n\n**Thresholds:** Alert on deviation > 3× from rolling baseline rather than a fixed number.",
+      "interval": "1m"
     },
     {
       "datasource": {
@@ -258,7 +246,7 @@
           "links": [
             {
               "title": "Error Drilldown →",
-              "url": "/d/demo-monitoring-v1?var-app=$app&viewPanel=201",
+              "url": "/d/app-analytics?var-job=$job&viewPanel=201",
               "targetBlank": false
             }
           ]
@@ -277,7 +265,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "sum(increase(http_requests_total{app=\"$app\", status=~\"5..\"}[$__rate_interval]))",
+          "expr": "sum(increase(app:http_requests_total{job=\"$job\", status_code=~\"5..\"}[$__rate_interval]))",
           "legendFormat": "5xx errors (count)"
         },
         {
@@ -285,13 +273,14 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "sum(increase(http_requests_total{app=\"$app\", status=~\"4..\"}[$__rate_interval]))",
+          "expr": "sum(increase(app:http_requests_total{job=\"$job\", status_code=~\"4..\"}[$__rate_interval]))",
           "legendFormat": "4xx errors (count)"
         }
       ],
       "title": "Error Count — 4xx / 5xx (per scrape interval)",
       "type": "timeseries",
-      "description": "**What it measures:** Number of error responses in each scrape interval.\n\nUses `increase()` over `$__rate_interval` so every data point shows the actual count of errors in that window — not a per-second rate.\n\n**Click any data point to open the Error Drilldown table** (per-endpoint breakdown)."
+      "description": "**What it measures:** Number of error responses in each scrape interval.\n\nUses `increase()` over `$__rate_interval` so every data point shows the actual count of errors in that window — not a per-second rate.\n\n**Click any data point to open the Error Drilldown table** (per-endpoint breakdown).",
+      "interval": "1m"
     },
     {
       "datasource": {
@@ -364,7 +353,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "avg(pg_stat_activity_count{app=\"$app\"} / pg_settings_max_connections{app=\"$app\"})",
+          "expr": "avg(db:connections_active{job=\"$db_job\"} / db:connections_max{job=\"$db_job\"})",
           "legendFormat": "DB Connections",
           "refId": "A",
           "instant": false
@@ -374,7 +363,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "(100 - avg(rate(node_cpu_seconds_total{mode=\"idle\"}[$__rate_interval])) * 100) / 100",
+          "expr": "(100 - avg(rate(host:cpu_seconds_total{mode=\"idle\", app=\"$app\"}[$__rate_interval])) * 100) / 100",
           "legendFormat": "CPU",
           "refId": "B",
           "instant": false
@@ -384,10 +373,76 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "1 - (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes)",
+          "expr": "1 - (host:memory_available_bytes{app=\"$app\"} / host:memory_total_bytes{app=\"$app\"})",
           "legendFormat": "Memory",
           "refId": "C",
           "instant": false
+        }
+      ]
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "fixed",
+            "fixedColor": "blue"
+          },
+          "mappings": [],
+          "links": [
+            {
+              "title": "Open App-Specific Dashboard →",
+              "url": "/d/$specific_dashboard?var-job=$job&${__url_time_range}",
+              "targetBlank": false
+            }
+          ]
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 24,
+        "x": 0,
+        "y": 17
+      },
+      "id": 60,
+      "options": {
+        "reduceOptions": {
+          "values": false,
+          "calcs": ["lastNotNull"],
+          "fields": ""
+        },
+        "orientation": "horizontal",
+        "textMode": "name",
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "center"
+      },
+      "pluginVersion": "10.0.0",
+      "repeat": "specific_dashboard",
+      "repeatDirection": "h",
+      "title": "🔎  App-Specific Dashboard Available",
+      "type": "stat",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "expr": "vector(1)",
+          "legendFormat": "Open ${specific_dashboard:text} →",
+          "refId": "A",
+          "instant": true
+        }
+      ],
+      "links": [
+        {
+          "title": "Open App-Specific Dashboard →",
+          "url": "/d/$specific_dashboard?var-job=$job&${__url_time_range}",
+          "targetBlank": false
         }
       ]
     },
@@ -450,13 +505,14 @@
                 "type": "prometheus",
                 "uid": "prometheus"
               },
-              "expr": "100 - (avg by(instance) (rate(node_cpu_seconds_total{mode=\"idle\"}[$__rate_interval])) * 100)",
+              "expr": "100 - (avg by(instance) (rate(host:cpu_seconds_total{mode=\"idle\", app=\"$app\"}[$__rate_interval])) * 100)",
               "legendFormat": "{{instance}} CPU %"
             }
           ],
           "title": "CPU Utilization %",
           "type": "timeseries",
-          "description": "**What it measures:** Percentage of CPU time spent on non-idle work per host, broken down by mode: user (application code), system (kernel), iowait (waiting for disk I/O), steal (stolen by hypervisor on VMs).\n\n**How collected:** `node_exporter` reads `/proc/stat` and exposes `node_cpu_seconds_total` counters per mode per core. PromQL computes the rate of non-idle time.\n\n**Thresholds:** Warn > 70% · Critical > 90% sustained for 5 minutes.\n\n**Key modes to watch:** High `iowait` means disk is the bottleneck. High `steal` means the VM host is overloaded — consider migrating to a less noisy host."
+          "description": "**What it measures:** Percentage of CPU time spent on non-idle work per host, broken down by mode: user (application code), system (kernel), iowait (waiting for disk I/O), steal (stolen by hypervisor on VMs).\n\n**How collected:** `node_exporter` reads `/proc/stat` and exposes `host:cpu_seconds_total` counters per mode per core. PromQL computes the rate of non-idle time.\n\n**Thresholds:** Warn > 70% · Critical > 90% sustained for 5 minutes.\n\n**Key modes to watch:** High `iowait` means disk is the bottleneck. High `steal` means the VM host is overloaded — consider migrating to a less noisy host.",
+          "interval": "1m"
         },
         {
           "datasource": {
@@ -488,7 +544,7 @@
                 "type": "prometheus",
                 "uid": "prometheus"
               },
-              "expr": "node_memory_MemTotal_bytes - node_memory_MemAvailable_bytes",
+              "expr": "host:memory_total_bytes{app=\"$app\"} - host:memory_available_bytes{app=\"$app\"}",
               "legendFormat": "Used"
             },
             {
@@ -496,13 +552,14 @@
                 "type": "prometheus",
                 "uid": "prometheus"
               },
-              "expr": "node_memory_MemAvailable_bytes",
+              "expr": "host:memory_available_bytes{app=\"$app\"}",
               "legendFormat": "Available"
             }
           ],
           "title": "Memory — Used vs Available",
           "type": "timeseries",
-          "description": "**What it measures:** RAM used by applications and the kernel vs RAM available for new allocations. Uses `MemAvailable` (not `MemFree`) which includes reclaimable page cache.\n\n**How collected:** `node_exporter` reads `/proc/meminfo` and exposes `node_memory_*` gauges.\n\n**Why MemAvailable matters:** Linux aggressively uses free RAM for file caching (beneficial). `MemFree` appears low even on healthy systems. `MemAvailable` is what the kernel can actually give to a new process.\n\n**Thresholds:** Warn when MemAvailable < 20% of total · Critical < 10%.\n\n**Watch for:** Any swap usage is a critical signal — apps hitting swap experience 100–1000× memory access latency."
+          "description": "**What it measures:** RAM used by applications and the kernel vs RAM available for new allocations. Uses `MemAvailable` (not `MemFree`) which includes reclaimable page cache.\n\n**How collected:** `node_exporter` reads `/proc/meminfo` and exposes `node_memory_*` gauges.\n\n**Why MemAvailable matters:** Linux aggressively uses free RAM for file caching (beneficial). `MemFree` appears low even on healthy systems. `MemAvailable` is what the kernel can actually give to a new process.\n\n**Thresholds:** Warn when MemAvailable < 20% of total · Critical < 10%.\n\n**Watch for:** Any swap usage is a critical signal — apps hitting swap experience 100–1000× memory access latency.",
+          "interval": "1m"
         },
         {
           "datasource": {
@@ -534,13 +591,14 @@
                 "type": "prometheus",
                 "uid": "prometheus"
               },
-              "expr": "node_memory_SwapTotal_bytes - node_memory_SwapFree_bytes",
+              "expr": "host:memory_swap_total_bytes{app=\"$app\"} - host:memory_swap_free_bytes{app=\"$app\"}",
               "legendFormat": "Swap used"
             }
           ],
           "title": "Swap Usage (should be 0)",
           "type": "timeseries",
-          "description": "**What it measures:** Amount of swap space (disk used as overflow memory) currently in use. Should always be zero on a healthy system.\n\n**Why it matters:** When a system uses swap, it is treating disk as RAM. Disk is 100–1000× slower than RAM. Any process reading from swap will experience severe latency spikes.\n\n**How collected:** `node_exporter` exposes `node_memory_SwapTotal_bytes` and `node_memory_SwapFree_bytes`. Used = Total − Free.\n\n**Thresholds:** Any nonzero value is Critical — treat as a P1 incident. The OOM killer is the alternative, which terminates processes.\n\n**Common causes:** Memory leak, under-provisioned host, JVM heap set too large relative to available RAM."
+          "description": "**What it measures:** Amount of swap space (disk used as overflow memory) currently in use. Should always be zero on a healthy system.\n\n**Why it matters:** When a system uses swap, it is treating disk as RAM. Disk is 100–1000× slower than RAM. Any process reading from swap will experience severe latency spikes.\n\n**How collected:** `node_exporter` exposes `host:memory_swap_total_bytes` and `host:memory_swap_free_bytes`. Used = Total − Free.\n\n**Thresholds:** Any nonzero value is Critical — treat as a P1 incident. The OOM killer is the alternative, which terminates processes.\n\n**Common causes:** Memory leak, under-provisioned host, JVM heap set too large relative to available RAM.",
+          "interval": "1m"
         },
         {
           "datasource": {
@@ -572,7 +630,7 @@
                 "type": "prometheus",
                 "uid": "prometheus"
               },
-              "expr": "rate(node_disk_read_bytes_total[$__rate_interval])",
+              "expr": "rate(host:disk_read_bytes_total{app=\"$app\"}[$__rate_interval])",
               "legendFormat": "{{device}} read"
             },
             {
@@ -580,13 +638,14 @@
                 "type": "prometheus",
                 "uid": "prometheus"
               },
-              "expr": "rate(node_disk_written_bytes_total[$__rate_interval])",
+              "expr": "rate(host:disk_written_bytes_total{app=\"$app\"}[$__rate_interval])",
               "legendFormat": "{{device}} write"
             }
           ],
           "title": "Disk I/O Throughput",
           "type": "timeseries",
-          "description": "**What it measures:** Bytes read from and written to disk per second per device.\n\n**How collected:** `node_exporter` reads `/proc/diskstats` and exposes `node_disk_read_bytes_total` and `node_disk_written_bytes_total` counters.\n\n**Saturation metric:** `rate(node_disk_io_time_seconds_total[5m])` approaching 1.0 means the disk is 100% busy and I/O operations are queuing.\n\n**Thresholds:** Disk utilisation Warn > 70% · Critical > 90%. Write latency Warn > 10ms (SSD) · Warn > 50ms (spinning disk).\n\n**Common causes of high write I/O:** Database writes, application logging, backup jobs, log rotation."
+          "description": "**What it measures:** Bytes read from and written to disk per second per device.\n\n**How collected:** `node_exporter` reads `/proc/diskstats` and exposes `host:disk_read_bytes_total` and `host:disk_written_bytes_total` counters.\n\n**Saturation metric:** `rate(node_disk_io_time_seconds_total[5m])` approaching 1.0 means the disk is 100% busy and I/O operations are queuing.\n\n**Thresholds:** Disk utilisation Warn > 70% · Critical > 90%. Write latency Warn > 10ms (SSD) · Warn > 50ms (spinning disk).\n\n**Common causes of high write I/O:** Database writes, application logging, backup jobs, log rotation.",
+          "interval": "1m"
         },
         {
           "datasource": {
@@ -641,13 +700,13 @@
                 "type": "prometheus",
                 "uid": "prometheus"
               },
-              "expr": "1 - (node_filesystem_avail_bytes{fstype!~\"tmpfs|overlay\"} / node_filesystem_size_bytes{fstype!~\"tmpfs|overlay\"})",
+              "expr": "1 - (host:filesystem_avail_bytes{fstype!~\"tmpfs|overlay\", app=\"$app\"} / host:filesystem_size_bytes{fstype!~\"tmpfs|overlay\", app=\"$app\"})",
               "legendFormat": "{{mountpoint}}"
             }
           ],
           "title": "Disk Space Used %",
           "type": "gauge",
-          "description": "**What it measures:** Percentage of disk space used per filesystem mount point.\n\n**How collected:** `node_exporter` reads filesystem stats via `statfs()` and exposes `node_filesystem_avail_bytes` and `node_filesystem_size_bytes`.\n\n**Thresholds:** Warn < 20% free · Critical < 10% free.\n\n**Best practice:** Alert on rate of fill, not just current percentage. A disk filling at 1GB/hour needs a different response than one filling at 1MB/hour. Use `predict_linear(node_filesystem_avail_bytes[6h], 4*3600) < 0` to alert when a disk will fill within 4 hours."
+          "description": "**What it measures:** Percentage of disk space used per filesystem mount point.\n\n**How collected:** `node_exporter` reads filesystem stats via `statfs()` and exposes `host:filesystem_avail_bytes` and `host:filesystem_size_bytes`.\n\n**Thresholds:** Warn < 20% free · Critical < 10% free.\n\n**Best practice:** Alert on rate of fill, not just current percentage. A disk filling at 1GB/hour needs a different response than one filling at 1MB/hour. Use `predict_linear(host:filesystem_avail_bytes[6h], 4*3600) < 0` to alert when a disk will fill within 4 hours."
         },
         {
           "datasource": {
@@ -679,7 +738,7 @@
                 "type": "prometheus",
                 "uid": "prometheus"
               },
-              "expr": "rate(node_network_receive_bytes_total{device!~\"lo\"}[$__rate_interval])",
+              "expr": "rate(host:network_receive_bytes_total{device!~\"lo\", app=\"$app\"}[$__rate_interval])",
               "legendFormat": "{{device}} rx"
             },
             {
@@ -687,13 +746,14 @@
                 "type": "prometheus",
                 "uid": "prometheus"
               },
-              "expr": "rate(node_network_transmit_bytes_total{device!~\"lo\"}[$__rate_interval])",
+              "expr": "rate(host:network_transmit_bytes_total{device!~\"lo\", app=\"$app\"}[$__rate_interval])",
               "legendFormat": "{{device}} tx"
             }
           ],
           "title": "Network Throughput RX / TX",
           "type": "timeseries",
-          "description": "**What it measures:** Bytes received (RX) and transmitted (TX) per network interface per second.\n\n**How collected:** `node_exporter` reads `/proc/net/dev` and exposes `node_network_receive_bytes_total` and `node_network_transmit_bytes_total` counters per interface.\n\n**Thresholds:** Compare against your interface speed (1Gbps = 125MB/s). Alert when sustained throughput > 80% of interface capacity.\n\n**Also monitor:** `node_network_receive_drop_total` and `node_network_transmit_drop_total` — any packet drops indicate saturation or hardware issues."
+          "description": "**What it measures:** Bytes received (RX) and transmitted (TX) per network interface per second.\n\n**How collected:** `node_exporter` reads `/proc/net/dev` and exposes `host:network_receive_bytes_total` and `host:network_transmit_bytes_total` counters per interface.\n\n**Thresholds:** Compare against your interface speed (1Gbps = 125MB/s). Alert when sustained throughput > 80% of interface capacity.\n\n**Also monitor:** `node_network_receive_drop_total` and `node_network_transmit_drop_total` — any packet drops indicate saturation or hardware issues.",
+          "interval": "1m"
         }
       ]
     },
@@ -716,7 +776,7 @@
           },
           "fieldConfig": {
             "defaults": {
-              "unit": "reqps",
+              "unit": "reqpm",
               "color": {
                 "mode": "palette-classic"
               },
@@ -739,13 +799,14 @@
                 "type": "prometheus",
                 "uid": "prometheus"
               },
-              "expr": "sum by(handler) (rate(http_requests_total{app=\"$app\"}[$__rate_interval]))",
-              "legendFormat": "{{handler}}"
+              "expr": "(sum by(route) (rate(app:http_requests_total{job=\"$job\"}[$__rate_interval]))) * 60",
+              "legendFormat": "{{route}}"
             }
           ],
-          "title": "Request Rate by Endpoint",
+          "title": "Request Rate by Endpoint (RPM)",
           "type": "timeseries",
-          "description": "**What it measures:** HTTP requests per second broken down by individual route/endpoint.\n\n**Why it matters:** Aggregate traffic hides the distribution. 1,000 RPS could mean 990 on `/health` and 10 on `/checkout` — very different implications for scaling.\n\n**How collected:** `http_requests_total` counter with a `handler` label set to the route template (e.g. `/api/orders/{id}` not `/api/orders/12345`). PromQL `sum by(handler)` groups by endpoint.\n\n**Drill-down:** Click a spike on this chart to correlate with the latency panel — filter by the same handler label to see whether the high-traffic endpoint is also slow.\n\n**Warning:** Never use user IDs or raw URLs as label values — this creates unbounded label cardinality that will crash Prometheus."
+          "description": "**What it measures:** HTTP requests per second broken down by individual route/endpoint.\n\n**Why it matters:** Aggregate traffic hides the distribution. 1,000 RPS could mean 990 on `/health` and 10 on `/checkout` — very different implications for scaling.\n\n**How collected:** `app:http_requests_total` counter with a `route` label set to the route template (e.g. `/api/orders/{id}` not `/api/orders/12345`). PromQL `sum by(route)` groups by endpoint.\n\n**Drill-down:** Click a spike on this chart to correlate with the latency panel — filter by the same route label to see whether the high-traffic endpoint is also slow.\n\n**Warning:** Never use user IDs or raw URLs as label values — this creates unbounded label cardinality that will crash Prometheus.",
+          "interval": "1m"
         },
         {
           "datasource": {
@@ -765,7 +826,7 @@
               "links": [
                 {
                   "title": "Error Endpoint Drilldown →",
-                  "url": "/d/demo-monitoring-v1?var-app=$app&viewPanel=201",
+                  "url": "/d/app-analytics?var-job=$job&viewPanel=201",
                   "targetBlank": false
                 }
               ]
@@ -785,7 +846,7 @@
                 "type": "prometheus",
                 "uid": "prometheus"
               },
-              "expr": "sum by(status) (increase(http_requests_total{app=\"$app\", status=~\"5..\"}[$__rate_interval]))",
+              "expr": "sum by(status) (increase(app:http_requests_total{job=\"$job\", status_code=~\"5..\"}[$__rate_interval]))",
               "legendFormat": "{{status}} (server error)"
             },
             {
@@ -793,7 +854,7 @@
                 "type": "prometheus",
                 "uid": "prometheus"
               },
-              "expr": "sum by(status) (increase(http_requests_total{app=\"$app\", status=~\"4..\"}[$__rate_interval]))",
+              "expr": "sum by(status) (increase(app:http_requests_total{job=\"$job\", status_code=~\"4..\"}[$__rate_interval]))",
               "legendFormat": "{{status}} (client error)"
             }
           ],
@@ -808,7 +869,8 @@
               "placement": "bottom"
             }
           },
-          "description": "**What it measures:** Count of error responses by HTTP status code in each interval.\n\nUses `increase()` to show the actual number of errors rather than a rate.\n\n**Click any line to drill into the Error Endpoint Drilldown table.**"
+          "description": "**What it measures:** Count of error responses by HTTP status code in each interval.\n\nUses `increase()` to show the actual number of errors rather than a rate.\n\n**Click any line to drill into the Error Endpoint Drilldown table.**",
+          "interval": "1m"
         },
         {
           "datasource": {
@@ -840,13 +902,14 @@
                 "type": "prometheus",
                 "uid": "prometheus"
               },
-              "expr": "sum by(type) (rate(business_transactions_total{app=\"$app\"}[$__rate_interval]))",
+              "expr": "(sum by(type) (rate(business_transactions_total{job=\"$job\"}[$__rate_interval]))) * 60",
               "legendFormat": "{{type}}"
             }
           ],
-          "title": "Business Transactions Rate (logins)",
+          "title": "Business Transactions Rate (logins / min)",
           "type": "timeseries",
-          "description": "**What it measures:** Domain-specific event counts — transactions completed, logins, report generations, or any meaningful business action — expressed as a rate per second.\n\n**Why it matters:** A system can be technically healthy (zero 5xx, low latency) and still fail to deliver business value. Business transaction metrics catch silent failures — for example, a payment form that always returns 200 OK but never actually processes the payment.\n\n**How collected:** Explicit `Counter` increments at each business event in application code. Named after the action: `business_transactions_total{type='transaction_completed'}`.\n\n**Alert pattern:** Alert on percentage drops from rolling baseline (`< baseline * 0.5`) rather than fixed numbers. A drop in transaction rate is often the first symptom of a broken user journey."
+          "description": "**What it measures:** Domain-specific event counts — transactions completed, logins, report generations, or any meaningful business action — expressed as a rate per second.\n\n**Why it matters:** A system can be technically healthy (zero 5xx, low latency) and still fail to deliver business value. Business transaction metrics catch silent failures — for example, a payment form that always returns 200 OK but never actually processes the payment.\n\n**How collected:** Explicit `Counter` increments at each business event in application code. Named after the action: `business_transactions_total{type='transaction_completed'}`.\n\n**Alert pattern:** Alert on percentage drops from rolling baseline (`< baseline * 0.5`) rather than fixed numbers. A drop in transaction rate is often the first symptom of a broken user journey.",
+          "interval": "1m"
         },
         {
           "datasource": {
@@ -878,13 +941,14 @@
                 "type": "prometheus",
                 "uid": "prometheus"
               },
-              "expr": "histogram_quantile(0.95, sum by(upstream, le) (rate(http_client_request_duration_seconds_bucket{app=\"$app\"}[$__rate_interval])))",
+              "expr": "histogram_quantile(0.95, sum by(upstream, le) (rate(app:http_client_request_duration_seconds_bucket{job=\"$job\"}[$__rate_interval])))",
               "legendFormat": "{{upstream}} p95"
             }
           ],
           "title": "External Dependency Latency p95",
           "type": "timeseries",
-          "description": "**What it measures:** The 95th percentile latency of outbound HTTP calls from your application to downstream services — databases exposed via HTTP, external APIs, microservices, etc.\n\n**Why it matters:** Your application's latency cannot be better than the sum of its slowest dependency calls. If a downstream service degrades, your latency and error rate will follow within seconds.\n\n**How collected:** `http_client_request_duration_seconds` Histogram with an `upstream` label identifying the downstream service. PromQL `histogram_quantile(0.95)` per upstream.\n\n**What to watch:** Each upstream line independently. If one upstream's latency climbs while others stay flat, the problem is in that specific dependency, not your application.\n\n**Thresholds:** Warn when any upstream p95 > 2× its historical baseline."
+          "description": "**What it measures:** The 95th percentile latency of outbound HTTP calls from your application to downstream services — databases exposed via HTTP, external APIs, microservices, etc.\n\n**Why it matters:** Your application's latency cannot be better than the sum of its slowest dependency calls. If a downstream service degrades, your latency and error rate will follow within seconds.\n\n**How collected:** `http_client_request_duration_seconds` Histogram with an `upstream` label identifying the downstream service. PromQL `histogram_quantile(0.95)` per upstream.\n\n**What to watch:** Each upstream line independently. If one upstream's latency climbs while others stay flat, the problem is in that specific dependency, not your application.\n\n**Thresholds:** Warn when any upstream p95 > 2× its historical baseline.",
+          "interval": "1m"
         }
       ]
     },
@@ -907,7 +971,7 @@
           },
           "fieldConfig": {
             "defaults": {
-              "unit": "ms",
+              "unit": "s",
               "color": {
                 "mode": "palette-classic"
               },
@@ -924,11 +988,11 @@
                   },
                   {
                     "color": "yellow",
-                    "value": 100
+                    "value": 0.1
                   },
                   {
                     "color": "red",
-                    "value": 500
+                    "value": 0.5
                   }
                 ]
               }
@@ -947,21 +1011,22 @@
                 "type": "prometheus",
                 "uid": "prometheus"
               },
-              "expr": "histogram_quantile(0.95, rate(pg_stat_statements_total_exec_time_bucket{app=\"$app\"}[$__rate_interval]))",
-              "legendFormat": "Query latency p95"
+              "expr": "rate(db:query_duration_seconds_sum{job=\"$db_job\"}[$__rate_interval]) / rate(db:query_duration_seconds_count{job=\"$db_job\"}[$__rate_interval])",
+              "legendFormat": "Query latency avg"
             },
             {
               "datasource": {
                 "type": "prometheus",
                 "uid": "prometheus"
               },
-              "expr": "histogram_quantile(0.99, rate(pg_stat_statements_total_exec_time_bucket{app=\"$app\"}[$__rate_interval]))",
-              "legendFormat": "Query latency p99"
+              "expr": "db:query_duration_seconds_max{job=\"$db_job\"}",
+              "legendFormat": "Query latency max"
             }
           ],
-          "title": "DB Query Latency (p95 / p99)",
+          "title": "DB Query Latency (avg / max)",
           "type": "timeseries",
-          "description": "**What it measures:** How long the database takes to execute queries, at the 95th and 99th percentile. Includes parse time, planning time, lock wait time, and execution time.\n\n**How collected:** PostgreSQL: `pg_stat_statements` extension + `postgres_exporter`. MySQL: `mysqld_exporter` with slow query log. The exporter exposes query timing as a Histogram.\n\n**Why p99 matters:** A query that is fast 99% of the time but takes 10 seconds 1% of the time will devastate tail latency for your users.\n\n**Thresholds:** OLTP Warn p99 > 100ms · Critical p99 > 500ms.\n\n**Common causes of latency spikes:** Missing index, stale statistics causing plan regression, lock contention, replication lag on read replicas, vacuum running on a large table."
+          "description": "**What it measures:** How long the database takes to execute queries — average (rate of total time / rate of total count) and the worst single query observed. Includes parse time, planning time, lock wait time, and execution time.\n\n**How collected:** exact aggregates from each vendor's own query-stats view (PostgreSQL `pg_stat_statements`, MySQL `performance_schema`, SQL Server `sys.dm_exec_query_stats`), via `db-exporter`. `max` is each vendor's own native per-query maximum, not derived — except **Oracle, which shows \"No data\" for max** since `v$sqlarea` has no per-call maximum column and a true one requires licensed Diagnostics Pack features (see `db-exporter/README.md`).\n\n**Why this replaced p95/p99:** none of these vendors' standard system views expose a true per-call latency distribution, only aggregates — the previous percentile panel was computed from an approximated/guessed histogram. Avg and max are both exact.\n\n**Thresholds:** Warn avg > 100ms · Critical avg > 500ms.\n\n**Common causes of latency spikes:** Missing index, stale statistics causing plan regression, lock contention, replication lag on read replicas, vacuum running on a large table.",
+          "interval": "1m"
         },
         {
           "datasource": {
@@ -1016,8 +1081,8 @@
                 "type": "prometheus",
                 "uid": "prometheus"
               },
-              "expr": "pg_stat_activity_count / pg_settings_max_connections{app=\"$app\"}",
-              "legendFormat": "{{datname}}"
+              "expr": "db:connections_active{job=\"$db_job\"} / db:connections_max{job=\"$db_job\"}",
+              "legendFormat": "{{database}}"
             }
           ],
           "title": "DB Active Connections %",
@@ -1071,13 +1136,14 @@
                 "type": "prometheus",
                 "uid": "prometheus"
               },
-              "expr": "pg_replication_lag{app=\"$app\"}",
+              "expr": "db:replication_lag_seconds{job=\"$db_job\"}",
               "legendFormat": "{{instance}}"
             }
           ],
           "title": "Replication Lag",
           "type": "timeseries",
-          "description": "**What it measures:** The delay between a write being committed on the primary database and that write being applied on replica databases, in seconds.\n\n**Why it matters:** Applications reading from replicas see stale data during lag. More critically, if the primary fails during high replication lag, the data written during that window is lost in a failover.\n\n**How collected:** `postgres_exporter` queries `pg_stat_replication` on the primary for bytes of WAL not yet replicated. MySQL: `mysqld_exporter` reads `Seconds_Behind_Master` from replica status.\n\n**Thresholds:** Warn > 10s · Critical > 60s. For financial data: Warn > 2s.\n\n**Common causes:** Network issues between primary and replica, replica under-resourced, very high write throughput on primary."
+          "description": "**What it measures:** The delay between a write being committed on the primary database and that write being applied on replica databases, in seconds.\n\n**Why it matters:** Applications reading from replicas see stale data during lag. More critically, if the primary fails during high replication lag, the data written during that window is lost in a failover.\n\n**How collected:** `postgres_exporter` queries `pg_stat_replication` on the primary for bytes of WAL not yet replicated. MySQL: `mysqld_exporter` reads `Seconds_Behind_Master` from replica status.\n\n**Thresholds:** Warn > 10s · Critical > 60s. For financial data: Warn > 2s.\n\n**Common causes:** Network issues between primary and replica, replica under-resourced, very high write throughput on primary.",
+          "interval": "1m"
         },
         {
           "datasource": {
@@ -1109,21 +1175,22 @@
                 "type": "prometheus",
                 "uid": "prometheus"
               },
-              "expr": "pg_locks_count{app=\"$app\"}",
-              "legendFormat": "{{datname}} {{mode}}"
+              "expr": "db:locks_total{job=\"$db_job\"}",
+              "legendFormat": "{{database}} {{mode}}"
             },
             {
               "datasource": {
                 "type": "prometheus",
                 "uid": "prometheus"
               },
-              "expr": "rate(mysql_global_status_innodb_deadlocks[$__rate_interval])",
-              "legendFormat": "MySQL deadlocks/s"
+              "expr": "rate(db:deadlocks_total{job=\"$db_job\"}[$__rate_interval])",
+              "legendFormat": "Deadlocks/s"
             }
           ],
           "title": "Lock Waits & Deadlocks",
           "type": "timeseries",
-          "description": "**What it measures:** The number of database lock waits and deadlocks over time. Lock waits occur when a transaction needs a lock held by another transaction.\n\n**Why it matters:** Lock contention degrades throughput non-linearly — a few long-running transactions can block hundreds of others. Deadlocks cause transaction rollbacks and application errors.\n\n**How collected:** PostgreSQL: `pg_locks` view counts locks by type. MySQL: `Innodb_deadlocks` status variable via `mysqld_exporter`.\n\n**Thresholds:** Any increase in deadlocks should be investigated. Lock waits > 5 concurrent is Warn.\n\n**Common causes:** Long-running transactions, missing indexes causing full table scans that hold locks, application not committing transactions promptly."
+          "description": "**What it measures:** The number of database lock waits and deadlocks over time. Lock waits occur when a transaction needs a lock held by another transaction.\n\n**Why it matters:** Lock contention degrades throughput non-linearly — a few long-running transactions can block hundreds of others. Deadlocks cause transaction rollbacks and application errors.\n\n**How collected:** PostgreSQL: `pg_locks` view counts locks by type. MySQL: `Innodb_deadlocks` status variable via `mysqld_exporter`.\n\n**Thresholds:** Any increase in deadlocks should be investigated. Lock waits > 5 concurrent is Warn.\n\n**Common causes:** Long-running transactions, missing indexes causing full table scans that hold locks, application not committing transactions promptly.",
+          "interval": "1m"
         },
         {
           "datasource": {
@@ -1155,13 +1222,14 @@
                 "type": "prometheus",
                 "uid": "prometheus"
               },
-              "expr": "pg_database_size_bytes{app=\"$app\"}",
-              "legendFormat": "{{datname}}"
+              "expr": "db:size_bytes{job=\"$db_job\"}",
+              "legendFormat": "{{database}}"
             }
           ],
           "title": "Database Size Growth",
           "type": "timeseries",
-          "description": "**What it measures:** Total size of each database in bytes, tracked over time to show growth trends.\n\n**How collected:** `postgres_exporter` queries `pg_database_size()` function which returns size in bytes per database.\n\n**Why it matters:** Unexpected growth spikes can indicate a runaway job inserting data, missing delete/archival processes, or a data leak. Predictable growth helps capacity planning.\n\n**Best practice:** Combine with tablespace-level breakdown to identify which tables are growing fastest. Alert when growth rate exceeds 3× the 30-day average daily growth.\n\n**Also monitor:** Table bloat from unvacuumed dead tuples in PostgreSQL — the table file grows even without new data."
+          "description": "**What it measures:** Total size of each database in bytes, tracked over time to show growth trends.\n\n**How collected:** `postgres_exporter` queries `pg_database_size()` function which returns size in bytes per database.\n\n**Why it matters:** Unexpected growth spikes can indicate a runaway job inserting data, missing delete/archival processes, or a data leak. Predictable growth helps capacity planning.\n\n**Best practice:** Combine with tablespace-level breakdown to identify which tables are growing fastest. Alert when growth rate exceeds 3× the 30-day average daily growth.\n\n**Also monitor:** Table bloat from unvacuumed dead tuples in PostgreSQL — the table file grows even without new data.",
+          "interval": "1m"
         }
       ]
     },
@@ -1171,7 +1239,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 300
+        "y": 116
       },
       "id": 99,
       "title": "📊 Drilldowns (opened via chart links)",
@@ -1283,7 +1351,7 @@
                     "value": [
                       {
                         "title": "Operation Detail →",
-                        "url": "/d/demo-monitoring-v1?var-app=$app&var-handler=${__data.fields[\"Operation (Endpoint)\"]}&viewPanel=202",
+                        "url": "/d/app-analytics?var-job=$job&var-route=${__data.fields[\"Operation (Endpoint)\"]}&viewPanel=202",
                         "targetBlank": false
                       }
                     ]
@@ -1298,8 +1366,8 @@
                 "type": "prometheus",
                 "uid": "prometheus"
               },
-              "expr": "sum by(handler) (rate(http_request_duration_seconds_sum{app=\"$app\"}[$__range])) / sum by(handler) (rate(http_request_duration_seconds_count{app=\"$app\"}[$__range]))",
-              "legendFormat": "{{handler}}",
+              "expr": "sum by(route) (rate(app:http_request_duration_seconds_sum{job=\"$job\"}[$__range])) / sum by(route) (rate(app:http_request_duration_seconds_count{job=\"$job\"}[$__range]))",
+              "legendFormat": "{{route}}",
               "instant": true,
               "refId": "A",
               "format": "table"
@@ -1309,8 +1377,8 @@
                 "type": "prometheus",
                 "uid": "prometheus"
               },
-              "expr": "sum by(handler) (increase(http_requests_total{app=\"$app\"}[$__range]))",
-              "legendFormat": "{{handler}}",
+              "expr": "sum by(route) (increase(app:http_requests_total{job=\"$job\"}[$__range]))",
+              "legendFormat": "{{route}}",
               "instant": true,
               "refId": "B",
               "format": "table"
@@ -1329,7 +1397,7 @@
                   "__name__": true
                 },
                 "renameByName": {
-                  "handler": "Operation (Endpoint)",
+                  "route": "Operation (Endpoint)",
                   "Value #A": "Duration (avg)",
                   "Value #B": "Count"
                 },
@@ -1463,7 +1531,7 @@
                     "value": [
                       {
                         "title": "Operation Detail →",
-                        "url": "/d/demo-monitoring-v1?var-app=$app&var-handler=${__data.fields[\"Operation (Endpoint)\"]}&viewPanel=202",
+                        "url": "/d/app-analytics?var-job=$job&var-route=${__data.fields[\"Operation (Endpoint)\"]}&viewPanel=202",
                         "targetBlank": false
                       }
                     ]
@@ -1478,8 +1546,8 @@
                 "type": "prometheus",
                 "uid": "prometheus"
               },
-              "expr": "sum by(handler) (increase(http_requests_total{app=\"$app\", status=~\"[45]..\"}[$__range]))",
-              "legendFormat": "{{handler}}",
+              "expr": "sum by(route) (increase(app:http_requests_total{job=\"$job\", status_code=~\"[45]..\"}[$__range]))",
+              "legendFormat": "{{route}}",
               "instant": true,
               "refId": "A",
               "format": "table"
@@ -1489,8 +1557,8 @@
                 "type": "prometheus",
                 "uid": "prometheus"
               },
-              "expr": "sum by(handler) (rate(http_request_duration_seconds_sum{app=\"$app\"}[$__range])) / sum by(handler) (rate(http_request_duration_seconds_count{app=\"$app\"}[$__range]))",
-              "legendFormat": "{{handler}}",
+              "expr": "sum by(route) (rate(app:http_request_duration_seconds_sum{job=\"$job\"}[$__range])) / sum by(route) (rate(app:http_request_duration_seconds_count{job=\"$job\"}[$__range]))",
+              "legendFormat": "{{route}}",
               "instant": true,
               "refId": "B",
               "format": "table"
@@ -1509,7 +1577,7 @@
                   "__name__": true
                 },
                 "renameByName": {
-                  "handler": "Operation (Endpoint)",
+                  "route": "Operation (Endpoint)",
                   "Value #A": "Error Count",
                   "Value #B": "Avg Duration"
                 },
@@ -1545,8 +1613,8 @@
             "y": 28
           },
           "id": 202,
-          "title": "🔍 Operation Detail — ${handler:raw}",
-          "description": "Granular view for the selected endpoint.\n\nShows error count, total request rate and p95 latency for this single operation. Use the time range picker to zoom into the incident window.\n\n**For deeper log investigation** connect Grafana Loki or Elasticsearch and filter by `app=$app handler=$handler status=~[45]..`",
+          "title": "🔍 Operation Detail — ${route:raw}",
+          "description": "Granular view for the selected endpoint.\n\nShows error count, total request rate and p95 latency for this single operation. Use the time range picker to zoom into the incident window.\n\n**For deeper log investigation** connect Grafana Loki or Elasticsearch and filter by `app=$app route=$route status_code=~[45]..`",
           "type": "timeseries",
           "fieldConfig": {
             "defaults": {
@@ -1633,7 +1701,7 @@
                 "type": "prometheus",
                 "uid": "prometheus"
               },
-              "expr": "sum(increase(http_requests_total{app=\"$app\", handler=\"$handler\", status=~\"[45]..\"}[$__rate_interval]))",
+              "expr": "sum(increase(app:http_requests_total{job=\"$job\", route=\"$route\", status_code=~\"[45]..\"}[$__rate_interval]))",
               "legendFormat": "Error Count",
               "refId": "A"
             },
@@ -1642,7 +1710,7 @@
                 "type": "prometheus",
                 "uid": "prometheus"
               },
-              "expr": "sum(rate(http_requests_total{app=\"$app\", handler=\"$handler\"}[$__rate_interval]))",
+              "expr": "sum(rate(app:http_requests_total{job=\"$job\", route=\"$route\"}[$__rate_interval]))",
               "legendFormat": "Total RPS",
               "refId": "B"
             },
@@ -1651,11 +1719,12 @@
                 "type": "prometheus",
                 "uid": "prometheus"
               },
-              "expr": "histogram_quantile(0.95, sum by(le) (rate(http_request_duration_seconds_bucket{app=\"$app\", handler=\"$handler\"}[$__rate_interval])))",
+              "expr": "histogram_quantile(0.95, sum by(le) (rate(app:http_request_duration_seconds_bucket{job=\"$job\", route=\"$route\"}[$__rate_interval])))",
               "legendFormat": "p95 Latency",
               "refId": "C"
             }
-          ]
+          ],
+          "interval": "1m"
         }
       ]
     }
@@ -1663,9 +1732,8 @@
   "refresh": "10s",
   "schemaVersion": 38,
   "tags": [
-    "demo",
-    "monitoring",
-    "observability"
+    "real-apps",
+    "production"
   ],
   "time": {
     "from": "now-30m",
@@ -1673,31 +1741,35 @@
   },
   "timepicker": {},
   "timezone": "browser",
-  "title": "Centralized Monitoring — 4-Layer Observability (Demo)",
-  "uid": "demo-monitoring-v1",
+  "title": "Application Analytics",
+  "uid": "app-analytics",
   "version": 1,
   "templating": {
     "list": [
       {
-        "current": {},
+        "current": {
+          "selected": false,
+          "text": "authapi",
+          "value": "authapi"
+        },
         "datasource": {
           "type": "prometheus",
           "uid": "prometheus"
         },
-        "definition": "label_values(app_uptime_ratio, app)",
+        "definition": "label_values(up{job!~\"prometheus|grafana|node-exporter|fake-apps\"}, job)",
         "hide": 0,
         "includeAll": false,
         "multi": false,
-        "name": "app",
+        "name": "job",
         "options": [],
         "query": {
-          "query": "label_values(app_uptime_ratio, app)",
+          "query": "label_values(up{job!~\"prometheus|grafana|node-exporter|fake-apps\"}, job)",
           "refId": "A"
         },
         "refresh": 2,
         "sort": 1,
         "type": "query",
-        "label": "Application"
+        "label": "Application (Job)"
       },
       {
         "current": {},
@@ -1705,35 +1777,89 @@
           "type": "prometheus",
           "uid": "prometheus"
         },
-        "definition": "label_values(http_requests_total{app=\"$app\"}, handler)",
+        "definition": "label_values(up{job=\"$job\"}, app)",
         "hide": 2,
-        "includeAll": true,
+        "includeAll": false,
         "multi": false,
-        "name": "handler",
+        "name": "app",
         "options": [],
         "query": {
-          "query": "label_values(http_requests_total{app=\"$app\"}, handler)",
+          "query": "label_values(up{job=\"$job\"}, app)",
           "refId": "A"
         },
         "refresh": 2,
         "sort": 1,
         "type": "query",
-        "label": "Endpoint"
+        "label": "Application (derived)"
+      },
+      {
+        "current": {},
+        "datasource": {
+          "type": "prometheus",
+          "uid": "prometheus"
+        },
+        "definition": "label_values(app:http_request_duration_seconds_count{job=\"$job\"}, route)",
+        "hide": 2,
+        "includeAll": true,
+        "multi": false,
+        "name": "route",
+        "options": [],
+        "query": {
+          "query": "label_values(app:http_request_duration_seconds_count{job=\"$job\"}, route)",
+          "refId": "A"
+        },
+        "refresh": 2,
+        "sort": 1,
+        "type": "query",
+        "label": "Endpoint (Route)"
+      },
+      {
+        "current": {
+          "selected": false,
+          "text": "",
+          "value": ""
+        },
+        "datasource": {
+          "type": "prometheus",
+          "uid": "prometheus"
+        },
+        "definition": "label_values(db:connections_active{app=\"$app\"}, job)",
+        "hide": 0,
+        "includeAll": false,
+        "multi": false,
+        "name": "db_job",
+        "options": [],
+        "query": {
+          "query": "label_values(db:connections_active{app=\"$app\"}, job)",
+          "refId": "A"
+        },
+        "refresh": 2,
+        "sort": 1,
+        "type": "query",
+        "label": "Database Job"
+      },
+      {
+        "current": {
+          "text": "",
+          "value": []
+        },
+        "hide": 2,
+        "includeAll": false,
+        "multi": true,
+        "name": "specific_dashboard",
+        "options": [
+          {
+            "text": "AuthApi Specific Metrics",
+            "value": "authapi-analytics",
+            "selected": false
+          }
+        ],
+        "query": "AuthApi Specific Metrics : authapi-analytics",
+        "queryValue": "",
+        "skipUrlSync": false,
+        "type": "custom",
+        "label": "App-Specific Dashboard"
       }
     ]
-  },
-  "links": [
-    {
-      "asDropdown": false,
-      "icon": "arrow-left",
-      "includeVars": false,
-      "keepTime": true,
-      "tags": [],
-      "targetBlank": false,
-      "title": "← Portfolio Overview",
-      "tooltip": "Back to Application Portfolio Overview",
-      "type": "link",
-      "url": "/d/app-portfolio-overview"
-    }
-  ]
+  }
 }

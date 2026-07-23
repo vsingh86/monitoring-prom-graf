@@ -18,12 +18,10 @@ services:
     command:
       - --config.file=/etc/prometheus/prometheus.yml
       - --storage.tsdb.path=/prometheus
-      - --storage.tsdb.retention.time=7d
-      - --web.console.libraries=/usr/share/prometheus/console_libraries
-      - --web.console.templates=/usr/share/prometheus/consoles
+      - --storage.tsdb.retention.time=15d
       - --web.enable-lifecycle
     volumes:
-      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - ./prometheus:/etc/prometheus:ro
       - prometheus_data:/prometheus
     ports:
       - "9090:9090"
@@ -37,17 +35,12 @@ services:
     restart: unless-stopped
     environment:
       GF_SECURITY_ADMIN_USER: admin
-      GF_SECURITY_ADMIN_PASSWORD: demo1234
+      GF_SECURITY_ADMIN_PASSWORD: admin
       GF_USERS_ALLOW_SIGN_UP: "false"
-      GF_AUTH_ANONYMOUS_ENABLED: "true"
-      GF_AUTH_ANONYMOUS_ORG_ROLE: Viewer
-      # Set the overview as the home/landing dashboard
-      GF_DASHBOARDS_DEFAULT_HOME_DASHBOARD_PATH: /var/lib/grafana/dashboards/overview.json
     volumes:
       - grafana_data:/var/lib/grafana
       - ./grafana/provisioning:/etc/grafana/provisioning:ro
       - ./grafana/dashboards:/var/lib/grafana/dashboards:ro
-      - ./grafana/dashboards/real-apps:/var/lib/grafana/dashboards/real-apps:ro
     ports:
       - "3000:3000"
     depends_on:
@@ -55,36 +48,52 @@ services:
     networks:
       - monitoring
 
-  # # ── Node Exporter (real host metrics) ─────────────────────────────────────
-  # node-exporter:
-  #   image: prom/node-exporter:v1.7.0
-  #   container_name: node-exporter
-  #   restart: unless-stopped
-  #   command:
-  #     - --path.rootfs=/host
-  #     - --path.procfs=/host/proc
-  #     - --path.sysfs=/host/sys
-  #     - --collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)
-  #     - --no-collector.os
-  #     - --no-collector.rapl
-  #     - --no-collector.buddyinfo
-  #   volumes:
-  #     - /proc:/host/proc:ro
-  #     - /sys:/host/sys:ro
-  #     - /:/host:ro,rslave
-  #   ports:
-  #     - "9100:9100"
-  #   networks:
-  #     - monitoring
+  # ── Node Exporter (host metrics) ─────────────────────────────────────────────
+  node-exporter:
+    image: prom/node-exporter:v1.7.0
+    container_name: node-exporter
+    restart: unless-stopped
+    command:
+      - --path.rootfs=/host
+      - --path.procfs=/host/proc
+      - --path.sysfs=/host/sys
+      - --collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/host:ro,rslave
+    ports:
+      - "9100:9100"
+    networks:
+      - monitoring
 
-  # # ── Fake Exporter (multi-app simulated metrics) ────────────────────────────
-  # fake-exporter:
-  #   build:
-  #     context: ./fake-exporter
-  #     dockerfile: Dockerfile
-  #   container_name: fake-exporter
-  #   restart: unless-stopped
-  #   ports:
-  #     - "9999:9999"
-  #   networks:
-  #     - monitoring
+  # ── DB Exporter (multi-database, blackbox-style) ─────────────────────────────
+  # One shared service scrapes Postgres/MySQL/SQL Server/Oracle. Prometheus
+  # selects which database via GET /metrics?target=<name>, where <name> must
+  # match a "name" entry in db-exporter/config.yaml. See db-exporter/README.md.
+  #
+  # Passwords come from a repo-root .env file (gitignored, copy from
+  # db-exporter/.env.example) via Compose's built-in auto-load -- deliberately
+  # NOT an explicit `env_file:` pointing into db-exporter/, because Compose
+  # hard-fails validation of the ENTIRE file (blocking prometheus/grafana too)
+  # if an explicit env_file path doesn't exist. The root .env is optional by
+  # design: if it's missing, these just resolve to empty strings and only
+  # db-exporter's own DB connections fail -- prometheus/grafana are unaffected.
+  # Adding a new database's password: add the ${VAR} to config.yaml, add the
+  # real value to root .env, and add a matching line below.
+  db-exporter:
+    build:
+      context: ./db-exporter
+    container_name: db-exporter
+    restart: unless-stopped
+    environment:
+      AUTHAPI_POSTGRES_PASSWORD: ${AUTHAPI_POSTGRES_PASSWORD:-}
+      MYAPP_MYSQL_PASSWORD: ${MYAPP_MYSQL_PASSWORD:-}
+      MYAPP_SQLSERVER_PASSWORD: ${MYAPP_SQLSERVER_PASSWORD:-}
+      MYAPP_ORACLE_PASSWORD: ${MYAPP_ORACLE_PASSWORD:-}
+    volumes:
+      - ./db-exporter/config.yaml:/app/config.yaml:ro
+    ports:
+      - "9433:9433"
+    networks:
+      - monitoring

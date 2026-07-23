@@ -1,0 +1,64 @@
+groups:
+  - name: db_postgres_normalization
+    interval: 15s
+    rules:
+      # db_type="postgres" is set as a static label on each scrape job served
+      # by db-exporter (see ../../db-exporter/README.md). label_replace maps
+      # "datname" → "database" for consistent labeling across DB types.
+
+      # Query duration: exact aggregates from pg_stat_statements (requires the
+      # extension enabled). count/sum are plain sums; max is Postgres's own
+      # native per-digest maximum (max_exec_time), not derived/approximated.
+      # No bucket/histogram here -- pg_stat_statements exposes no per-call
+      # latency distribution, only aggregates, so percentiles would have been
+      # guessed; db-exporter/app-analytics.json compute avg from sum/count
+      # instead (see grafana/dashboards/app-analytics.json panel id 50).
+      - record: db:query_duration_seconds_count
+        expr: pg_stat_statements_total_exec_time_count{db_type="postgres"}
+
+      - record: db:query_duration_seconds_sum
+        expr: pg_stat_statements_total_exec_time_sum{db_type="postgres"}
+
+      - record: db:query_duration_seconds_max
+        expr: pg_stat_statements_total_exec_time_max{db_type="postgres"}
+
+      # Active connections per database. pg_stat_activity_count has a "datname"
+      # label; normalize to "database".
+      - record: db:connections_active
+        expr: |
+          label_replace(
+            pg_stat_activity_count{db_type="postgres"},
+            "database", "$1", "datname", "(.*)"
+          )
+
+      # Maximum allowed connections (server-wide setting, no datname label).
+      - record: db:connections_max
+        expr: pg_settings_max_connections{db_type="postgres"}
+
+      # Replication lag in seconds (from pg_stat_replication on the primary).
+      - record: db:replication_lag_seconds
+        expr: pg_replication_lag{db_type="postgres"}
+
+      # Current lock count by database and lock mode.
+      - record: db:locks_total
+        expr: |
+          label_replace(
+            pg_locks_count{db_type="postgres"},
+            "database", "$1", "datname", "(.*)"
+          )
+
+      # Deadlock counter per database (requires pg_stat_database collector).
+      - record: db:deadlocks_total
+        expr: |
+          label_replace(
+            pg_stat_database_deadlocks{db_type="postgres"},
+            "database", "$1", "datname", "(.*)"
+          )
+
+      # Total database size in bytes per database.
+      - record: db:size_bytes
+        expr: |
+          label_replace(
+            pg_database_size_bytes{db_type="postgres"},
+            "database", "$1", "datname", "(.*)"
+          )

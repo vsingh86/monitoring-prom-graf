@@ -1,0 +1,9 @@
+# HELP db_exporter_up 1 if the last scrape of this target succeeded.
+# TYPE db_exporter_up gauge
+db_exporter_up{target="hims-db-oracle"} 0.0
+# HELP db_exporter_scrape_error 1 if any query failed during the last scrape.
+# TYPE db_exporter_scrape_error gauge
+db_exporter_scrape_error{target="hims-db-oracle"} 1.0
+# HELP db_exporter_scrape_duration_seconds Wall-clock time of the last scrape.
+# TYPE db_exporter_scrape_duration_seconds gauge
+db_exporter_scrape_duration_seconds{target="hims-db-oracle"} 1.169210000000021

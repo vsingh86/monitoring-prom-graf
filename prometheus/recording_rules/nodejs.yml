@@ -1,0 +1,28 @@
+groups:
+  - name: nodejs_normalization
+    interval: 15s
+    rules:
+      # app_type="nodejs" is set as a static label on each nodejs scrape job in prometheus.yml.
+      # These rules normalize prom-client metric names/labels to the shared app:* schema
+      # so that app-analytics.json works for all tech stacks without modification.
+
+      - record: app:http_requests_total
+        expr: http_requests_total{app_type="nodejs"}
+
+      - record: app:http_request_duration_seconds_bucket
+        expr: http_request_duration_seconds_bucket{app_type="nodejs"}
+
+      - record: app:http_request_duration_seconds_count
+        expr: http_request_duration_seconds_count{app_type="nodejs"}
+
+      - record: app:http_request_duration_seconds_sum
+        expr: http_request_duration_seconds_sum{app_type="nodejs"}
+
+      - record: app:http_client_request_duration_seconds_bucket
+        expr: http_client_request_duration_seconds_bucket{app_type="nodejs"}
+
+      - record: app:http_client_request_duration_seconds_count
+        expr: http_client_request_duration_seconds_count{app_type="nodejs"}
+
+      - record: app:http_client_request_duration_seconds_sum
+        expr: http_client_request_duration_seconds_sum{app_type="nodejs"}

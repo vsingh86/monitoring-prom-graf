@@ -1,0 +1,121 @@
+# HELP dotnet_collection_count_total GC collection count
+# TYPE dotnet_collection_count_total counter
+dotnet_collection_count_total{generation="0"} 11
+dotnet_collection_count_total{generation="1"} 5
+dotnet_collection_count_total{generation="2"} 3
+# HELP process_start_time_seconds Start time of the process since unix epoch in seconds.
+# TYPE process_start_time_seconds gauge
+process_start_time_seconds 1783353700.69086
+# HELP process_cpu_seconds_total Total user and system CPU time spent in seconds.
+# TYPE process_cpu_seconds_total counter
+process_cpu_seconds_total 18.9375
+# HELP process_virtual_memory_bytes Virtual memory size in bytes.
+# TYPE process_virtual_memory_bytes gauge
+process_virtual_memory_bytes 887476224
+# HELP process_working_set_bytes Process working set
+# TYPE process_working_set_bytes gauge
+process_working_set_bytes 193740800
+# HELP process_private_memory_bytes Process private memory size
+# TYPE process_private_memory_bytes gauge
+process_private_memory_bytes 200577024
+# HELP process_open_handles Number of open handles
+# TYPE process_open_handles gauge
+process_open_handles 1244
+# HELP process_num_threads Total number of threads
+# TYPE process_num_threads gauge
+process_num_threads 37
+# HELP dotnet_total_memory_bytes Total known allocated memory
+# TYPE dotnet_total_memory_bytes gauge
+dotnet_total_memory_bytes 35525208
+# HELP prometheus_net_metric_families Number of metric families currently registered.
+# TYPE prometheus_net_metric_families gauge
+prometheus_net_metric_families{metric_type="counter"} 4
+prometheus_net_metric_families{metric_type="gauge"} 10
+prometheus_net_metric_families{metric_type="summary"} 0
+prometheus_net_metric_families{metric_type="histogram"} 1
+# HELP prometheus_net_metric_instances Number of metric instances currently registered across all metric families.
+# TYPE prometheus_net_metric_instances gauge
+prometheus_net_metric_instances{metric_type="counter"} 6
+prometheus_net_metric_instances{metric_type="gauge"} 19
+prometheus_net_metric_instances{metric_type="summary"} 0
+prometheus_net_metric_instances{metric_type="histogram"} 6
+# HELP prometheus_net_metric_timeseries Number of metric timeseries currently generated from all metric instances.
+# TYPE prometheus_net_metric_timeseries gauge
+prometheus_net_metric_timeseries{metric_type="counter"} 6
+prometheus_net_metric_timeseries{metric_type="gauge"} 19
+prometheus_net_metric_timeseries{metric_type="summary"} 0
+prometheus_net_metric_timeseries{metric_type="histogram"} 66
+# HELP prometheus_net_exemplars_recorded_total Number of exemplars that were accepted into in-memory storage in the prometheus-net SDK.
+# TYPE prometheus_net_exemplars_recorded_total counter
+prometheus_net_exemplars_recorded_total 0
+# HELP ui_requests_total Total number of UI requests.
+# TYPE ui_requests_total counter
+ui_requests_total 16
+# HELP ui_page_load_seconds Histogram of UI page load times in seconds.
+# TYPE ui_page_load_seconds histogram
+ui_page_load_seconds_sum{page="prjProjectsSummary"} 10.560215
+ui_page_load_seconds_count{page="prjProjectsSummary"} 6
+ui_page_load_seconds_bucket{page="prjProjectsSummary",le="0.1"} 0
+ui_page_load_seconds_bucket{page="prjProjectsSummary",le="0.2"} 3
+ui_page_load_seconds_bucket{page="prjProjectsSummary",le="0.4"} 5
+ui_page_load_seconds_bucket{page="prjProjectsSummary",le="0.8"} 5
+ui_page_load_seconds_bucket{page="prjProjectsSummary",le="1.6"} 5
+ui_page_load_seconds_bucket{page="prjProjectsSummary",le="3.2"} 5
+ui_page_load_seconds_bucket{page="prjProjectsSummary",le="6.4"} 5
+ui_page_load_seconds_bucket{page="prjProjectsSummary",le="12.8"} 6
+ui_page_load_seconds_bucket{page="prjProjectsSummary",le="+Inf"} 6
+ui_page_load_seconds_sum{page="prjProjectEdit"} 1.2819747
+ui_page_load_seconds_count{page="prjProjectEdit"} 5
+ui_page_load_seconds_bucket{page="prjProjectEdit",le="0.1"} 1
+ui_page_load_seconds_bucket{page="prjProjectEdit",le="0.2"} 3
+ui_page_load_seconds_bucket{page="prjProjectEdit",le="0.4"} 4
+ui_page_load_seconds_bucket{page="prjProjectEdit",le="0.8"} 5
+ui_page_load_seconds_bucket{page="prjProjectEdit",le="1.6"} 5
+ui_page_load_seconds_bucket{page="prjProjectEdit",le="3.2"} 5
+ui_page_load_seconds_bucket{page="prjProjectEdit",le="6.4"} 5
+ui_page_load_seconds_bucket{page="prjProjectEdit",le="12.8"} 5
+ui_page_load_seconds_bucket{page="prjProjectEdit",le="+Inf"} 5
+ui_page_load_seconds_sum{page="prjPerformancesSummary"} 0.4142382
+ui_page_load_seconds_count{page="prjPerformancesSummary"} 2
+ui_page_load_seconds_bucket{page="prjPerformancesSummary",le="0.1"} 1
+ui_page_load_seconds_bucket{page="prjPerformancesSummary",le="0.2"} 1
+ui_page_load_seconds_bucket{page="prjPerformancesSummary",le="0.4"} 2
+ui_page_load_seconds_bucket{page="prjPerformancesSummary",le="0.8"} 2
+ui_page_load_seconds_bucket{page="prjPerformancesSummary",le="1.6"} 2
+ui_page_load_seconds_bucket{page="prjPerformancesSummary",le="3.2"} 2
+ui_page_load_seconds_bucket{page="prjPerformancesSummary",le="6.4"} 2
+ui_page_load_seconds_bucket{page="prjPerformancesSummary",le="12.8"} 2
+ui_page_load_seconds_bucket{page="prjPerformancesSummary",le="+Inf"} 2
+ui_page_load_seconds_sum{page="prjActivitySummary"} 0.0604813
+ui_page_load_seconds_count{page="prjActivitySummary"} 1
+ui_page_load_seconds_bucket{page="prjActivitySummary",le="0.1"} 1
+ui_page_load_seconds_bucket{page="prjActivitySummary",le="0.2"} 1
+ui_page_load_seconds_bucket{page="prjActivitySummary",le="0.4"} 1
+ui_page_load_seconds_bucket{page="prjActivitySummary",le="0.8"} 1
+ui_page_load_seconds_bucket{page="prjActivitySummary",le="1.6"} 1
+ui_page_load_seconds_bucket{page="prjActivitySummary",le="3.2"} 1
+ui_page_load_seconds_bucket{page="prjActivitySummary",le="6.4"} 1
+ui_page_load_seconds_bucket{page="prjActivitySummary",le="12.8"} 1
+ui_page_load_seconds_bucket{page="prjActivitySummary",le="+Inf"} 1
+ui_page_load_seconds_sum{page="prjProjectComments"} 0.0370777
+ui_page_load_seconds_count{page="prjProjectComments"} 1
+ui_page_load_seconds_bucket{page="prjProjectComments",le="0.1"} 1
+ui_page_load_seconds_bucket{page="prjProjectComments",le="0.2"} 1
+ui_page_load_seconds_bucket{page="prjProjectComments",le="0.4"} 1
+ui_page_load_seconds_bucket{page="prjProjectComments",le="0.8"} 1
+ui_page_load_seconds_bucket{page="prjProjectComments",le="1.6"} 1
+ui_page_load_seconds_bucket{page="prjProjectComments",le="3.2"} 1
+ui_page_load_seconds_bucket{page="prjProjectComments",le="6.4"} 1
+ui_page_load_seconds_bucket{page="prjProjectComments",le="12.8"} 1
+ui_page_load_seconds_bucket{page="prjProjectComments",le="+Inf"} 1
+ui_page_load_seconds_sum{page="prjAdHocGroupsSummary"} 0.0551746
+ui_page_load_seconds_count{page="prjAdHocGroupsSummary"} 1
+ui_page_load_seconds_bucket{page="prjAdHocGroupsSummary",le="0.1"} 1
+ui_page_load_seconds_bucket{page="prjAdHocGroupsSummary",le="0.2"} 1
+ui_page_load_seconds_bucket{page="prjAdHocGroupsSummary",le="0.4"} 1
+ui_page_load_seconds_bucket{page="prjAdHocGroupsSummary",le="0.8"} 1
+ui_page_load_seconds_bucket{page="prjAdHocGroupsSummary",le="1.6"} 1
+ui_page_load_seconds_bucket{page="prjAdHocGroupsSummary",le="3.2"} 1
+ui_page_load_seconds_bucket{page="prjAdHocGroupsSummary",le="6.4"} 1
+ui_page_load_seconds_bucket{page="prjAdHocGroupsSummary",le="12.8"} 1
+ui_page_load_seconds_bucket{page="prjAdHocGroupsSummary",le="+Inf"} 1

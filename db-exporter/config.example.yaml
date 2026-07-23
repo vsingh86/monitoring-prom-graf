@@ -1,0 +1,48 @@
+# Copy this file to config.yaml and fill in real connection details.
+# config.yaml is gitignored -- never commit real hostnames/usernames here.
+#
+# Each entry's "name" is the join key used in three places, and all three
+# MUST match exactly:
+#   1. This config file's "name" field
+#   2. The Prometheus job's "params.target" in prometheus.yml
+#   3. The "?target=" query param used to scrape this exporter
+#
+# Passwords must use ${ENV_VAR} syntax -- resolved from the process
+# environment at startup. Never put a real password directly in this file.
+# See .env.example for the corresponding environment variable names.
+
+scrape_timeout_seconds: 10   # global default; override per-entry below if needed
+
+databases:
+  - name: authapi-postgres
+    db_type: postgres          # postgres | mysql | sqlserver | oracle
+    host: postgres-host.internal
+    port: 5432
+    database: authapi
+    username: authapi_ro
+    password: ${AUTHAPI_POSTGRES_PASSWORD}
+
+  - name: myapp-mysql
+    db_type: mysql
+    host: mysql-host.internal
+    port: 3306
+    database: myapp
+    username: myapp_ro
+    password: ${MYAPP_MYSQL_PASSWORD}
+
+  - name: myapp-sqlserver
+    db_type: sqlserver
+    host: sqlserver-host.internal
+    port: 1433
+    database: myapp
+    username: myapp_ro
+    password: ${MYAPP_SQLSERVER_PASSWORD}
+
+  - name: myapp-oracle
+    db_type: oracle
+    host: oracle-host.internal
+    port: 1521
+    service_name: ORCLPDB1     # Oracle uses service_name, not a bare database name
+    username: myapp_ro
+    password: ${MYAPP_ORACLE_PASSWORD}
+    scrape_timeout_seconds: 15  # optional per-entry override
