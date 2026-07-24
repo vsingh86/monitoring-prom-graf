@@ -25,7 +25,7 @@ _QUERY_STATS_SQL = """
 _ACTIVITY_SQL = """
     SELECT datname, count(*) AS cnt
     FROM pg_stat_activity
-    WHERE datname IS NOT NULL
+    WHERE datname IS NOT NULL AND datname != 'rdsadmin'
     GROUP BY datname
 """
 
@@ -41,15 +41,24 @@ _LOCKS_SQL = """
     SELECT d.datname, l.mode, count(*) AS cnt
     FROM pg_locks l
     JOIN pg_database d ON l.database = d.oid
+    WHERE d.datname != 'rdsadmin'
     GROUP BY d.datname, l.mode
 """
 
-_DEADLOCKS_SQL = "SELECT datname, deadlocks FROM pg_stat_database WHERE datname IS NOT NULL"
+_DEADLOCKS_SQL = """
+    SELECT datname, deadlocks
+    FROM pg_stat_database
+    WHERE datname IS NOT NULL AND datname != 'rdsadmin'
+"""
 
+# rdsadmin is AWS RDS's internal database -- present in pg_database on every
+# RDS instance, but pg_database_size() on it raises permission denied even
+# for the dedicated monitoring role (by design; it's not meant to be
+# accessible). Excluded here for the same reason it's excluded above.
 _SIZE_SQL = """
     SELECT datname, pg_database_size(datname)
     FROM pg_database
-    WHERE datname NOT IN ('template0', 'template1')
+    WHERE datname NOT IN ('template0', 'template1', 'rdsadmin')
 """
 
 

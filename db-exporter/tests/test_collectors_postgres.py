@@ -1,3 +1,4 @@
+from src.collectors import postgres
 from src.collectors.postgres import PostgresAdapter
 from src.config import DatabaseTarget
 from tests.fakes import FakeConnection, build_registry, metric_lines
@@ -11,6 +12,17 @@ TARGET = DatabaseTarget(
     password="p",
     database="authapi",
 )
+
+
+def test_rdsadmin_excluded_from_every_per_database_query():
+    """rdsadmin is AWS RDS's internal database -- pg_database_size() on it
+    raises permission denied even for the dedicated monitoring role, and it
+    isn't a real app database, so it must not appear in any per-database
+    metric (activity, locks, deadlocks, size)."""
+    assert "rdsadmin" in postgres._ACTIVITY_SQL
+    assert "rdsadmin" in postgres._LOCKS_SQL
+    assert "rdsadmin" in postgres._DEADLOCKS_SQL
+    assert "rdsadmin" in postgres._SIZE_SQL
 
 
 def test_collect_happy_path_is_replica():
