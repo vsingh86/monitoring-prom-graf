@@ -2,13 +2,14 @@
 -- monitoring user created by mysql_create_user.sql. Every statement must
 -- succeed (even if it returns zero rows) -- any permission error here is
 -- exactly what db-exporter will hit in production. Queries copied verbatim
--- from src/collectors/mysql.py.
+-- from src/collectors/mysql.py -- replace target_database with the exact
+-- value of config.yaml's "database:" field for this target.
 
 -- Backs: db:query_duration_seconds_{count,sum,max}
 -- Requires: SELECT ON performance_schema.*
 SELECT SUM(COUNT_STAR) AS cnt, SUM(SUM_TIMER_WAIT) AS sum_wait, MAX(MAX_TIMER_WAIT) AS max_wait
 FROM performance_schema.events_statements_summary_by_digest
-WHERE COUNT_STAR > 0;
+WHERE SCHEMA_NAME = 'target_database' AND COUNT_STAR > 0;
 
 -- Backs: db:connections_active
 -- Requires: no special privilege (SHOW STATUS is unrestricted)
@@ -32,7 +33,7 @@ WHERE ERROR_NAME = 'ER_LOCK_DEADLOCK';
 -- Requires: SELECT ON information_schema.*
 SELECT TABLE_SCHEMA, SUM(DATA_LENGTH) AS data_len, SUM(INDEX_LENGTH) AS index_len
 FROM information_schema.TABLES
-WHERE TABLE_SCHEMA NOT IN ('mysql', 'information_schema', 'performance_schema', 'sys')
+WHERE TABLE_SCHEMA = 'target_database'
 GROUP BY TABLE_SCHEMA;
 
 -- Backs: db:replication_lag_seconds (only emitted when this is a replica)

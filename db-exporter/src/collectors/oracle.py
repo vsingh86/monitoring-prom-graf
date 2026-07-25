@@ -54,7 +54,19 @@ _LOCKS_SQL = """
 
 _DEADLOCK_PROXY_SQL = "SELECT COUNT(*) FROM v$session WHERE event = 'enq: TX - row lock contention'"
 
-_TABLESPACE_SQL = "SELECT tablespace_name, SUM(bytes) AS bytes FROM dba_data_files GROUP BY tablespace_name"
+# SYSTEM/SYSAUX are Oracle-reserved names that can't be renamed; UNDOTBS% is
+# Oracle's default undo tablespace naming convention (a DBA can rename it --
+# if this instance does, adjust the filter, or grant SELECT ON
+# DBA_TABLESPACES for a CONTENTS='UNDO' based check instead). These aren't
+# part of the application's data and would otherwise pollute db:size_bytes
+# the same way an unfiltered instance-wide query does on other vendors (see
+# postgres.py's collector for that fix).
+_TABLESPACE_SQL = """
+    SELECT tablespace_name, SUM(bytes) AS bytes
+    FROM dba_data_files
+    WHERE tablespace_name NOT IN ('SYSTEM', 'SYSAUX') AND tablespace_name NOT LIKE 'UNDOTBS%'
+    GROUP BY tablespace_name
+"""
 
 # v$sqlarea.elapsed_time is in microseconds.
 _MICROSECONDS_PER_SECOND = 1e6

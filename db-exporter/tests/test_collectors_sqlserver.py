@@ -1,3 +1,4 @@
+from src.collectors import sqlserver
 from src.collectors.sqlserver import SqlServerAdapter
 from src.config import DatabaseTarget
 from tests.fakes import FakeConnection, build_registry, metric_lines
@@ -11,6 +12,38 @@ TARGET = DatabaseTarget(
     password="p",
     database="myapp",
 )
+
+
+def test_per_database_queries_are_scoped_to_target_database():
+    """query_duration, connections, lock_waits, and size must filter on
+    target.database via DB_ID(%s) rather than returning every database on
+    the instance -- ag_lag is the one deliberate exception (see its own
+    comment in sqlserver.py)."""
+    queue = [
+        [(1, 1, 1)],
+        [("myapp", 1)],
+        [(0,)],
+        [("myapp", 1)],
+        [(0.0,)],
+        [("myapp", 1)],
+        [(None,)],
+    ]
+    conn = FakeConnection(queue)
+    adapter = SqlServerAdapter(TARGET)
+
+    adapter.collect(conn)
+
+    scoped_queries = [
+        sqlserver._QUERY_STATS_SQL,
+        sqlserver._CONNECTIONS_SQL,
+        sqlserver._LOCK_WAITS_SQL,
+        sqlserver._SIZE_SQL,
+    ]
+    for sql, params in conn.calls:
+        if sql in scoped_queries:
+            assert params == (TARGET.database,)
+        elif sql == sqlserver._AG_LAG_SQL:
+            assert params is None
 
 
 def test_collect_happy_path_with_ag():

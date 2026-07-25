@@ -1,3 +1,4 @@
+from src.collectors import mysql
 from src.collectors.mysql import MysqlAdapter
 from src.config import DatabaseTarget
 from tests.fakes import FakeConnection, build_registry, metric_lines
@@ -11,6 +12,31 @@ TARGET = DatabaseTarget(
     password="p",
     database="myapp",
 )
+
+
+def test_query_duration_and_size_are_scoped_to_target_database():
+    """query_duration and size must filter on target.database via a %s
+    parameter rather than a blacklist of system schemas -- otherwise every
+    other app schema sharing the same server leaks into these metrics too
+    (see the equivalent postgres.py fix for the same reasoning)."""
+    queue = [
+        [{"cnt": 1, "sum_wait": 1e12, "max_wait": 1e12}],
+        [("Threads_connected", "1")],
+        [("max_connections", "1")],
+        [("Innodb_row_lock_current_waits", "0")],
+        [{"cnt": 0}],
+        [{"TABLE_SCHEMA": "myapp", "data_len": 1, "index_len": 1}],
+        [],
+    ]
+    conn = FakeConnection(queue)
+    adapter = MysqlAdapter(TARGET)
+
+    adapter.collect(conn)
+
+    scoped_queries = [mysql._QUERY_STATS_SQL, mysql._SIZE_SQL]
+    for sql, params in conn.calls:
+        if sql in scoped_queries:
+            assert params == (TARGET.database,)
 
 
 def test_collect_happy_path_is_replica():

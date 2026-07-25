@@ -5,6 +5,12 @@ already expects. The connections/max-connections/row-lock/deadlock metrics
 are genuinely global scalars in MySQL (no per-database breakdown), matching
 the recording rule's own label_replace(..., "database", "mysql", ...) trick
 -- so this module correctly emits them with no extra label at all.
+
+query_duration and size ARE scoped to config.yaml's target.database via a
+%s parameter -- a target represents one app's schema, and both
+performance_schema and information_schema would otherwise return every
+schema on the server (see postgres.py's collector for the same fix and why
+a blacklist of schema names doesn't scale).
 """
 import mysql.connector
 from prometheus_client.core import GaugeMetricFamily
@@ -15,16 +21,20 @@ from src.config import DatabaseTarget
 
 # count/sum are exact (plain sums). MAX_TIMER_WAIT is also exact -- MySQL
 # tracks the true per-digest maximum natively, not derived from the mean.
+# SCHEMA_NAME reflects the schema of the digest's most recent execution --
+# a statement that runs against more than one schema only counts toward
+# whichever it last ran in. Good enough for the common one-schema-per-app
+# case this exporter targets.
 _QUERY_STATS_SQL = """
     SELECT SUM(COUNT_STAR) AS cnt, SUM(SUM_TIMER_WAIT) AS sum_wait, MAX(MAX_TIMER_WAIT) AS max_wait
     FROM performance_schema.events_statements_summary_by_digest
-    WHERE COUNT_STAR > 0
+    WHERE SCHEMA_NAME = %s AND COUNT_STAR > 0
 """
 
 _SIZE_SQL = """
     SELECT TABLE_SCHEMA, SUM(DATA_LENGTH) AS data_len, SUM(INDEX_LENGTH) AS index_len
     FROM information_schema.TABLES
-    WHERE TABLE_SCHEMA NOT IN ('mysql', 'information_schema', 'performance_schema', 'sys')
+    WHERE TABLE_SCHEMA = %s
     GROUP BY TABLE_SCHEMA
 """
 
@@ -102,7 +112,7 @@ class MysqlAdapter(VendorAdapter):
     def _query_duration_family(self, conn):
         cur = conn.cursor(dictionary=True)
         try:
-            cur.execute(_QUERY_STATS_SQL)
+            cur.execute(_QUERY_STATS_SQL, (self.target.database,))
             row = cur.fetchone()
         finally:
             cur.close()
@@ -176,7 +186,7 @@ class MysqlAdapter(VendorAdapter):
     def _size_family(self, conn):
         cur = conn.cursor(dictionary=True)
         try:
-            cur.execute(_SIZE_SQL)
+            cur.execute(_SIZE_SQL, (self.target.database,))
             rows = cur.fetchall()
         finally:
             cur.close()

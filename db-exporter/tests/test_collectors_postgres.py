@@ -14,15 +14,37 @@ TARGET = DatabaseTarget(
 )
 
 
-def test_rdsadmin_excluded_from_every_per_database_query():
-    """rdsadmin is AWS RDS's internal database -- pg_database_size() on it
-    raises permission denied even for the dedicated monitoring role, and it
-    isn't a real app database, so it must not appear in any per-database
-    metric (activity, locks, deadlocks, size)."""
-    assert "rdsadmin" in postgres._ACTIVITY_SQL
-    assert "rdsadmin" in postgres._LOCKS_SQL
-    assert "rdsadmin" in postgres._DEADLOCKS_SQL
-    assert "rdsadmin" in postgres._SIZE_SQL
+def test_every_per_database_query_is_scoped_to_target_database():
+    """Every per-database query must filter on target.database via a %s
+    parameter rather than blacklisting known system databases (rdsadmin,
+    postgres, template0/1, ...) -- otherwise every other real database
+    sharing the same instance/cluster leaks into these metrics too, and
+    permission-restricted system databases (e.g. RDS's rdsadmin) error out
+    entirely (see postgres_verify_grants.sql)."""
+    queue = [
+        [{"total_calls": 1, "total_time": 1.0, "max_time": 1.0}],
+        [{"datname": "authapi", "cnt": 1}],
+        [(100,)],
+        [(False,)],
+        [{"datname": "authapi", "mode": "RowShareLock", "cnt": 1}],
+        [{"datname": "authapi", "deadlocks": 0}],
+        [("authapi", 1)],
+    ]
+    conn = FakeConnection(queue)
+    adapter = PostgresAdapter(TARGET)
+
+    adapter.collect(conn)
+
+    scoped_queries = [
+        postgres._QUERY_STATS_SQL,
+        postgres._ACTIVITY_SQL,
+        postgres._LOCKS_SQL,
+        postgres._DEADLOCKS_SQL,
+        postgres._SIZE_SQL,
+    ]
+    for sql, params in conn.calls:
+        if sql in scoped_queries:
+            assert params == (TARGET.database,)
 
 
 def test_collect_happy_path_is_replica():

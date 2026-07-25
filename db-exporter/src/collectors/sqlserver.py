@@ -4,6 +4,12 @@ Emits exactly the vendor-native metric names recording_rules/db_sqlserver.yml
 already expects. "db" label names are preserved as-is (the recording rule
 does the "database" rename itself). No "mode" label on mssql_lock_waits --
 the recording rule doesn't consume one, so this module matches it literally.
+
+Every per-database query below is scoped to config.yaml's target.database
+via DB_ID(%s), NOT left to return every database on the instance -- a target
+represents one app's database (see postgres.py's collector for the same fix
+and why a blacklist doesn't scale). _AG_LAG_SQL is the one deliberate
+exception -- see its own comment.
 """
 import pymssql
 from prometheus_client.core import GaugeMetricFamily
@@ -14,17 +20,21 @@ from src.config import DatabaseTarget
 
 # count/sum are exact (plain sums). max_elapsed_time is also exact -- SQL
 # Server tracks the true per-statement maximum natively, not derived from
-# the mean.
+# the mean. sys.dm_exec_query_stats has no direct database column -- dbid
+# comes from CROSS APPLY sys.dm_exec_sql_text(). dbid can be NULL for some
+# plans (ad-hoc batches without a database context), so those rows are
+# silently excluded -- this is a best-effort scope, not exact.
 _QUERY_STATS_SQL = """
-    SELECT SUM(execution_count) AS cnt, SUM(total_elapsed_time) AS total_time, MAX(max_elapsed_time) AS max_time
-    FROM sys.dm_exec_query_stats
-    WHERE execution_count > 0
+    SELECT SUM(qs.execution_count) AS cnt, SUM(qs.total_elapsed_time) AS total_time, MAX(qs.max_elapsed_time) AS max_time
+    FROM sys.dm_exec_query_stats qs
+    CROSS APPLY sys.dm_exec_sql_text(qs.sql_handle) st
+    WHERE st.dbid = DB_ID(%s) AND qs.execution_count > 0
 """
 
 _CONNECTIONS_SQL = """
     SELECT DB_NAME(database_id) AS db, COUNT(*) AS cnt
     FROM sys.dm_exec_sessions
-    WHERE database_id > 0 AND is_user_process = 1
+    WHERE database_id = DB_ID(%s) AND is_user_process = 1
     GROUP BY database_id
 """
 
@@ -42,7 +52,7 @@ _LOCK_WAITS_SQL = """
     SELECT DB_NAME(l.resource_database_id) AS db, COUNT(*) AS cnt
     FROM sys.dm_tran_locks l
     JOIN sys.dm_os_waiting_tasks wt ON l.lock_owner_address = wt.resource_address
-    WHERE l.request_status = 'WAIT'
+    WHERE l.resource_database_id = DB_ID(%s) AND l.request_status = 'WAIT'
     GROUP BY l.resource_database_id
 """
 
@@ -55,6 +65,7 @@ _DEADLOCKS_SQL = """
 _SIZE_SQL = """
     SELECT DB_NAME(database_id) AS db, SUM(CAST(size AS BIGINT) * 8 * 1024) AS bytes
     FROM sys.master_files
+    WHERE database_id = DB_ID(%s)
     GROUP BY database_id
 """
 
@@ -109,7 +120,7 @@ class SqlServerAdapter(VendorAdapter):
     def _query_duration_family(self, conn):
         cur = conn.cursor()
         try:
-            cur.execute(_QUERY_STATS_SQL)
+            cur.execute(_QUERY_STATS_SQL, (self.target.database,))
             row = cur.fetchone()
         finally:
             cur.close()
@@ -129,7 +140,7 @@ class SqlServerAdapter(VendorAdapter):
     def _connections_family(self, conn):
         cur = conn.cursor()
         try:
-            cur.execute(_CONNECTIONS_SQL)
+            cur.execute(_CONNECTIONS_SQL, (self.target.database,))
             rows = cur.fetchall()
         finally:
             cur.close()
@@ -167,7 +178,7 @@ class SqlServerAdapter(VendorAdapter):
     def _lock_waits_family(self, conn):
         cur = conn.cursor()
         try:
-            cur.execute(_LOCK_WAITS_SQL)
+            cur.execute(_LOCK_WAITS_SQL, (self.target.database,))
             rows = cur.fetchall()
         finally:
             cur.close()
@@ -190,7 +201,7 @@ class SqlServerAdapter(VendorAdapter):
     def _size_family(self, conn):
         cur = conn.cursor()
         try:
-            cur.execute(_SIZE_SQL)
+            cur.execute(_SIZE_SQL, (self.target.database,))
             rows = cur.fetchall()
         finally:
             cur.close()

@@ -41,4 +41,10 @@ SELECT COUNT(*) FROM v$session WHERE event = 'enq: TX - row lock contention';
 
 -- Backs: db:size_bytes
 -- Requires: SELECT ON DBA_DATA_FILES (not covered by SELECT_CATALOG_ROLE)
-SELECT tablespace_name, SUM(bytes) AS bytes FROM dba_data_files GROUP BY tablespace_name;
+-- SYSTEM/SYSAUX/UNDOTBS* are excluded as not part of the application's data
+-- -- if this instance renamed its undo tablespace away from the UNDOTBS%
+-- default, adjust the filter accordingly.
+SELECT tablespace_name, SUM(bytes) AS bytes
+FROM dba_data_files
+WHERE tablespace_name NOT IN ('SYSTEM', 'SYSAUX') AND tablespace_name NOT LIKE 'UNDOTBS%'
+GROUP BY tablespace_name;

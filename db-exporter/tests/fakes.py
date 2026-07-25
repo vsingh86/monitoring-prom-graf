@@ -3,11 +3,16 @@ call, in the exact order the collector under test issues them."""
 
 
 class FakeCursor:
-    def __init__(self, results_queue: list):
+    def __init__(self, results_queue: list, calls: list | None = None):
         self._results_queue = results_queue
         self._current = None
+        # Shared with the owning FakeConnection so tests can assert on what
+        # was actually sent to the database (e.g. that a query was correctly
+        # scoped to target.database via a parameter).
+        self.calls = calls if calls is not None else []
 
     def execute(self, sql, params=None):
+        self.calls.append((sql, params))
         if not self._results_queue:
             raise AssertionError(f"no queued result left for query:\n{sql}")
         item = self._results_queue.pop(0)
@@ -38,9 +43,10 @@ class FakeCursor:
 class FakeConnection:
     def __init__(self, results_queue: list):
         self._results_queue = results_queue
+        self.calls: list = []
 
     def cursor(self, *args, **kwargs):
-        return FakeCursor(self._results_queue)
+        return FakeCursor(self._results_queue, self.calls)
 
     def close(self):
         pass

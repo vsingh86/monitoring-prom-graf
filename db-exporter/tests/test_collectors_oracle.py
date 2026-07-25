@@ -1,4 +1,4 @@
-from src.collectors.oracle import OracleAdapter, _parse_oracle_interval_seconds
+from src.collectors.oracle import OracleAdapter, _TABLESPACE_SQL, _parse_oracle_interval_seconds
 from src.config import DatabaseTarget
 from tests.fakes import FakeConnection, build_registry, metric_lines
 
@@ -11,6 +11,15 @@ TARGET = DatabaseTarget(
     password="p",
     service_name="ORCLPDB1",
 )
+
+
+def test_system_tablespaces_excluded_from_size_query():
+    """SYSTEM/SYSAUX/UNDOTBS* aren't part of the application's data and
+    would otherwise pollute db:size_bytes -- see the equivalent postgres.py
+    fix (excluding rdsadmin) for the same reasoning."""
+    assert "SYSTEM" in _TABLESPACE_SQL
+    assert "SYSAUX" in _TABLESPACE_SQL
+    assert "UNDOTBS" in _TABLESPACE_SQL
 
 
 def test_parse_oracle_interval_seconds():

@@ -14,18 +14,27 @@ from src.collectors.base import VendorAdapter
 from src.collectors.query_stats import build_query_stats_families
 from src.config import DatabaseTarget
 
+# Every query below is scoped to config.yaml's target.database via a %s
+# parameter, NOT a blacklist of known system/admin databases (rdsadmin,
+# postgres, template0/1, ...) -- a target represents one app's database, and
+# a growing exclusion list is a losing game against every vendor's own set of
+# built-in databases (and would still wrongly blend in stats from other real
+# databases sharing the same instance/cluster).
+
 # count/sum are exact (plain sums). max_exec_time is also exact -- Postgres
 # tracks the true per-digest maximum natively, not derived from the mean.
+# pg_stat_statements has no datname column itself -- dbid joins to pg_database.
 _QUERY_STATS_SQL = """
-    SELECT SUM(calls) AS total_calls, SUM(total_exec_time) AS total_time, MAX(max_exec_time) AS max_time
-    FROM pg_stat_statements
-    WHERE calls > 0
+    SELECT SUM(pss.calls) AS total_calls, SUM(pss.total_exec_time) AS total_time, MAX(pss.max_exec_time) AS max_time
+    FROM pg_stat_statements pss
+    JOIN pg_database d ON pss.dbid = d.oid
+    WHERE d.datname = %s AND pss.calls > 0
 """
 
 _ACTIVITY_SQL = """
     SELECT datname, count(*) AS cnt
     FROM pg_stat_activity
-    WHERE datname IS NOT NULL AND datname != 'rdsadmin'
+    WHERE datname = %s
     GROUP BY datname
 """
 
@@ -41,24 +50,20 @@ _LOCKS_SQL = """
     SELECT d.datname, l.mode, count(*) AS cnt
     FROM pg_locks l
     JOIN pg_database d ON l.database = d.oid
-    WHERE d.datname != 'rdsadmin'
+    WHERE d.datname = %s
     GROUP BY d.datname, l.mode
 """
 
 _DEADLOCKS_SQL = """
     SELECT datname, deadlocks
     FROM pg_stat_database
-    WHERE datname IS NOT NULL AND datname != 'rdsadmin'
+    WHERE datname = %s
 """
 
-# rdsadmin is AWS RDS's internal database -- present in pg_database on every
-# RDS instance, but pg_database_size() on it raises permission denied even
-# for the dedicated monitoring role (by design; it's not meant to be
-# accessible). Excluded here for the same reason it's excluded above.
 _SIZE_SQL = """
     SELECT datname, pg_database_size(datname)
     FROM pg_database
-    WHERE datname NOT IN ('template0', 'template1', 'rdsadmin')
+    WHERE datname = %s
 """
 
 
@@ -109,7 +114,7 @@ class PostgresAdapter(VendorAdapter):
         return families, had_error
 
     def _query_duration_family(self, cur):
-        cur.execute(_QUERY_STATS_SQL)
+        cur.execute(_QUERY_STATS_SQL, (self.target.database,))
         row = cur.fetchone()
         if row is None or row["total_calls"] is None:
             return build_query_stats_families(
@@ -125,7 +130,7 @@ class PostgresAdapter(VendorAdapter):
         )
 
     def _activity_family(self, cur):
-        cur.execute(_ACTIVITY_SQL)
+        cur.execute(_ACTIVITY_SQL, (self.target.database,))
         family = GaugeMetricFamily(
             "pg_stat_activity_count", "Active connections per database.", labels=["datname"]
         )
@@ -152,7 +157,7 @@ class PostgresAdapter(VendorAdapter):
         return family
 
     def _locks_family(self, cur):
-        cur.execute(_LOCKS_SQL)
+        cur.execute(_LOCKS_SQL, (self.target.database,))
         family = GaugeMetricFamily(
             "pg_locks_count", "Current lock count by database and mode.", labels=["datname", "mode"]
         )
@@ -161,7 +166,7 @@ class PostgresAdapter(VendorAdapter):
         return family
 
     def _deadlocks_family(self, cur):
-        cur.execute(_DEADLOCKS_SQL)
+        cur.execute(_DEADLOCKS_SQL, (self.target.database,))
         # GaugeMetricFamily, not CounterMetricFamily: Counter*Family auto-appends
         # "_total" to the exposed name, which would break the exact metric name
         # (no suffix) that recording_rules/db_postgres.yml already expects.
@@ -174,7 +179,7 @@ class PostgresAdapter(VendorAdapter):
         return family
 
     def _size_family(self, cur):
-        cur.execute(_SIZE_SQL)
+        cur.execute(_SIZE_SQL, (self.target.database,))
         family = GaugeMetricFamily(
             "pg_database_size_bytes", "Database size in bytes.", labels=["datname"]
         )
