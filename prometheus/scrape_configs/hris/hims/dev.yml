@@ -1,0 +1,66 @@
+# HIMS -- development environment.
+# See docs/onboarding-new-app.md for what each label (app/app_type/db_type/
+# host_type/environment) does and why every job below must share app: HIMS.
+
+# Oracle
+- job_name: hris-hims-db-dev
+  params:
+    target: ["hims-db-oracle"]
+  static_configs:
+    - targets: ["db-exporter:9433"]
+      labels:
+        db_type: oracle
+        app: HIMS
+        environment: development
+  relabel_configs:
+    - source_labels: [__param_target]
+      target_label: instance
+
+- job_name: hris-hims-infra-frontend-dev
+  metrics_path: /metrics
+  scrape_interval: 15s
+  scheme: https
+  basic_auth:
+    username: admin
+    password: byteme
+  tls_config:
+    # ca_file: /etc/prometheus/certs/spuappwebdvl.pem
+    # server_name: SPUAPPWEBDVL.ad.seattle.gov
+    insecure_skip_verify: true
+  static_configs:
+    - targets: ["spuappwebdvl:9182"]
+      labels:
+        app: HIMS
+        host_type: windows
+        environment: development
+
+- job_name: 'hris-hims-app-backend-dev'
+  scrape_interval: 15s
+  authorization:
+    type: Bearer
+    credentials_file: /tmp/hims_webservice_dev_metrics_token
+  metrics_path: /HIMSWebService/metrics
+  static_configs: # use docker host internal temp
+    - targets: ['spuappwebdvl:80']
+      labels:
+        app: HIMS
+        app_type: dotnet-framework
+        environment: development
+
+- job_name: "hris-hims-app-frontend-dev"
+  authorization:
+    type: Bearer
+    credentials_file: /tmp/hims_web_dev_metrics_token
+  scheme: https
+  tls_config:
+    # ca_file: /etc/prometheus/certs/spuappwebdvl.pem
+    # server_name: SPUAPPWEBDVL.ad.seattle.gov
+    insecure_skip_verify: true
+  metrics_path: /HIMSWeb/metrics
+  scrape_interval: 15s
+  static_configs:
+    - targets: ['spuappwebdvl:443']
+      labels:
+        app: HIMS
+        app_type: dotnet-framework
+        environment: development

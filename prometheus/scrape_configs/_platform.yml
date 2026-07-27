@@ -1,0 +1,7 @@
+# Platform-level jobs with no single owning app -- these stay outside the
+# <team>/<app>/<env> tree since onboarding a new app never touches this file.
+
+- job_name: prometheus
+  static_configs:
+    - targets: ["localhost:9090"]
+  metrics_path: /prometheus/metrics

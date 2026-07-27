@@ -5,20 +5,30 @@ up correctly in `Application Analytics` (`app-analytics.json`) — Layer 1
 (Golden Signals), Layer 2 (Infrastructure), Layer 3 (Application), and
 Layer 4 (Database) — with no dashboard edits required.
 
-## 1. Pick an `app` label value
+## 1. Pick a team, an app, and an `app` label value
 
-Choose a unique name (e.g. `AuthApi`, PascalCase to match existing convention).
-**Every job that belongs to this app — its application job, database job(s),
-and infra host job(s) — must set `app: <Name>` with this exact value.**
+Choose a unique app name (e.g. `AuthApi`, PascalCase to match existing
+convention) and confirm which team/division directory it belongs under
+(e.g. `hris`). **Every job that belongs to this app — its application job,
+database job(s), and infra host job(s) — must set `app: <Name>` with this
+exact value.**
 
 This is the join key `app-analytics.json` uses internally to tie an
 application's request metrics, database metrics, and host metrics together.
 Skipping it, or using a different value on one of the jobs, means that
 job's data won't show up when you select this app in the dashboard.
 
+Every scrape job lives under `prometheus/scrape_configs/<team>/<app>/<env>.yml`
+(e.g. `prometheus/scrape_configs/hris/my-app/production.yml`) — Prometheus
+auto-discovers any file matching `scrape_configs/*/*/*.yml` via
+`scrape_config_files` in `prometheus.yml`, so **adding a new app or
+environment never means editing `prometheus.yml` itself**, just adding a new
+file at that path. One file per environment holds every job for that app in
+that environment (application, database, infra).
+
 ## 2. Add the application scrape job (required)
 
-In `prometheus/prometheus.yml`, under `# ── Real Applications ──`:
+Create (or add to) `prometheus/scrape_configs/<team>/<app>/<env>.yml`:
 
 ```yaml
 - job_name: my-app
@@ -31,13 +41,16 @@ In `prometheus/prometheus.yml`, under `# ── Real Applications ──`:
         environment: production
 ```
 
-`app_type` must match one of the existing `prometheus/recording_rules/<stack>.yml`
-files (`nodejs`, `dotnet`, `dotnet-framework`, `java`), which normalize that
+Remember the file itself starts directly with the `-` list item — no
+`scrape_configs:` wrapper key (unlike the old single-file layout).
+
+`app_type` must match one of the existing `prometheus/rules/data-mapping/<stack>.yml`
+files (`nodejs`, `dotnet`, `dotnet_framework`, `java`), which normalize that
 stack's native HTTP metrics into the shared `app:*` schema the dashboard
-queries. If your stack isn't one of these, add a new `recording_rules/<stack>.yml`
-following the same pattern (filter on `app_type="<stack>"`, map native
-metric/label names to `app:*`) and reference it under `rule_files:` in
-`prometheus.yml`.
+queries. If your stack isn't one of these, add a new
+`rules/data-mapping/<stack>.yml` following the same pattern (filter on
+`app_type="<stack>"`, map native metric/label names to `app:*`) and
+reference it under `rule_files:` in `prometheus.yml`.
 
 > Note: `dotnet` (modern .NET + OpenTelemetry ASP.NET Core) and
 > `dotnet-framework` (classic .NET Framework + `prometheus-net`) are separate
@@ -69,13 +82,16 @@ which configured database to query (blackbox_exporter-style):
 You also need to add the actual connection details to
 `db-exporter/config.yaml` (and its password to the repo-root `.env`) — see
 [`db-exporter/README.md`](../db-exporter/README.md#adding-a-database) for
-the full steps. `db_type` must match an existing `recording_rules/db_<type>.yml`
+the full steps. `db_type` must match an existing `rules/data-mapping/db_<type>.yml`
 (`postgres`, `mysql`, `sqlserver`, `oracle`), or a new one following the same
-pattern (plus a new `db-exporter/src/collectors/<type>.py`).
+pattern (plus a new `db-exporter/src/collectors/<type>.py`). Also see
+`db-exporter/sql/<type>_create_user.sql` and `<type>_verify_grants.sql` for
+setting up and testing a least-privilege monitoring user for the new database.
 
 ## 4. Add infra host job(s) — optional, only if Layer 2 should scope to this app
 
-One exporter job per host:
+One exporter job per host, in the same `<team>/<app>/<env>.yml` file as steps
+2-3:
 
 ```yaml
 - job_name: windows-exporter-my-app-host
@@ -93,11 +109,19 @@ view rather than attributing a shared host to one app.
 
 ## 5. Reload Prometheus and verify targets
 
+Worth a quick `promtool check config prometheus/prometheus.yml` first (from
+inside the `prometheus` container, or a local `promtool`) — with config now
+split across many files, this catches a bad glob or YAML typo in your new
+file before it silently fails to load.
+
 ```powershell
 curl -X POST http://localhost:9090/-/reload
 ```
 
 Check **Prometheus → Status → Targets** — the new job(s) should show `UP`.
+If a brand-new `<team>/<app>/` directory doesn't show up at all, double-check
+it matches the `scrape_configs/*/*/*.yml` glob in `prometheus.yml` (exactly
+two directory levels under `scrape_configs/`, three-deep file).
 
 ## 6. Verify in Grafana
 

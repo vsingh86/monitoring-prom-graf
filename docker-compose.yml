@@ -13,6 +13,7 @@ services:
       - PROMETHEUS_SERVER=${PROMETHEUS_SERVER:-http://localhost:9090}
     volumes:
       - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - ./prometheus/scrape_configs:/etc/prometheus/scrape_configs:ro
       - ./prometheus/rules:/etc/prometheus/rules:ro
       - ./prometheus/certs:/etc/prometheus/certs:ro
       - ./prometheus/start-prometheus.sh:/etc/prometheus/start-prometheus.sh:ro
