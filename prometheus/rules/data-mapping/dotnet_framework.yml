@@ -19,6 +19,15 @@ groups:
       #   UI:              ui_requests_total (single aggregate counter, NO labels)
       #                    ui_page_load_seconds_{bucket,count,sum}{page}
       #
+      # A third shape exists too: apps using prometheus-net.AspNetCore's stock
+      # UseHttpMetrics() middleware with NO custom counter -- its default request
+      # counter is named http_requests_received_total (not http_requests_total),
+      # with a "code" label (not "status_code") plus MVC "controller"/"action"
+      # labels. The duration histogram it emits is already the plain
+      # http_request_duration_seconds_{bucket,count,sum}{endpoint,...} shape the
+      # API branch below already matches (endpoint -> route is a no-op rename if
+      # other labels differ), so only the request-count rule needs a third branch.
+      #
       # Caveat: ui_requests_total has no status_code/route breakdown at all, so a
       # UI job's traffic only populates aggregate RPS. Panels that filter/group by
       # status_code or route (2xx RPS, Error Count by Status Code, Request Rate by
@@ -34,6 +43,14 @@ groups:
           )
           or
           ui_requests_total{app_type="dotnet-framework"}
+          or
+          label_replace(
+            label_replace(
+              http_requests_received_total{app_type="dotnet-framework"},
+              "route", "$1", "endpoint", "(.*)"
+            ),
+            "status_code", "$1", "code", "(.*)"
+          )
 
       - record: app:http_request_duration_seconds_bucket
         expr: |

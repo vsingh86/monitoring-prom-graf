@@ -24,8 +24,13 @@ rule_files:
   - rules/data-mapping/db_mysql.yml
   - rules/data-mapping/db_sqlserver.yml
   - rules/data-mapping/db_oracle.yml
-  # Alerting rules -- one directory per app, auto-discovered
-  - rules/alerts/*/*
+  # Alerting rules. Prometheus only allows a glob's "*" in the FINAL path
+  # segment, never in a directory component -- so each app's alert directory
+  # needs its own explicit line below; a bare "rules/alerts/*/*" is rejected
+  # at startup ("invalid rule file path"). Adding a new app's alerts means
+  # adding one line here.
+  - rules/alerts/auth-service/*
+  - rules/alerts/hims/*
 
 # ── Onboarding a new app ─────────────────────────────────────────────────────
 # Every job that belongs to an app — its application job, database job(s), and
@@ -37,10 +42,16 @@ rule_files:
 # copy-paste job templates.
 #
 # Every scrape job lives under scrape_configs/<team>/<app>/<env>.yml instead
-# of inline here -- adding a new app or environment means adding a new file
-# at that path, never editing this file. scrape_configs/_platform.yml holds
-# the handful of jobs with no single owning app (currently just Prometheus's
-# own self-scrape).
+# of inline here. Same glob restriction as rule_files above applies here too
+# (Prometheus rejects "*" in a directory component, only the final segment)
+# -- so each app gets its own explicit line, with "*.yml" picking up every
+# environment file under it automatically. Adding a new ENVIRONMENT for an
+# existing app is a zero-edit change (just add the file); adding a brand new
+# APP means adding one line below. scrape_configs/_platform.yml holds the
+# handful of jobs with no single owning app (currently just Prometheus's own
+# self-scrape).
 scrape_config_files:
   - scrape_configs/_platform.yml
-  - scrape_configs/*/*/*.yml
+  - scrape_configs/hris/hims/*.yml
+  - scrape_configs/hris/authapi/*.yml
+  - scrape_configs/hris/card-service/*.yml

@@ -19,30 +19,46 @@ Skipping it, or using a different value on one of the jobs, means that
 job's data won't show up when you select this app in the dashboard.
 
 Every scrape job lives under `prometheus/scrape_configs/<team>/<app>/<env>.yml`
-(e.g. `prometheus/scrape_configs/hris/my-app/production.yml`) — Prometheus
-auto-discovers any file matching `scrape_configs/*/*/*.yml` via
-`scrape_config_files` in `prometheus.yml`, so **adding a new app or
-environment never means editing `prometheus.yml` itself**, just adding a new
-file at that path. One file per environment holds every job for that app in
-that environment (application, database, infra).
+(e.g. `prometheus/scrape_configs/hris/my-app/production.yml`). One file per
+environment holds every job for that app in that environment (application,
+database, infra).
+
+Prometheus only allows a glob's `*` in the *final* path segment of a
+`scrape_config_files`/`rule_files` entry, never in a directory component —
+so a single `scrape_configs/*/*/*.yml`-style pattern that auto-discovers
+brand new app directories isn't possible. Each app gets one explicit line in
+`prometheus.yml`'s `scrape_config_files` (e.g. `scrape_configs/hris/my-app/*.yml`),
+and in `rule_files` too if the app has its own alert rules directory.
+**Adding a new environment for an app that's already onboarded is a
+zero-edit change** — just add the file, the existing `*.yml` glob picks it
+up automatically. Onboarding a brand new app still means adding those one or
+two lines to `prometheus.yml`.
 
 ## 2. Add the application scrape job (required)
+
+**If this app has never been onboarded before**, add one line to
+`prometheus/prometheus.yml`'s `scrape_config_files` list:
+`scrape_configs/<team>/<app>/*.yml` (see the comment above that list for why
+a single auto-discovering glob isn't possible). Skip this if you're just
+adding a new environment for an app that's already listed there.
 
 Create (or add to) `prometheus/scrape_configs/<team>/<app>/<env>.yml`:
 
 ```yaml
-- job_name: my-app
-  metrics_path: /metrics          # wherever the app exposes Prometheus metrics
-  static_configs:
-    - targets: ["my-app-host:port"]
-      labels:
-        app: MyApp
-        app_type: nodejs           # or: dotnet, dotnet-framework, java
-        environment: production
+scrape_configs:
+  - job_name: my-app
+    metrics_path: /metrics          # wherever the app exposes Prometheus metrics
+    static_configs:
+      - targets: ["my-app-host:port"]
+        labels:
+          app: MyApp
+          app_type: nodejs           # or: dotnet, dotnet-framework, java
+          environment: production
 ```
 
-Remember the file itself starts directly with the `-` list item — no
-`scrape_configs:` wrapper key (unlike the old single-file layout).
+Each file needs its own top-level `scrape_configs:` key, same as the old
+single-file layout — `scrape_config_files` merges the contents of every
+matched file's `scrape_configs:` list, it doesn't accept a bare list.
 
 `app_type` must match one of the existing `prometheus/rules/data-mapping/<stack>.yml`
 files (`nodejs`, `dotnet`, `dotnet_framework`, `java`), which normalize that
@@ -62,21 +78,22 @@ reference it under `rule_files:` in `prometheus.yml`.
 All four database types are served by one shared service,
 [`db-exporter`](../db-exporter/README.md) — Prometheus doesn't scrape the
 database directly, it scrapes `db-exporter` with a `params.target` selecting
-which configured database to query (blackbox_exporter-style):
+which configured database to query (blackbox_exporter-style). Add this as
+another item under the same file's `scrape_configs:` list from step 2:
 
 ```yaml
-- job_name: my-app-postgres
-  params:
-    target: ["my-app-postgres"]   # must match a "name:" entry in db-exporter/config.yaml
-  static_configs:
-    - targets: ["db-exporter:9433"]
-      labels:
-        app: MyApp                # same value as step 1
-        db_type: postgres         # or: mysql, sqlserver, oracle
-        environment: production
-  relabel_configs:
-    - source_labels: [__param_target]
-      target_label: instance
+  - job_name: my-app-postgres
+    params:
+      target: ["my-app-postgres"]   # must match a "name:" entry in db-exporter/config.yaml
+    static_configs:
+      - targets: ["db-exporter:9433"]
+        labels:
+          app: MyApp                # same value as step 1
+          db_type: postgres         # or: mysql, sqlserver, oracle
+          environment: production
+    relabel_configs:
+      - source_labels: [__param_target]
+        target_label: instance
 ```
 
 You also need to add the actual connection details to
@@ -90,17 +107,17 @@ setting up and testing a least-privilege monitoring user for the new database.
 
 ## 4. Add infra host job(s) — optional, only if Layer 2 should scope to this app
 
-One exporter job per host, in the same `<team>/<app>/<env>.yml` file as steps
-2-3:
+One exporter job per host, again appended to the same `scrape_configs:`
+list in the same `<team>/<app>/<env>.yml` file as steps 2-3:
 
 ```yaml
-- job_name: windows-exporter-my-app-host
-  static_configs:
-    - targets: ["my-app-host.example.com:9182"]
-      labels:
-        app: MyApp                # same value as step 1
-        host_type: windows        # or: linux (node-exporter)
-        environment: production
+  - job_name: windows-exporter-my-app-host
+    static_configs:
+      - targets: ["my-app-host.example.com:9182"]
+        labels:
+          app: MyApp                # same value as step 1
+          host_type: windows        # or: linux (node-exporter)
+          environment: production
 ```
 
 If a host is shared across multiple apps, leave `app` off entirely — the
@@ -119,9 +136,8 @@ curl -X POST http://localhost:9090/-/reload
 ```
 
 Check **Prometheus → Status → Targets** — the new job(s) should show `UP`.
-If a brand-new `<team>/<app>/` directory doesn't show up at all, double-check
-it matches the `scrape_configs/*/*/*.yml` glob in `prometheus.yml` (exactly
-two directory levels under `scrape_configs/`, three-deep file).
+If a brand-new app's jobs don't show up at all, double-check step 2's
+`scrape_config_files` line was added and its glob matches your file's path.
 
 ## 6. Verify in Grafana
 
