@@ -1,0 +1,77 @@
+# HELP process_cpu_seconds_total Total user and system CPU time spent in seconds.
+# TYPE process_cpu_seconds_total counter
+process_cpu_seconds_total 5.171875
+# HELP dotnet_collection_count_total GC collection count
+# TYPE dotnet_collection_count_total counter
+dotnet_collection_count_total{generation="0"} 14
+dotnet_collection_count_total{generation="2"} 14
+dotnet_collection_count_total{generation="1"} 14
+# HELP http_requests_in_progress The number of requests currently in progress in the ASP.NET Core pipeline. One series without controller/action label values counts all in-progress requests, with separate series existing for each controller-action pair.
+# TYPE http_requests_in_progress gauge
+http_requests_in_progress{method="GET",controller="Home",action="GetMiscDoc",endpoint="{controller=Home}/{action=Search}/{Id?}"} 0
+http_requests_in_progress{method="GET",controller="Home",action="Search",endpoint="{libId?}"} 0
+# HELP process_private_memory_bytes Process private memory size
+# TYPE process_private_memory_bytes gauge
+process_private_memory_bytes 736329728
+# HELP http_request_duration_seconds The duration of HTTP requests processed by an ASP.NET Core application.
+# TYPE http_request_duration_seconds histogram
+http_request_duration_seconds_sum{code="200",method="GET",controller="Home",action="GetMiscDoc",endpoint="{controller=Home}/{action=Search}/{Id?}"} 11.1010386
+http_request_duration_seconds_count{code="200",method="GET",controller="Home",action="GetMiscDoc",endpoint="{controller=Home}/{action=Search}/{Id?}"} 1
+http_request_duration_seconds_bucket{code="200",method="GET",controller="Home",action="GetMiscDoc",endpoint="{controller=Home}/{action=Search}/{Id?}",le="0.001"} 0
+http_request_duration_seconds_bucket{code="200",method="GET",controller="Home",action="GetMiscDoc",endpoint="{controller=Home}/{action=Search}/{Id?}",le="0.002"} 0
+http_request_duration_seconds_bucket{code="200",method="GET",controller="Home",action="GetMiscDoc",endpoint="{controller=Home}/{action=Search}/{Id?}",le="0.004"} 0
+http_request_duration_seconds_bucket{code="200",method="GET",controller="Home",action="GetMiscDoc",endpoint="{controller=Home}/{action=Search}/{Id?}",le="0.008"} 0
+http_request_duration_seconds_bucket{code="200",method="GET",controller="Home",action="GetMiscDoc",endpoint="{controller=Home}/{action=Search}/{Id?}",le="0.016"} 0
+http_request_duration_seconds_bucket{code="200",method="GET",controller="Home",action="GetMiscDoc",endpoint="{controller=Home}/{action=Search}/{Id?}",le="0.032"} 0
+http_request_duration_seconds_bucket{code="200",method="GET",controller="Home",action="GetMiscDoc",endpoint="{controller=Home}/{action=Search}/{Id?}",le="0.064"} 0
+http_request_duration_seconds_bucket{code="200",method="GET",controller="Home",action="GetMiscDoc",endpoint="{controller=Home}/{action=Search}/{Id?}",le="0.128"} 0
+http_request_duration_seconds_bucket{code="200",method="GET",controller="Home",action="GetMiscDoc",endpoint="{controller=Home}/{action=Search}/{Id?}",le="0.256"} 0
+http_request_duration_seconds_bucket{code="200",method="GET",controller="Home",action="GetMiscDoc",endpoint="{controller=Home}/{action=Search}/{Id?}",le="0.512"} 0
+http_request_duration_seconds_bucket{code="200",method="GET",controller="Home",action="GetMiscDoc",endpoint="{controller=Home}/{action=Search}/{Id?}",le="1.024"} 0
+http_request_duration_seconds_bucket{code="200",method="GET",controller="Home",action="GetMiscDoc",endpoint="{controller=Home}/{action=Search}/{Id?}",le="2.048"} 0
+http_request_duration_seconds_bucket{code="200",method="GET",controller="Home",action="GetMiscDoc",endpoint="{controller=Home}/{action=Search}/{Id?}",le="4.096"} 0
+http_request_duration_seconds_bucket{code="200",method="GET",controller="Home",action="GetMiscDoc",endpoint="{controller=Home}/{action=Search}/{Id?}",le="8.192"} 0
+http_request_duration_seconds_bucket{code="200",method="GET",controller="Home",action="GetMiscDoc",endpoint="{controller=Home}/{action=Search}/{Id?}",le="16.384"} 1
+http_request_duration_seconds_bucket{code="200",method="GET",controller="Home",action="GetMiscDoc",endpoint="{controller=Home}/{action=Search}/{Id?}",le="32.768"} 1
+http_request_duration_seconds_bucket{code="200",method="GET",controller="Home",action="GetMiscDoc",endpoint="{controller=Home}/{action=Search}/{Id?}",le="+Inf"} 1
+http_request_duration_seconds_sum{code="200",method="GET",controller="Home",action="Search",endpoint="{libId?}"} 11.120587299999999
+http_request_duration_seconds_count{code="200",method="GET",controller="Home",action="Search",endpoint="{libId?}"} 16
+http_request_duration_seconds_bucket{code="200",method="GET",controller="Home",action="Search",endpoint="{libId?}",le="0.001"} 0
+http_request_duration_seconds_bucket{code="200",method="GET",controller="Home",action="Search",endpoint="{libId?}",le="0.002"} 0
+http_request_duration_seconds_bucket{code="200",method="GET",controller="Home",action="Search",endpoint="{libId?}",le="0.004"} 0
+http_request_duration_seconds_bucket{code="200",method="GET",controller="Home",action="Search",endpoint="{libId?}",le="0.008"} 0
+http_request_duration_seconds_bucket{code="200",method="GET",controller="Home",action="Search",endpoint="{libId?}",le="0.016"} 0
+http_request_duration_seconds_bucket{code="200",method="GET",controller="Home",action="Search",endpoint="{libId?}",le="0.032"} 0
+http_request_duration_seconds_bucket{code="200",method="GET",controller="Home",action="Search",endpoint="{libId?}",le="0.064"} 0
+http_request_duration_seconds_bucket{code="200",method="GET",controller="Home",action="Search",endpoint="{libId?}",le="0.128"} 3
+http_request_duration_seconds_bucket{code="200",method="GET",controller="Home",action="Search",endpoint="{libId?}",le="0.256"} 12
+http_request_duration_seconds_bucket{code="200",method="GET",controller="Home",action="Search",endpoint="{libId?}",le="0.512"} 14
+http_request_duration_seconds_bucket{code="200",method="GET",controller="Home",action="Search",endpoint="{libId?}",le="1.024"} 14
+http_request_duration_seconds_bucket{code="200",method="GET",controller="Home",action="Search",endpoint="{libId?}",le="2.048"} 14
+http_request_duration_seconds_bucket{code="200",method="GET",controller="Home",action="Search",endpoint="{libId?}",le="4.096"} 15
+http_request_duration_seconds_bucket{code="200",method="GET",controller="Home",action="Search",endpoint="{libId?}",le="8.192"} 16
+http_request_duration_seconds_bucket{code="200",method="GET",controller="Home",action="Search",endpoint="{libId?}",le="16.384"} 16
+http_request_duration_seconds_bucket{code="200",method="GET",controller="Home",action="Search",endpoint="{libId?}",le="32.768"} 16
+http_request_duration_seconds_bucket{code="200",method="GET",controller="Home",action="Search",endpoint="{libId?}",le="+Inf"} 16
+# HELP process_virtual_memory_bytes Virtual memory size in bytes.
+# TYPE process_virtual_memory_bytes gauge
+process_virtual_memory_bytes 2213383127040
+# HELP process_open_handles Number of open handles
+# TYPE process_open_handles gauge
+process_open_handles 882
+# HELP dotnet_total_memory_bytes Total known allocated memory
+# TYPE dotnet_total_memory_bytes gauge
+dotnet_total_memory_bytes 561521888
+# HELP process_working_set_bytes Process working set
+# TYPE process_working_set_bytes gauge
+process_working_set_bytes 578465792
+# HELP http_requests_received_total Provides the count of HTTP requests that have been processed by the ASP.NET Core pipeline.
+# TYPE http_requests_received_total counter
+http_requests_received_total{code="200",method="GET",controller="Home",action="GetMiscDoc",endpoint="{controller=Home}/{action=Search}/{Id?}"} 1
+http_requests_received_total{code="200",method="GET",controller="Home",action="Search",endpoint="{libId?}"} 16
+# HELP process_num_threads Total number of threads
+# TYPE process_num_threads gauge
+process_num_threads 34
+# HELP process_start_time_seconds Start time of the process since unix epoch in seconds.
+# TYPE process_start_time_seconds gauge
+process_start_time_seconds 1785289668.566363

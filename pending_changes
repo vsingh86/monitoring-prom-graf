@@ -1,3 +1,5 @@
-- create a analytics dashboard for 3 teir app. The existing app specific dashboard will be good but with the addition of api/webserivce panel. 
-- keep the existing dashboard for 2 teir app, which only has web or api layer and a database 
-- 
+- Remove the "Open AuthAPI specific metrics" feature from analytics dashboard. We will implement this feature later down the road.
+- Remove Business Transactions Rate (logins / min) and External Dependency Latency p95 for now as it appears to be app specific. 
+- Some apps may not have a backend database and some apps run on vendor infra where we cannot scrape the host data. Does it make sense to have a separate app-analytics dashboard for these types of applications?
+- Add sections for multiple teams in the team overivew dashboard. Teams: HR and Finance, Public Safety, Middleware. Create 5 placeholder panels for each team (name: teamname-app1, teamname-app2, etc), also use the same name for the job as well so it is easy to find and replace with the real app and job. 
+- Currently we have onboarding-new-app document which focuses on how to add new app to this centralized service. Create another onboard document for the consumer teams and apps. For example, consuming team will need to expose /metrics from their app endpoint, install exporter_scrapper on hosting server, and request dba to create a database user with proper grants. 

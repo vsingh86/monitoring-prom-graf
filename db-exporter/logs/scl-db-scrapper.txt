@@ -1,0 +1,31 @@
+# HELP mssql_query_execution_seconds_count Query execution time from sys.dm_exec_query_stats (count).
+# TYPE mssql_query_execution_seconds_count gauge
+mssql_query_execution_seconds_count 9035.0
+# HELP mssql_query_execution_seconds_sum Query execution time from sys.dm_exec_query_stats (sum, seconds).
+# TYPE mssql_query_execution_seconds_sum gauge
+mssql_query_execution_seconds_sum 70.006496
+# HELP mssql_query_execution_seconds_max Query execution time from sys.dm_exec_query_stats (max, seconds).
+# TYPE mssql_query_execution_seconds_max gauge
+mssql_query_execution_seconds_max 12.123074
+# HELP mssql_connections Active user connections per database.
+# TYPE mssql_connections gauge
+mssql_connections{db="SCLdocLibrary"} 4.0
+# HELP mssql_max_connections Configured max user connections (0 = unlimited).
+# TYPE mssql_max_connections gauge
+mssql_max_connections 0.0
+# HELP mssql_lock_waits Current lock waits per database.
+# TYPE mssql_lock_waits gauge
+# HELP mssql_deadlocks_per_second SQL Server's own Deadlocks/sec perf counter.
+# TYPE mssql_deadlocks_per_second gauge
+mssql_deadlocks_per_second 0.0
+# HELP mssql_database_size_bytes Database size in bytes.
+# TYPE mssql_database_size_bytes gauge
+# HELP db_exporter_up 1 if the last scrape of this target succeeded.
+# TYPE db_exporter_up gauge
+db_exporter_up{target="hris-scl-engineering-db"} 1.0
+# HELP db_exporter_scrape_error 1 if any query failed during the last scrape.
+# TYPE db_exporter_scrape_error gauge
+db_exporter_scrape_error{target="hris-scl-engineering-db"} 0.0
+# HELP db_exporter_scrape_duration_seconds Wall-clock time of the last scrape.
+# TYPE db_exporter_scrape_duration_seconds gauge
+db_exporter_scrape_duration_seconds{target="hris-scl-engineering-db"} 0.3356681999999864
