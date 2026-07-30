@@ -14,35 +14,27 @@
 scrape_timeout_seconds: 10   # global default; override per-entry below if needed
 
 databases:
-  - name: authapi-postgres
-    db_type: postgres          # postgres | mysql | sqlserver | oracle
-    host: postgres-host.internal
-    port: 5432
-    database: authapi
-    username: authapi_ro
-    password: ${AUTHAPI_POSTGRES_PASSWORD}
-
-  - name: myapp-mysql
-    db_type: mysql
-    host: mysql-host.internal
-    port: 3306
-    database: myapp
-    username: myapp_ro
-    password: ${MYAPP_MYSQL_PASSWORD}
-
-  - name: myapp-sqlserver
+  - name: hris-scl-engineering-db
     db_type: sqlserver
-    host: sqlserver-host.internal
+    host: changme
     port: 1433
-    database: myapp
-    username: myapp_ro
-    password: ${MYAPP_SQLSERVER_PASSWORD}
+    database: SCLdocLibrary
+    username: prom_exporter
+    password: ${HRIS_SCL_ENGINEERING_DB_PASSWORD}
 
-  - name: myapp-oracle
+  - name: hris-card-db
+    db_type: postgres          # postgres | mysql | sqlserver | oracle
+    host: changme
+    port: 9452
+    database: card
+    username: prom_exporter
+    password: ${HRIS_CARD_DB_PASSWORD}
+
+  - name: hris-hims-db
     db_type: oracle
-    host: oracle-host.internal
-    port: 1521
-    service_name: ORCLPDB1     # Oracle uses service_name, not a bare database name
-    username: myapp_ro
-    password: ${MYAPP_ORACLE_PASSWORD}
+    host: changme
+    port: 5031
+    service_name: SPUD     # Oracle uses service_name, not a bare database name
+    username: prom_exporter
+    password: ${HRIS_HIMS_DB_PASSWORD}
     scrape_timeout_seconds: 15  # optional per-entry override
