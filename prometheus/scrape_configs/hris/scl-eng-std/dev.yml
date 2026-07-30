@@ -1,0 +1,35 @@
+# HIMS -- development environment.
+# See docs/onboarding-new-app.md for what each label (app/app_type/db_type/
+# host_type/environment) does and why every job below must share app: HIMS.
+scrape_configs:
+# MyDB
+  - job_name: hris-scl-engineering-db-dev
+    params:
+      target: ["hris-scl-engineering-db"]
+    static_configs:
+      - targets: ["db-exporter:9433"]
+        labels:
+          db_type: sqlserver
+          app: SCLENGINEERINGS
+          environment: development
+    relabel_configs:
+      - source_labels: [__param_target]
+        target_label: instance
+
+
+# Application - Frontend 
+  - job_name: "hris-scl-engineering-frontend-dev"
+    static_configs:
+      - targets: ["webqa8.seattle.gov:443"]
+        labels:
+          app_type: dotnet-framework
+          app: SCLENGINEERINGS
+          environment: development
+    scheme: https
+    authorization:
+      type: Bearer
+      credentials_file: /tmp/HRIS_SCL_ENGINEERING_BE_METRICS_TOKEN
+    tls_config:
+      insecure_skip_verify: true
+    metrics_path: /city-light-engineering-standards/metrics
+    scrape_interval: 15s

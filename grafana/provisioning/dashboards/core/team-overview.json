@@ -272,7 +272,7 @@
           "links": [
             {
               "title": "Open App Analytics →",
-              "url": "/d/app-analytics?var-job=authapi&${__url_time_range}",
+              "url": "/d/app-analytics?var-job=hris-hims-app-backend-dev&${__url_time_range}",
               "targetBlank": false
             }
           ]
@@ -476,7 +476,7 @@
           "links": [
             {
               "title": "Open App Analytics →",
-              "url": "/d/app-analytics?var-job=authapi&${__url_time_range}",
+              "url": "/d/app-analytics?var-job=hris-card-frontend-dev&${__url_time_range}",
               "targetBlank": false
             }
           ]
@@ -623,7 +623,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "avg_over_time(up{job=\"authapi\"}[$__range])",
+          "expr": "avg_over_time(up{job=\"hris-card-frontend-dev\"}[$__range])",
           "legendFormat": "Uptime",
           "refId": "A"
         },
@@ -632,17 +632,17 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "up{job=\"authapi\"}",
+          "expr": "up{job=\"hris-card-frontend-dev\"}",
           "legendFormat": "Status",
           "refId": "B"
         }
       ],
-      "title": "📦 Placeholder App 2",
+      "title": "📦 CARD",
       "type": "stat",
       "links": [
         {
           "title": "Open App Analytics →",
-          "url": "/d/app-analytics?var-job=authapi&${__url_time_range}",
+          "url": "/d/app-analytics?var-job=hris-card-frontend-dev&${__url_time_range}",
           "targetBlank": false
         }
       ]
@@ -680,7 +680,7 @@
           "links": [
             {
               "title": "Open App Analytics →",
-              "url": "/d/app-analytics?var-job=authapi&${__url_time_range}",
+              "url": "/d/app-analytics?var-job=hris-scl-engineering-frontend-dev&${__url_time_range}",
               "targetBlank": false
             }
           ]
@@ -827,7 +827,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "avg_over_time(up{job=\"authapi\"}[$__range])",
+          "expr": "avg_over_time(up{job=\"hris-scl-engineering-frontend-dev\"}[$__range])",
           "legendFormat": "Uptime",
           "refId": "A"
         },
@@ -836,17 +836,17 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "up{job=\"authapi\"}",
+          "expr": "up{job=\"hris-scl-engineering-frontend-dev\"}",
           "legendFormat": "Status",
           "refId": "B"
         }
       ],
-      "title": "📦 Placeholder App 3",
+      "title": "📦 SCL Eng. Std",
       "type": "stat",
       "links": [
         {
           "title": "Open App Analytics →",
-          "url": "/d/app-analytics?var-job=authapi&${__url_time_range}",
+          "url": "/d/app-analytics?var-job=hris-scl-engineering-frontend-dev&${__url_time_range}",
           "targetBlank": false
         }
       ]

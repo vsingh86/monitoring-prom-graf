@@ -14,13 +14,13 @@
 USE master;
 GO
 
-CREATE LOGIN db_exporter WITH PASSWORD = 'CHANGE_ME';
-GRANT VIEW SERVER STATE TO db_exporter;
-GRANT CONNECT SQL TO db_exporter;
+CREATE LOGIN prom_exporter WITH PASSWORD = 'CHANGE_ME';
+GRANT VIEW SERVER STATE TO prom_exporter;
+GRANT CONNECT SQL TO prom_exporter;
 GO
 
 USE [target_database];
 GO
 
-CREATE USER db_exporter FOR LOGIN db_exporter;
+CREATE USER prom_exporter FOR LOGIN prom_exporter;
 GO

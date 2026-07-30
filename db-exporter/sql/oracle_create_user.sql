@@ -7,8 +7,8 @@
 --                          V_$SESSION, V_$DATABASE, V_$DATAGUARD_STATS
 --   SELECT ON DBA_DATA_FILES -> tablespace size (not covered by the role above)
 
-CREATE USER db_exporter IDENTIFIED BY "CHANGE_ME";
+CREATE USER prom_exporter IDENTIFIED BY "CHANGE_ME";
 
-GRANT CREATE SESSION TO db_exporter;
-GRANT SELECT_CATALOG_ROLE TO db_exporter;
-GRANT SELECT ON DBA_DATA_FILES TO db_exporter;
+GRANT CREATE SESSION TO prom_exporter;
+GRANT SELECT_CATALOG_ROLE TO prom_exporter;
+GRANT SELECT ON DBA_DATA_FILES TO prom_exporter;

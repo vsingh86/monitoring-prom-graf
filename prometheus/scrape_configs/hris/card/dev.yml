@@ -1,0 +1,32 @@
+# Card service -- staging environment (AWS). Commented out until re-enabled
+# -- see docs/onboarding-new-app.md for the checklist to bring an app job live.
+scrape_configs:
+# Database
+  - job_name: hris-card-db-dev
+    params:
+      target: ["hris-card-db"]
+    static_configs:
+      - targets: ["db-exporter:9433"]
+        labels:
+          db_type: postgres
+          app: CARD
+          environment: development
+    relabel_configs:
+      - source_labels: [__param_target]
+        target_label: instance
+# Application - Frontend 
+  - job_name: "hris-card-frontend-dev"
+    static_configs:
+      - targets: ["app.card-stage.adc.seattle.gov:443"]
+        labels:
+          app_type: nodejs
+          app: CARD
+          environment: development
+    scheme: https
+    authorization:
+      type: Bearer
+      credentials_file: /tmp/HRIS_CARD_BE_METRICS_TOKEN
+    tls_config:
+      insecure_skip_verify: true
+    metrics_path: /api/metrics
+    scrape_interval: 15s

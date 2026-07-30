@@ -353,7 +353,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "avg(db:connections_active{job=\"$db_job\"} / db:connections_max{job=\"$db_job\"})",
+          "expr": "avg(db:connections_active{job=\"$db_job\"} / (db:connections_max{job=\"$db_job\"} > 0))",
           "legendFormat": "DB Connections",
           "refId": "A",
           "instant": false
@@ -1083,13 +1083,70 @@
                 "type": "prometheus",
                 "uid": "prometheus"
               },
-              "expr": "db:connections_active{job=\"$db_job\"} / db:connections_max{job=\"$db_job\"}",
+              "expr": "db:connections_active{job=\"$db_job\"} / (db:connections_max{job=\"$db_job\"} > 0)",
               "legendFormat": "{{database}}"
             }
           ],
           "title": "DB Active Connections %",
           "type": "gauge",
-          "description": "**What it measures:** Active database connections as a percentage of the maximum allowed (`max_connections` in PostgreSQL).\n\n**Why it matters:** Approaching `max_connections` causes 'too many connections' errors that make the application completely unable to reach the database.\n\n**How collected:** `postgres_exporter` queries `pg_stat_activity` for active connection count and `pg_settings` for `max_connections`. The ratio is the saturation metric.\n\n**Thresholds:** Warn > 70% · Critical > 90%.\n\n**Best practice:** Use a connection pooler (PgBouncer) in front of PostgreSQL. This allows many application threads to share a small number of actual database connections, preventing exhaustion under load."
+          "description": "**What it measures:** Active database connections as a percentage of the maximum allowed (`max_connections` in PostgreSQL).\n\n**Why it matters:** Approaching `max_connections` causes 'too many connections' errors that make the application completely unable to reach the database.\n\n**How collected:** `postgres_exporter` queries `pg_stat_activity` for active connection count and `pg_settings` for `max_connections`. The ratio is the saturation metric.\n\n**Thresholds:** Warn > 70% · Critical > 90%.\n\n**Best practice:** Use a connection pooler (PgBouncer) in front of PostgreSQL. This allows many application threads to share a small number of actual database connections, preventing exhaustion under load.\n\n**Note:** shows no data when `connections_max` is `0` (SQL Server/Postgres convention for \"unlimited/not explicitly capped\") -- a meaningless ratio otherwise, since dividing by zero produces `+Inf`. See the companion \"DB Active Connections (count)\" panel for a value that's always populated."
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "unit": "short",
+              "color": {
+                "mode": "thresholds"
+              },
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  }
+                ]
+              }
+            }
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 6,
+            "x": 6,
+            "y": 124
+          },
+          "id": 56,
+          "options": {
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "orientation": "auto",
+            "textMode": "auto",
+            "colorMode": "value",
+            "graphMode": "area",
+            "justifyMode": "auto"
+          },
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "prometheus"
+              },
+              "expr": "db:connections_active{job=\"$db_job\"}",
+              "legendFormat": "{{database}}"
+            }
+          ],
+          "title": "DB Active Connections (count)",
+          "type": "stat",
+          "description": "**What it measures:** Raw active connection count per database, independent of whether a `max_connections` cap is configured.\n\n**Why it exists:** The neighboring \"DB Active Connections %\" gauge shows nothing when `connections_max` is `0` -- SQL Server's (and some Postgres setups') convention for \"no explicit cap configured,\" which is the common case, not an edge case. This panel always has a number regardless.\n\n**Thresholds:** none set -- there's no universal \"too many\" for an absolute count; set one per-app if you have a known pool size limit at the application layer (e.g. a connection pooler)."
         },
         {
           "datasource": {
@@ -1177,7 +1234,7 @@
                 "type": "prometheus",
                 "uid": "prometheus"
               },
-              "expr": "db:locks_total{job=\"$db_job\"}",
+              "expr": "db:locks_total{job=\"$db_job\"} or vector(0)",
               "legendFormat": "{{database}} {{mode}}"
             },
             {

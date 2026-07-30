@@ -1,12 +1,11 @@
 # HIMS -- development environment.
 # See docs/onboarding-new-app.md for what each label (app/app_type/db_type/
 # host_type/environment) does and why every job below must share app: HIMS.
-
 scrape_configs:
-  # Oracle
-  - job_name: hris-hims-db-dev
+# Oracle
+  - job_name: hris-hims-db-dev  
     params:
-      target: ["hims-db-oracle"]
+      target: ["hris-hims-db"]
     static_configs:
       - targets: ["db-exporter:9433"]
         labels:
@@ -16,6 +15,7 @@ scrape_configs:
     relabel_configs:
       - source_labels: [__param_target]
         target_label: instance
+
 
   - job_name: hris-hims-infra-frontend-dev
     metrics_path: /metrics
@@ -39,7 +39,7 @@ scrape_configs:
     scrape_interval: 15s
     authorization:
       type: Bearer
-      credentials_file: /tmp/hims_webservice_dev_metrics_token
+      credentials_file: /tmp/HRIS_HIMS_BE_METRICS_TOKEN
     metrics_path: /HIMSWebService/metrics
     static_configs: # use docker host internal temp
       - targets: ['spuappwebdvl:80']
@@ -51,7 +51,7 @@ scrape_configs:
   - job_name: "hris-hims-app-frontend-dev"
     authorization:
       type: Bearer
-      credentials_file: /tmp/hims_web_dev_metrics_token
+      credentials_file: /tmp/HRIS_HIMS_FE_METRICS_TOKEN
     scheme: https
     tls_config:
       # ca_file: /etc/prometheus/certs/spuappwebdvl.pem

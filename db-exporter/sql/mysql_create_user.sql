@@ -10,10 +10,10 @@
 --   REPLICATION CLIENT             -> SHOW SLAVE STATUS (replica lag)
 -- SHOW GLOBAL STATUS / SHOW GLOBAL VARIABLES need no extra privilege.
 
-CREATE USER 'db_exporter'@'%' IDENTIFIED BY 'CHANGE_ME';
+CREATE USER 'prom_exporter'@'%' IDENTIFIED BY 'CHANGE_ME';
 
-GRANT SELECT ON performance_schema.* TO 'db_exporter'@'%';
-GRANT SELECT ON information_schema.* TO 'db_exporter'@'%';
-GRANT REPLICATION CLIENT ON *.* TO 'db_exporter'@'%';
+GRANT SELECT ON performance_schema.* TO 'prom_exporter'@'%';
+GRANT SELECT ON information_schema.* TO 'prom_exporter'@'%';
+GRANT REPLICATION CLIENT ON *.* TO 'prom_exporter'@'%';
 
 FLUSH PRIVILEGES;

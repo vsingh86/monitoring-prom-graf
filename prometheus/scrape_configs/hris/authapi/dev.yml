@@ -1,0 +1,21 @@
+# AuthApi -- staging environment (AWS). Commented out until re-enabled --
+# see docs/onboarding-new-app.md for the checklist to bring an app job live.
+scrape_configs:
+# Scrape Auth service - https://api.hris.adc.seattle.gov/api/auth/metrics/
+  - job_name: hris-authapi-backend-dev
+    metrics_path: /api/auth/metrics
+    scheme: https
+    scrape_interval: 15s
+    static_configs:
+      - targets: ["api.hris-stage.adc.seattle.gov"]
+        labels:
+          app: AuthApi
+          environment: staging
+          app_type: nodejs
+    tls_config:
+      # ca_file: /etc/prometheus/certs/spuappwebdvl.pem
+      # server_name: SPUAPPWEBDVL.ad.seattle.gov
+      insecure_skip_verify: true
+    authorization:
+      type: Bearer
+      credentials_file: /tmp/HRIS_AUTHAPI_BE_METRICS_TOKEN
