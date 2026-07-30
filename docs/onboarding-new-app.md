@@ -5,18 +5,26 @@ up correctly in `Application Analytics` (`app-analytics.json`) — Layer 1
 (Golden Signals), Layer 2 (Infrastructure), Layer 3 (Application), and
 Layer 4 (Database) — with no dashboard edits required.
 
-## 1. Pick a team, an app, and an `app` label value
+## 1. Pick a team, an app, and `app`/`team` label values
 
 Choose a unique app name (e.g. `AuthApi`, PascalCase to match existing
 convention) and confirm which team/division directory it belongs under
-(e.g. `hris`). **Every job that belongs to this app — its application job,
-database job(s), and infra host job(s) — must set `app: <Name>` with this
-exact value.**
-
-This is the join key `app-analytics.json` uses internally to tie an
-application's request metrics, database metrics, and host metrics together.
-Skipping it, or using a different value on one of the jobs, means that
-job's data won't show up when you select this app in the dashboard.
+(e.g. `hris` — the scrape-config directory slug doesn't have to match the
+team's Grafana folder/display name exactly; `hris` is the directory for what
+Grafana shows as the "HR and Finance" folder). **Every job that belongs to
+this app — its application job, database job(s), and infra host job(s) —
+must set both:**
+- `app: <Name>` — the join key `app-analytics.json` uses internally to tie
+  an application's request metrics, database metrics, and host metrics
+  together. Skipping it, or using a different value on one of the jobs,
+  means that job's data won't show up when you select this app in the
+  dashboard.
+- `team: <Display Name>` — must exactly match the destination team's
+  Grafana folder display name (e.g. `HR and Finance`, `Public Safety`,
+  `Middleware`), quoted in YAML since these contain spaces
+  (`team: "HR and Finance"`). This is what the Directors rollup dashboard
+  (`directors/all-teams-overview.json`) counts per team — get it wrong and
+  this app won't be counted (or gets miscounted) there.
 
 Every scrape job lives under `prometheus/scrape_configs/<team>/<app>/<env>.yml`
 (e.g. `prometheus/scrape_configs/hris/my-app/production.yml`). One file per
@@ -52,6 +60,7 @@ scrape_configs:
       - targets: ["my-app-host:port"]
         labels:
           app: MyApp
+          team: "HR and Finance"     # exact Grafana folder display name -- see step 1
           app_type: nodejs           # or: dotnet, dotnet-framework, java
           environment: production
 ```
@@ -89,6 +98,7 @@ another item under the same file's `scrape_configs:` list from step 2:
       - targets: ["db-exporter:9433"]
         labels:
           app: MyApp                # same value as step 1
+          team: "HR and Finance"    # same value as step 1
           db_type: postgres         # or: mysql, sqlserver, oracle
           environment: production
     relabel_configs:
@@ -116,9 +126,17 @@ list in the same `<team>/<app>/<env>.yml` file as steps 2-3:
       - targets: ["my-app-host.example.com:9182"]
         labels:
           app: MyApp                # same value as step 1
+          team: "HR and Finance"    # same value as step 1
           host_type: windows        # or: linux (node-exporter)
           environment: production
 ```
+
+If this app has neither a database (step 3) nor a scrapable host (this step)
+— e.g. fully vendor-hosted, no infra you can reach — skip both and use
+`app-analytics-lite` instead of `app-analytics` when linking it from a
+team-overview card (step 8). It's the same dashboard minus the Layer 2/4
+rows and the saturation panel, so it doesn't show two permanently-empty
+sections for an app that will never have that data.
 
 If a host is shared across multiple apps, leave `app` off entirely — the
 dashboard will correctly show no infra data for it under any single app's
@@ -155,16 +173,24 @@ jobs, or the target is down.
 
 ## 7. Optional: app-specific dashboard
 
-If this app needs extra panels beyond the generic layers (see
-`authapi-analytics.json` for the pattern — auth operations, dependency
-health, runtime internals), create a new dashboard file and add it to the
-`specific_dashboard` custom variable's options in `app-analytics.json`. It
-will then surface as a linked panel ("App-Specific Dashboard Available")
-when this app is selected.
+**Currently disabled/paused** — `app-analytics.json` used to support linking
+out to a per-app dashboard (see `core/authapi-analytics.json` for the
+existing pattern: auth operations, dependency health, runtime internals),
+via a `specific_dashboard` variable and an "App-Specific Dashboard Available"
+panel. Both were removed from `app-analytics.json` while this feature is
+redesigned — the mechanism and `authapi-analytics.json` itself are left
+intact for when it comes back. Don't try to re-wire a new app into it until
+this section is updated.
 
 ## 8. Optional: team-overview card
 
-Replace one of the "Placeholder App N" cards in `team-overview.json` with
-this app: update its two `up{job="..."}` targets and its link to
-`/d/app-analytics?var-job=my-app` (add `&var-specific_dashboard=<uid>` if
-step 7 applies).
+Each team has its own overview dashboard under
+`grafana/provisioning/dashboards/<team-slug>/team-overview.json`
+(e.g. `hr-finance/team-overview.json`, `public-safety/team-overview.json`).
+Replace one of its "Placeholder App N" cards with this app: update its two
+`up{job="..."}` targets and its link to
+`/d/app-analytics?var-job=my-app&${__url_time_range}` (or
+`/d/app-analytics-lite?...` per step 4's note). The Directors rollup
+(`directors/all-teams-overview.json`) needs no changes — its per-team app
+count is a live query against the `team:` label from step 1, not a
+hand-maintained card.

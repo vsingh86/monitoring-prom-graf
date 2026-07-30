@@ -1,5 +1,5 @@
 {
-  "description": "Team Applications — Monitoring Overview. Click any app card to drill into its full analytics dashboard.",
+  "description": "HR and Finance — Team Applications Monitoring Overview. Click any app card to drill into its full analytics dashboard.",
   "editable": true,
   "graphTooltip": 1,
   "panels": [
@@ -16,7 +16,7 @@
       },
       "id": 1,
       "options": {
-        "content": "<div style=\"font-family:'DM Sans',Arial,sans-serif;display:flex;align-items:center;justify-content:space-between;padding:14px 20px;background:linear-gradient(135deg,#0f172a 0%,#1e293b 60%,#0f2744 100%);border-radius:10px;border:1px solid #1e3a5f\">\n  <div style=\"display:flex;align-items:center;gap:14px\">\n    <div style=\"width:10px;height:10px;border-radius:50%;background:#22c55e;box-shadow:0 0 8px #22c55e\"></div>\n    <div>\n      <div style=\"color:#f1f5f9;font-size:18px;font-weight:700;letter-spacing:0.01em\">Team Applications — Monitoring Overview</div>\n      <div style=\"color:#64748b;font-size:12px;margin-top:2px\">Apps supported by the team &nbsp;·&nbsp; Click any card to open its full analytics dashboard</div>\n    </div>\n  </div>\n  <div style=\"display:flex;gap:24px;align-items:center\">\n    <div style=\"text-align:center\"><div style=\"color:#22c55e;font-size:11px;font-weight:600\">APPS</div><div style=\"color:#94a3b8;font-size:11px\">10 services</div></div>\n  </div>\n</div>",
+        "content": "<div style=\"font-family:'DM Sans',Arial,sans-serif;display:flex;align-items:center;justify-content:space-between;padding:14px 20px;background:linear-gradient(135deg,#0f172a 0%,#1e293b 60%,#0f2744 100%);border-radius:10px;border:1px solid #1e3a5f\">\n  <div style=\"display:flex;align-items:center;gap:14px\">\n    <div style=\"width:10px;height:10px;border-radius:50%;background:#22c55e;box-shadow:0 0 8px #22c55e\"></div>\n    <div>\n      <div style=\"color:#f1f5f9;font-size:18px;font-weight:700;letter-spacing:0.01em\">HR and Finance — Team Applications</div>\n      <div style=\"color:#64748b;font-size:12px;margin-top:2px\">Apps supported by the team &nbsp;·&nbsp; Click any card to open its full analytics dashboard</div>\n    </div>\n  </div>\n  <div style=\"display:flex;gap:24px;align-items:center\">\n    <div style=\"text-align:center\"><div style=\"color:#22c55e;font-size:11px;font-weight:600\">APPS</div><div style=\"color:#94a3b8;font-size:11px\">10 services</div></div>\n  </div>\n</div>",
         "mode": "html"
       },
       "title": "",
@@ -68,7 +68,7 @@
           "links": [
             {
               "title": "Open App Analytics →",
-              "url": "/d/app-analytics?var-job=authapi&var-specific_dashboard=authapi-analytics&${__url_time_range}",
+              "url": "/d/app-analytics?var-job=authapi&${__url_time_range}",
               "targetBlank": false
             }
           ]
@@ -234,7 +234,7 @@
       "links": [
         {
           "title": "Open App Analytics →",
-          "url": "/d/app-analytics?var-job=authapi&var-specific_dashboard=authapi-analytics&${__url_time_range}",
+          "url": "/d/app-analytics?var-job=authapi&${__url_time_range}",
           "targetBlank": false
         }
       ]
@@ -2089,7 +2089,7 @@
   },
   "timepicker": {},
   "timezone": "browser",
-  "title": "Team Applications — Overview",
-  "uid": "team-overview",
+  "title": "HR and Finance — Team Overview",
+  "uid": "team-overview-hr-finance",
   "version": 1
 }

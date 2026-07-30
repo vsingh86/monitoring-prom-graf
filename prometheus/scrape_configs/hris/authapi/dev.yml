@@ -1,5 +1,4 @@
-# AuthApi -- staging environment (AWS). Commented out until re-enabled --
-# see docs/onboarding-new-app.md for the checklist to bring an app job live.
+# AuthApi -- staging environment (AWS).
 scrape_configs:
 # Scrape Auth service - https://api.hris.adc.seattle.gov/api/auth/metrics/
   - job_name: hris-authapi-backend-dev
@@ -10,6 +9,7 @@ scrape_configs:
       - targets: ["api.hris-stage.adc.seattle.gov"]
         labels:
           app: AuthApi
+          team: "HR and Finance"
           environment: staging
           app_type: nodejs
     tls_config:

@@ -1,6 +1,7 @@
-# HIMS -- development environment.
+# SCL Engineering Standards -- development environment.
 # See docs/onboarding-new-app.md for what each label (app/app_type/db_type/
-# host_type/environment) does and why every job below must share app: HIMS.
+# host_type/environment/team) does and why every job below must share
+# app: SCLENGINEERINGS.
 scrape_configs:
 # MyDB
   - job_name: hris-scl-engineering-db-dev
@@ -11,6 +12,7 @@ scrape_configs:
         labels:
           db_type: sqlserver
           app: SCLENGINEERINGS
+          team: "HR and Finance"
           environment: development
     relabel_configs:
       - source_labels: [__param_target]
@@ -24,6 +26,7 @@ scrape_configs:
         labels:
           app_type: dotnet-framework
           app: SCLENGINEERINGS
+          team: "HR and Finance"
           environment: development
     scheme: https
     authorization:

@@ -1,0 +1,285 @@
+{
+  "description": "Director-level rollup: one card per team showing how many apps are currently monitored, derived live from Prometheus (count of distinct jobs per team: label). Not an operational dashboard -- see each team's own overview for that.",
+  "editable": true,
+  "graphTooltip": 1,
+  "panels": [
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 1,
+      "options": {
+        "content": "<div style=\"font-family:'DM Sans',Arial,sans-serif;display:flex;align-items:center;justify-content:space-between;padding:14px 20px;background:linear-gradient(135deg,#0f172a 0%,#1e293b 60%,#0f2744 100%);border-radius:10px;border:1px solid #1e3a5f\">\n  <div style=\"display:flex;align-items:center;gap:14px\">\n    <div style=\"width:10px;height:10px;border-radius:50%;background:#22c55e;box-shadow:0 0 8px #22c55e\"></div>\n    <div>\n      <div style=\"color:#f1f5f9;font-size:18px;font-weight:700;letter-spacing:0.01em\">All Teams — Monitoring Overview</div>\n      <div style=\"color:#64748b;font-size:12px;margin-top:2px\">Live app count per team, derived from each scrape job's team: label &nbsp;·&nbsp; Click a card to open that team's dashboard</div>\n    </div>\n  </div>\n</div>",
+        "mode": "html"
+      },
+      "title": "",
+      "transparent": true,
+      "type": "text"
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 3
+      },
+      "id": 2,
+      "title": "🏢  Teams",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "color": {
+            "mode": "thresholds"
+          },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "blue",
+                "value": null
+              }
+            ]
+          },
+          "noValue": "0",
+          "links": [
+            {
+              "title": "Open HR and Finance →",
+              "url": "/d/team-overview-hr-finance?${__url_time_range}",
+              "targetBlank": false
+            }
+          ]
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 8,
+        "x": 0,
+        "y": 4
+      },
+      "id": 10,
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "value_and_name",
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "orientation": "horizontal",
+        "text": {
+          "titleSize": 14,
+          "valueSize": 40
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "expr": "count(count by (job) (up{team=\"HR and Finance\"}))",
+          "legendFormat": "Apps Monitored",
+          "refId": "A"
+        }
+      ],
+      "title": "🏢 HR and Finance",
+      "type": "stat",
+      "links": [
+        {
+          "title": "Open HR and Finance →",
+          "url": "/d/team-overview-hr-finance?${__url_time_range}",
+          "targetBlank": false
+        }
+      ]
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "color": {
+            "mode": "thresholds"
+          },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "blue",
+                "value": null
+              }
+            ]
+          },
+          "noValue": "0",
+          "links": [
+            {
+              "title": "Open Public Safety →",
+              "url": "/d/team-overview-public-safety?${__url_time_range}",
+              "targetBlank": false
+            }
+          ]
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 8,
+        "x": 8,
+        "y": 4
+      },
+      "id": 11,
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "value_and_name",
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "orientation": "horizontal",
+        "text": {
+          "titleSize": 14,
+          "valueSize": 40
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "expr": "count(count by (job) (up{team=\"Public Safety\"}))",
+          "legendFormat": "Apps Monitored",
+          "refId": "A"
+        }
+      ],
+      "title": "🏢 Public Safety",
+      "type": "stat",
+      "links": [
+        {
+          "title": "Open Public Safety →",
+          "url": "/d/team-overview-public-safety?${__url_time_range}",
+          "targetBlank": false
+        }
+      ]
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "color": {
+            "mode": "thresholds"
+          },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "blue",
+                "value": null
+              }
+            ]
+          },
+          "noValue": "0",
+          "links": [
+            {
+              "title": "Open Middleware →",
+              "url": "/d/team-overview-middleware?${__url_time_range}",
+              "targetBlank": false
+            }
+          ]
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 8,
+        "x": 16,
+        "y": 4
+      },
+      "id": 12,
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "value_and_name",
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "orientation": "horizontal",
+        "text": {
+          "titleSize": 14,
+          "valueSize": 40
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "expr": "count(count by (job) (up{team=\"Middleware\"}))",
+          "legendFormat": "Apps Monitored",
+          "refId": "A"
+        }
+      ],
+      "title": "🏢 Middleware",
+      "type": "stat",
+      "links": [
+        {
+          "title": "Open Middleware →",
+          "url": "/d/team-overview-middleware?${__url_time_range}",
+          "targetBlank": false
+        }
+      ]
+    }
+  ],
+  "refresh": "1m",
+  "schemaVersion": 38,
+  "tags": [
+    "overview",
+    "directors"
+  ],
+  "time": {
+    "from": "now-1h",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "browser",
+  "title": "All Teams — Director Overview",
+  "uid": "all-teams-overview",
+  "version": 1
+}

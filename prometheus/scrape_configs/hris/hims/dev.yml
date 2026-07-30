@@ -11,6 +11,7 @@ scrape_configs:
         labels:
           db_type: oracle
           app: HIMS
+          team: "HR and Finance"
           environment: development
     relabel_configs:
       - source_labels: [__param_target]
@@ -32,6 +33,7 @@ scrape_configs:
       - targets: ["spuappwebdvl:9182"]
         labels:
           app: HIMS
+          team: "HR and Finance"
           host_type: windows
           environment: development
 
@@ -45,6 +47,7 @@ scrape_configs:
       - targets: ['spuappwebdvl:80']
         labels:
           app: HIMS
+          team: "HR and Finance"
           app_type: dotnet-framework
           environment: development
 
@@ -63,5 +66,6 @@ scrape_configs:
       - targets: ['spuappwebdvl:443']
         labels:
           app: HIMS
+          team: "HR and Finance"
           app_type: dotnet-framework
           environment: development
