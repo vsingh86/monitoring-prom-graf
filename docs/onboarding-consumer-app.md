@@ -66,8 +66,9 @@ disk, network) show up on Layer 2:
 **If your app runs on vendor-hosted/managed infrastructure you can't reach**
 (can't install an exporter, can't scrape the host), skip this — say so
 explicitly when you hand off to the platform team. Your app will use the
-`app-analytics-lite` dashboard variant instead of the full one, which
-doesn't have a permanently-empty Infrastructure section.
+`2-tier-no-host-analytics` dashboard variant instead of the full one (or
+`2-tier-no-host-no-db-analytics` if you also have no database — see
+below), which doesn't have a permanently-empty Infrastructure section.
 
 ## 3. If you have a database: request DBA grants
 
@@ -88,8 +89,9 @@ matching `*_verify_grants.sql` script in the same directory — run it logged
 in as the new monitoring user, every query in it should succeed.
 
 If you don't have a database, or it's fully managed by a vendor you have no
-DBA access to, say so — same as step 2, that's a `app-analytics-lite`
-situation for Layer 4.
+DBA access to, say so — same as step 2, that's a `2-tier-no-db-analytics`
+situation for Layer 4 (or `2-tier-no-host-no-db-analytics` if you also
+have no scrapable host).
 
 ## 4. What to hand back to the platform team
 

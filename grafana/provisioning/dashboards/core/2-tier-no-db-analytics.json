@@ -1,5 +1,5 @@
 {
-  "description": "Generic analytics dashboard for real applications. Features dynamic injection of application-specific panels at Layer 4+.",
+  "description": "Generic 2-tier (single-job) analytics dashboard for apps with no backend database: app + host only, no Layer 4/Database row. See 2-tier-fullstack-analytics for the full app+host+db dashboard.",
   "editable": true,
   "graphTooltip": 1,
   "links": [
@@ -14,18 +14,6 @@
       "tooltip": "Back to the All Teams overview (this dashboard is shared across every team, so there's no single 'correct' team to return to)",
       "type": "link",
       "url": "/d/all-teams-overview"
-    },
-    {
-      "asDropdown": false,
-      "icon": "external link",
-      "includeVars": false,
-      "keepTime": true,
-      "tags": [],
-      "targetBlank": false,
-      "title": "Frontend Dashboard →",
-      "tooltip": "Switch to the Frontend Analytics dashboard",
-      "type": "link",
-      "url": "/d/frontend-analytics"
     }
   ],
   "panels": [
@@ -77,7 +65,7 @@
           "links": [
             {
               "title": "Performance Drilldown →",
-              "url": "/d/app-analytics?var-job=$job&viewPanel=200",
+              "url": "/d/2-tier-no-db-analytics?var-job=$job&viewPanel=200",
               "targetBlank": false
             }
           ]
@@ -166,7 +154,7 @@
           "links": [
             {
               "title": "Performance Drilldown →",
-              "url": "/d/app-analytics?var-job=$job&viewPanel=200",
+              "url": "/d/2-tier-no-db-analytics?var-job=$job&viewPanel=200",
               "targetBlank": false
             }
           ]
@@ -246,7 +234,7 @@
           "links": [
             {
               "title": "Error Drilldown →",
-              "url": "/d/app-analytics?var-job=$job&viewPanel=201",
+              "url": "/d/2-tier-no-db-analytics?var-job=$job&viewPanel=201",
               "targetBlank": false
             }
           ]
@@ -294,8 +282,8 @@
         "y": 9
       },
       "id": 13,
-      "title": "Saturation — DB Connections / CPU / Memory",
-      "description": "**Resource saturation for the three most common bottlenecks.**\n\nAll values are normalised to 0–100% so they share the same axis:\n\n- **DB Connections:** `active_connections / max_connections` per app. Pool exhaustion causes 'too many connections' errors.\n- **CPU:** Average CPU utilisation across all cores on the host (from `node_exporter`).\n- **Memory:** Used RAM as a % of total (`MemAvailable` method, includes reclaimable cache).\n\n**Thresholds (shared):** Warn > 70% · Critical > 90%.",
+      "title": "Saturation — CPU / Memory",
+      "description": "**Resource saturation for the two most common host bottlenecks.** Normalised to 0-100%.\n\n- **CPU:** Average CPU utilisation across all cores on the host (from `node_exporter`).\n- **Memory:** Used RAM as a % of total (`MemAvailable` method, includes reclaimable cache).\n\n**Thresholds (shared):** Warn > 70% · Critical > 90%.",
       "type": "bargauge",
       "fieldConfig": {
         "defaults": {
@@ -348,16 +336,6 @@
         "minVizHeight": 10
       },
       "targets": [
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "prometheus"
-          },
-          "expr": "avg(db:connections_active{job=\"$db_job\"} / (db:connections_max{job=\"$db_job\"} > 0))",
-          "legendFormat": "DB Connections",
-          "refId": "A",
-          "instant": false
-        },
         {
           "datasource": {
             "type": "prometheus",
@@ -760,7 +738,7 @@
               "links": [
                 {
                   "title": "Error Endpoint Drilldown →",
-                  "url": "/d/app-analytics?var-job=$job&viewPanel=201",
+                  "url": "/d/2-tier-no-db-analytics?var-job=$job&viewPanel=201",
                   "targetBlank": false
                 }
               ]
@@ -804,344 +782,6 @@
             }
           },
           "description": "**What it measures:** Count of error responses by HTTP status code in each interval.\n\nUses `increase()` to show the actual number of errors rather than a rate.\n\n**Click any line to drill into the Error Endpoint Drilldown table.**",
-          "interval": "1m"
-        }
-      ]
-    },
-    {
-      "collapsed": true,
-      "gridPos": {
-        "h": 1,
-        "w": 24,
-        "x": 0,
-        "y": 115
-      },
-      "id": 5,
-      "title": "🔵  Layer 4 — Database & Storage",
-      "type": "row",
-      "panels": [
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "prometheus"
-          },
-          "fieldConfig": {
-            "defaults": {
-              "unit": "s",
-              "color": {
-                "mode": "palette-classic"
-              },
-              "custom": {
-                "lineWidth": 2,
-                "fillOpacity": 10
-              },
-              "thresholds": {
-                "mode": "absolute",
-                "steps": [
-                  {
-                    "color": "green",
-                    "value": null
-                  },
-                  {
-                    "color": "yellow",
-                    "value": 0.1
-                  },
-                  {
-                    "color": "red",
-                    "value": 0.5
-                  }
-                ]
-              }
-            }
-          },
-          "gridPos": {
-            "h": 8,
-            "w": 12,
-            "x": 0,
-            "y": 116
-          },
-          "id": 50,
-          "targets": [
-            {
-              "datasource": {
-                "type": "prometheus",
-                "uid": "prometheus"
-              },
-              "expr": "rate(db:query_duration_seconds_sum{job=\"$db_job\"}[$__rate_interval]) / rate(db:query_duration_seconds_count{job=\"$db_job\"}[$__rate_interval])",
-              "legendFormat": "Query latency avg"
-            },
-            {
-              "datasource": {
-                "type": "prometheus",
-                "uid": "prometheus"
-              },
-              "expr": "db:query_duration_seconds_max{job=\"$db_job\"}",
-              "legendFormat": "Query latency max"
-            }
-          ],
-          "title": "DB Query Latency (avg / max)",
-          "type": "timeseries",
-          "description": "**What it measures:** How long the database takes to execute queries — average (rate of total time / rate of total count) and the worst single query observed. Includes parse time, planning time, lock wait time, and execution time.\n\n**How collected:** exact aggregates from each vendor's own query-stats view (PostgreSQL `pg_stat_statements`, MySQL `performance_schema`, SQL Server `sys.dm_exec_query_stats`), via `db-exporter`. `max` is each vendor's own native per-query maximum, not derived — except **Oracle, which shows \"No data\" for max** since `v$sqlarea` has no per-call maximum column and a true one requires licensed Diagnostics Pack features (see `db-exporter/README.md`).\n\n**Why this replaced p95/p99:** none of these vendors' standard system views expose a true per-call latency distribution, only aggregates — the previous percentile panel was computed from an approximated/guessed histogram. Avg and max are both exact.\n\n**Thresholds:** Warn avg > 100ms · Critical avg > 500ms.\n\n**Common causes of latency spikes:** Missing index, stale statistics causing plan regression, lock contention, replication lag on read replicas, vacuum running on a large table.",
-          "interval": "1m"
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "prometheus"
-          },
-          "fieldConfig": {
-            "defaults": {
-              "unit": "percentunit",
-              "color": {
-                "mode": "thresholds"
-              },
-              "min": 0,
-              "max": 1,
-              "thresholds": {
-                "mode": "absolute",
-                "steps": [
-                  {
-                    "color": "green",
-                    "value": null
-                  },
-                  {
-                    "color": "yellow",
-                    "value": 0.7
-                  },
-                  {
-                    "color": "red",
-                    "value": 0.9
-                  }
-                ]
-              }
-            }
-          },
-          "gridPos": {
-            "h": 8,
-            "w": 6,
-            "x": 12,
-            "y": 124
-          },
-          "id": 51,
-          "options": {
-            "reduceOptions": {
-              "calcs": [
-                "lastNotNull"
-              ]
-            },
-            "orientation": "auto"
-          },
-          "targets": [
-            {
-              "datasource": {
-                "type": "prometheus",
-                "uid": "prometheus"
-              },
-              "expr": "db:connections_active{job=\"$db_job\"} / (db:connections_max{job=\"$db_job\"} > 0)",
-              "legendFormat": "{{database}}"
-            }
-          ],
-          "title": "DB Active Connections %",
-          "type": "gauge",
-          "description": "**What it measures:** Active database connections as a percentage of the maximum allowed (`max_connections` in PostgreSQL).\n\n**Why it matters:** Approaching `max_connections` causes 'too many connections' errors that make the application completely unable to reach the database.\n\n**How collected:** `postgres_exporter` queries `pg_stat_activity` for active connection count and `pg_settings` for `max_connections`. The ratio is the saturation metric.\n\n**Thresholds:** Warn > 70% · Critical > 90%.\n\n**Best practice:** Use a connection pooler (PgBouncer) in front of PostgreSQL. This allows many application threads to share a small number of actual database connections, preventing exhaustion under load.\n\n**Note:** shows no data when `connections_max` is `0` (SQL Server/Postgres convention for \"unlimited/not explicitly capped\") -- a meaningless ratio otherwise, since dividing by zero produces `+Inf`. See the companion \"DB Active Connections (count)\" panel for a value that's always populated."
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "prometheus"
-          },
-          "fieldConfig": {
-            "defaults": {
-              "unit": "short",
-              "color": {
-                "mode": "thresholds"
-              },
-              "thresholds": {
-                "mode": "absolute",
-                "steps": [
-                  {
-                    "color": "green",
-                    "value": null
-                  }
-                ]
-              }
-            }
-          },
-          "gridPos": {
-            "h": 8,
-            "w": 6,
-            "x": 6,
-            "y": 124
-          },
-          "id": 56,
-          "options": {
-            "reduceOptions": {
-              "calcs": [
-                "lastNotNull"
-              ],
-              "fields": "",
-              "values": false
-            },
-            "orientation": "auto",
-            "textMode": "auto",
-            "colorMode": "value",
-            "graphMode": "area",
-            "justifyMode": "auto"
-          },
-          "targets": [
-            {
-              "datasource": {
-                "type": "prometheus",
-                "uid": "prometheus"
-              },
-              "expr": "db:connections_active{job=\"$db_job\"}",
-              "legendFormat": "{{database}}"
-            }
-          ],
-          "title": "DB Active Connections (count)",
-          "type": "stat",
-          "description": "**What it measures:** Raw active connection count per database, independent of whether a `max_connections` cap is configured.\n\n**Why it exists:** The neighboring \"DB Active Connections %\" gauge shows nothing when `connections_max` is `0` -- SQL Server's (and some Postgres setups') convention for \"no explicit cap configured,\" which is the common case, not an edge case. This panel always has a number regardless.\n\n**Thresholds:** none set -- there's no universal \"too many\" for an absolute count; set one per-app if you have a known pool size limit at the application layer (e.g. a connection pooler)."
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "prometheus"
-          },
-          "fieldConfig": {
-            "defaults": {
-              "unit": "s",
-              "color": {
-                "mode": "palette-classic"
-              },
-              "custom": {
-                "lineWidth": 2,
-                "fillOpacity": 10
-              },
-              "thresholds": {
-                "mode": "absolute",
-                "steps": [
-                  {
-                    "color": "green",
-                    "value": null
-                  },
-                  {
-                    "color": "yellow",
-                    "value": 10
-                  },
-                  {
-                    "color": "red",
-                    "value": 60
-                  }
-                ]
-              }
-            }
-          },
-          "gridPos": {
-            "h": 8,
-            "w": 6,
-            "x": 18,
-            "y": 132
-          },
-          "id": 52,
-          "targets": [
-            {
-              "datasource": {
-                "type": "prometheus",
-                "uid": "prometheus"
-              },
-              "expr": "db:replication_lag_seconds{job=\"$db_job\"}",
-              "legendFormat": "{{instance}}"
-            }
-          ],
-          "title": "Replication Lag",
-          "type": "timeseries",
-          "description": "**What it measures:** The delay between a write being committed on the primary database and that write being applied on replica databases, in seconds.\n\n**Why it matters:** Applications reading from replicas see stale data during lag. More critically, if the primary fails during high replication lag, the data written during that window is lost in a failover.\n\n**How collected:** `postgres_exporter` queries `pg_stat_replication` on the primary for bytes of WAL not yet replicated. MySQL: `mysqld_exporter` reads `Seconds_Behind_Master` from replica status.\n\n**Thresholds:** Warn > 10s · Critical > 60s. For financial data: Warn > 2s.\n\n**Common causes:** Network issues between primary and replica, replica under-resourced, very high write throughput on primary.",
-          "interval": "1m"
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "prometheus"
-          },
-          "fieldConfig": {
-            "defaults": {
-              "unit": "short",
-              "color": {
-                "mode": "palette-classic"
-              },
-              "custom": {
-                "lineWidth": 2,
-                "fillOpacity": 8
-              }
-            }
-          },
-          "gridPos": {
-            "h": 8,
-            "w": 9,
-            "x": 6,
-            "y": 140
-          },
-          "id": 54,
-          "targets": [
-            {
-              "datasource": {
-                "type": "prometheus",
-                "uid": "prometheus"
-              },
-              "expr": "db:locks_total{job=\"$db_job\"} or vector(0)",
-              "legendFormat": "{{database}} {{mode}}"
-            },
-            {
-              "datasource": {
-                "type": "prometheus",
-                "uid": "prometheus"
-              },
-              "expr": "rate(db:deadlocks_total{job=\"$db_job\"}[$__rate_interval])",
-              "legendFormat": "Deadlocks/s"
-            }
-          ],
-          "title": "Lock Waits & Deadlocks",
-          "type": "timeseries",
-          "description": "**What it measures:** The number of database lock waits and deadlocks over time. Lock waits occur when a transaction needs a lock held by another transaction.\n\n**Why it matters:** Lock contention degrades throughput non-linearly — a few long-running transactions can block hundreds of others. Deadlocks cause transaction rollbacks and application errors.\n\n**How collected:** PostgreSQL: `pg_locks` view counts locks by type. MySQL: `Innodb_deadlocks` status variable via `mysqld_exporter`.\n\n**Thresholds:** Any increase in deadlocks should be investigated. Lock waits > 5 concurrent is Warn.\n\n**Common causes:** Long-running transactions, missing indexes causing full table scans that hold locks, application not committing transactions promptly.",
-          "interval": "1m"
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "prometheus"
-          },
-          "fieldConfig": {
-            "defaults": {
-              "unit": "bytes",
-              "color": {
-                "mode": "palette-classic"
-              },
-              "custom": {
-                "lineWidth": 2,
-                "fillOpacity": 8
-              }
-            }
-          },
-          "gridPos": {
-            "h": 8,
-            "w": 9,
-            "x": 15,
-            "y": 148
-          },
-          "id": 55,
-          "targets": [
-            {
-              "datasource": {
-                "type": "prometheus",
-                "uid": "prometheus"
-              },
-              "expr": "db:size_bytes{job=\"$db_job\"}",
-              "legendFormat": "{{database}}"
-            }
-          ],
-          "title": "Database Size Growth",
-          "type": "timeseries",
-          "description": "**What it measures:** Total size of each database in bytes, tracked over time to show growth trends.\n\n**How collected:** `postgres_exporter` queries `pg_database_size()` function which returns size in bytes per database.\n\n**Why it matters:** Unexpected growth spikes can indicate a runaway job inserting data, missing delete/archival processes, or a data leak. Predictable growth helps capacity planning.\n\n**Best practice:** Combine with tablespace-level breakdown to identify which tables are growing fastest. Alert when growth rate exceeds 3× the 30-day average daily growth.\n\n**Also monitor:** Table bloat from unvacuumed dead tuples in PostgreSQL — the table file grows even without new data.",
           "interval": "1m"
         }
       ]
@@ -1264,7 +904,7 @@
                     "value": [
                       {
                         "title": "Operation Detail →",
-                        "url": "/d/app-analytics?var-job=$job&var-route=${__data.fields[\"Operation (Endpoint)\"]}&viewPanel=202",
+                        "url": "/d/2-tier-no-db-analytics?var-job=$job&var-route=${__data.fields[\"Operation (Endpoint)\"]}&viewPanel=202",
                         "targetBlank": false
                       }
                     ]
@@ -1444,7 +1084,7 @@
                     "value": [
                       {
                         "title": "Operation Detail →",
-                        "url": "/d/app-analytics?var-job=$job&var-route=${__data.fields[\"Operation (Endpoint)\"]}&viewPanel=202",
+                        "url": "/d/2-tier-no-db-analytics?var-job=$job&var-route=${__data.fields[\"Operation (Endpoint)\"]}&viewPanel=202",
                         "targetBlank": false
                       }
                     ]
@@ -1654,8 +1294,8 @@
   },
   "timepicker": {},
   "timezone": "browser",
-  "title": "Application Analytics",
-  "uid": "app-analytics",
+  "title": "Application Analytics — 2-Tier, No DB",
+  "uid": "2-tier-no-db-analytics",
   "version": 1,
   "templating": {
     "list": [
@@ -1725,31 +1365,6 @@
         "sort": 1,
         "type": "query",
         "label": "Endpoint (Route)"
-      },
-      {
-        "current": {
-          "selected": false,
-          "text": "",
-          "value": ""
-        },
-        "datasource": {
-          "type": "prometheus",
-          "uid": "prometheus"
-        },
-        "definition": "label_values(db:connections_active{app=\"$app\"}, job)",
-        "hide": 0,
-        "includeAll": false,
-        "multi": false,
-        "name": "db_job",
-        "options": [],
-        "query": {
-          "query": "label_values(db:connections_active{app=\"$app\"}, job)",
-          "refId": "A"
-        },
-        "refresh": 2,
-        "sort": 1,
-        "type": "query",
-        "label": "Database Job"
       }
     ]
   }

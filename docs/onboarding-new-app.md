@@ -1,9 +1,16 @@
 # Onboarding a new app
 
 Checklist for adding a new application to this monitoring stack so it shows
-up correctly in `Application Analytics` (`app-analytics.json`) — Layer 1
-(Golden Signals), Layer 2 (Infrastructure), Layer 3 (Application), and
-Layer 4 (Database) — with no dashboard edits required.
+up correctly in the `core/` dashboard family with no dashboard edits
+required. Most apps use the **2-tier family** (single app job, scoped by
+`$job`): `2-tier-fullstack-analytics` — Layer 1 (Golden Signals), Layer 2
+(Infrastructure), Layer 3 (Application), Layer 4 (Database) — plus the
+trimmed variants `2-tier-no-host-analytics`, `2-tier-no-db-analytics`,
+`2-tier-no-host-no-db-analytics` for apps missing one or both of host/db
+(see step 4). Apps with a genuine frontend/backend split (step 4a)
+additionally show up in the **3-tier family**, scoped by `$app` plus the
+`tier` label: `3-tier-fullstack-analytics`, `3-tier-no-host-analytics`,
+`3-tier-no-db-analytics`.
 
 ## 1. Pick a team, an app, and `app`/`team` label values
 
@@ -132,15 +139,35 @@ list in the same `<team>/<app>/<env>.yml` file as steps 2-3:
 ```
 
 If this app has neither a database (step 3) nor a scrapable host (this step)
-— e.g. fully vendor-hosted, no infra you can reach — skip both and use
-`app-analytics-lite` instead of `app-analytics` when linking it from a
-team-overview card (step 8). It's the same dashboard minus the Layer 2/4
-rows and the saturation panel, so it doesn't show two permanently-empty
-sections for an app that will never have that data.
+— e.g. fully vendor-hosted, no infra you can reach — use
+`2-tier-no-host-no-db-analytics` instead of `2-tier-fullstack-analytics`
+when linking it from a team-overview card (step 8). If it has one but not
+the other, use `2-tier-no-host-analytics` (db, no host) or
+`2-tier-no-db-analytics` (host, no db). These are the same dashboard minus
+the rows that would otherwise always be empty for this app.
 
 If a host is shared across multiple apps, leave `app` off entirely — the
 dashboard will correctly show no infra data for it under any single app's
 view rather than attributing a shared host to one app.
+
+## 4a. Does this app need the 3-tier family? (optional)
+
+If this app has **two genuinely separate deployments** — a frontend
+app/host and a separate backend app/host, each independently scrapable
+(not just two IIS sites on the same box, though that's fine too — see
+HIMS) — set `tier: frontend` or `tier: backend` on its application job(s)
+(step 2) and its infra host job(s) (this step), one value per job,
+matching which side of the split that job belongs to. **Never** set
+`tier` on the database job (step 3) — the `$db_job` variable identifies
+the database independently of tier.
+
+Job-name substrings are not a reliable way to guess tier — some apps'
+"...-frontend-..." job is really their only/sole app job, not one half of
+a pair (see CARD, SCL Eng Std). Only set `tier` when there really are two
+independent jobs to distinguish.
+
+If the app has no tier split, skip this — it only shows up in the 2-tier
+family, which needs no `tier` label at all.
 
 ## 5. Reload Prometheus and verify targets
 
@@ -150,8 +177,10 @@ split across many files, this catches a bad glob or YAML typo in your new
 file before it silently fails to load.
 
 ```powershell
-curl -X POST http://localhost:9090/-/reload
+curl -X POST http://localhost:9090/prometheus/-/reload
 ```
+(note the `/prometheus/` route prefix — this stack's Prometheus runs with
+`--web.route-prefix=/prometheus/`.)
 
 Check **Prometheus → Status → Targets** — the new job(s) should show `UP`.
 If a brand-new app's jobs don't show up at all, double-check step 2's
@@ -159,8 +188,8 @@ If a brand-new app's jobs don't show up at all, double-check step 2's
 
 ## 6. Verify in Grafana
 
-Open **Application Analytics**, switch the `job` dropdown to `my-app`.
-Everything else resolves automatically:
+Open **Application Analytics** (`2-tier-fullstack-analytics`), switch the
+`job` dropdown to `my-app`. Everything else resolves automatically:
 
 - `$app` (hidden) derives from `$job` via the `app` label.
 - `$db_job` (Layer 4) auto-populates with only this app's database job(s).
@@ -171,16 +200,23 @@ If a layer shows "No data," it usually means: the corresponding job/label
 from steps 2-4 wasn't added, the `app` value doesn't match exactly across
 jobs, or the target is down.
 
+For an app with a `tier` split (step 4a), also open
+`3-tier-fullstack-analytics`, pick it in the `$app` dropdown, and confirm
+the frontend/backend job dropdowns (hidden, but check via panel data)
+resolve — if a row shows "No data," the most common cause is `tier` not
+set on the matching job, or set to a typo'd value.
+
 ## 7. Optional: app-specific dashboard
 
-**Currently disabled/paused** — `app-analytics.json` used to support linking
-out to a per-app dashboard (see `core/authapi-analytics.json` for the
-existing pattern: auth operations, dependency health, runtime internals),
-via a `specific_dashboard` variable and an "App-Specific Dashboard Available"
-panel. Both were removed from `app-analytics.json` while this feature is
-redesigned — the mechanism and `authapi-analytics.json` itself are left
-intact for when it comes back. Don't try to re-wire a new app into it until
-this section is updated.
+**Currently disabled/paused** — `2-tier-fullstack-analytics.json` used to
+support linking out to a per-app dashboard (see `core/authapi-analytics.json`
+for the existing pattern: auth operations, dependency health, runtime
+internals), via a `specific_dashboard` variable and an "App-Specific
+Dashboard Available" panel. Both were removed from
+`2-tier-fullstack-analytics.json` while this feature is redesigned — the
+mechanism and `authapi-analytics.json` itself are left intact for when it
+comes back. Don't try to re-wire a new app into it until this section is
+updated.
 
 ## 8. Optional: team-overview card
 
@@ -189,8 +225,11 @@ Each team has its own overview dashboard under
 (e.g. `hr-finance/team-overview.json`, `public-safety/team-overview.json`).
 Replace one of its "Placeholder App N" cards with this app: update its two
 `up{job="..."}` targets and its link to
-`/d/app-analytics?var-job=my-app&${__url_time_range}` (or
-`/d/app-analytics-lite?...` per step 4's note). The Directors rollup
+`/d/2-tier-fullstack-analytics?var-job=my-app&${__url_time_range}` (swap in
+whichever 2-tier variant matches this app's actual topology per step 4's
+note — `no-host`/`no-db`/`no-host-no-db` — or, for an app with a `tier`
+split per step 4a, point it at the matching `3-tier-*-analytics` dashboard
+instead using `var-app=MyApp` in place of `var-job`). The Directors rollup
 (`directors/all-teams-overview.json`) needs no changes — its per-team app
 count is a live query against the `team:` label from step 1, not a
 hand-maintained card.

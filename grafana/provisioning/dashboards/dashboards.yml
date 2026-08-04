@@ -1,9 +1,12 @@
 apiVersion: 1
 
 providers:
-  # Shared/reference dashboards linked into from every team's overview
-  # (app-analytics, app-analytics-lite, authapi-analytics). No folder: key,
-  # so these land in General -- every team folder can reach them.
+  # Shared/reference dashboards linked into from every team's overview: the
+  # 2-tier family (2-tier-fullstack-analytics, 2-tier-no-host-analytics,
+  # 2-tier-no-db-analytics, 2-tier-no-host-no-db-analytics), the 3-tier
+  # family (3-tier-fullstack-analytics, 3-tier-no-host-analytics,
+  # 3-tier-no-db-analytics), and authapi-analytics. No folder: key, so these
+  # land in General -- every team folder can reach them.
   - name: 'core'
     orgId: 1
     type: file

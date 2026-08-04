@@ -1,5 +1,5 @@
 {
-  "description": "Lite variant of Application Analytics for apps with no scrapable host (vendor-hosted infra) and no backend database -- Layer 1 (Golden Signals) and Layer 3 (Application) only. See app-analytics.json for the full 4-layer dashboard.",
+  "description": "2-tier variant of Application Analytics for apps with no scrapable host (vendor-hosted infra) and no backend database -- Layer 1 (Golden Signals) and Layer 3 (Application) only. See 2-tier-fullstack-analytics for the full app+host+db dashboard.",
   "editable": true,
   "graphTooltip": 1,
   "links": [
@@ -14,18 +14,6 @@
       "tooltip": "Back to the All Teams overview (this dashboard is shared across every team, so there's no single 'correct' team to return to)",
       "type": "link",
       "url": "/d/all-teams-overview"
-    },
-    {
-      "asDropdown": false,
-      "icon": "external link",
-      "includeVars": false,
-      "keepTime": true,
-      "tags": [],
-      "targetBlank": false,
-      "title": "Frontend Dashboard →",
-      "tooltip": "Switch to the Frontend Analytics dashboard",
-      "type": "link",
-      "url": "/d/frontend-analytics"
     }
   ],
   "panels": [
@@ -77,7 +65,7 @@
           "links": [
             {
               "title": "Performance Drilldown →",
-              "url": "/d/app-analytics?var-job=$job&viewPanel=200",
+              "url": "/d/2-tier-no-host-no-db-analytics?var-job=$job&viewPanel=200",
               "targetBlank": false
             }
           ]
@@ -166,7 +154,7 @@
           "links": [
             {
               "title": "Performance Drilldown →",
-              "url": "/d/app-analytics?var-job=$job&viewPanel=200",
+              "url": "/d/2-tier-no-host-no-db-analytics?var-job=$job&viewPanel=200",
               "targetBlank": false
             }
           ]
@@ -246,7 +234,7 @@
           "links": [
             {
               "title": "Error Drilldown →",
-              "url": "/d/app-analytics?var-job=$job&viewPanel=201",
+              "url": "/d/2-tier-no-host-no-db-analytics?var-job=$job&viewPanel=201",
               "targetBlank": false
             }
           ]
@@ -351,7 +339,7 @@
               "links": [
                 {
                   "title": "Error Endpoint Drilldown →",
-                  "url": "/d/app-analytics?var-job=$job&viewPanel=201",
+                  "url": "/d/2-tier-no-host-no-db-analytics?var-job=$job&viewPanel=201",
                   "targetBlank": false
                 }
               ]
@@ -517,7 +505,7 @@
                     "value": [
                       {
                         "title": "Operation Detail →",
-                        "url": "/d/app-analytics?var-job=$job&var-route=${__data.fields[\"Operation (Endpoint)\"]}&viewPanel=202",
+                        "url": "/d/2-tier-no-host-no-db-analytics?var-job=$job&var-route=${__data.fields[\"Operation (Endpoint)\"]}&viewPanel=202",
                         "targetBlank": false
                       }
                     ]
@@ -697,7 +685,7 @@
                     "value": [
                       {
                         "title": "Operation Detail →",
-                        "url": "/d/app-analytics?var-job=$job&var-route=${__data.fields[\"Operation (Endpoint)\"]}&viewPanel=202",
+                        "url": "/d/2-tier-no-host-no-db-analytics?var-job=$job&var-route=${__data.fields[\"Operation (Endpoint)\"]}&viewPanel=202",
                         "targetBlank": false
                       }
                     ]
@@ -907,8 +895,8 @@
   },
   "timepicker": {},
   "timezone": "browser",
-  "title": "Application Analytics — Lite (No DB / No Infra)",
-  "uid": "app-analytics-lite",
+  "title": "Application Analytics — 2-Tier, No Host / No DB",
+  "uid": "2-tier-no-host-no-db-analytics",
   "version": 1,
   "templating": {
     "list": [

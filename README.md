@@ -19,9 +19,9 @@ Prometheus + Grafana stack for monitoring real applications and infrastructure.
     │   ├── datasources/                  # Prometheus datasource (auto-provisioned)
     │   └── dashboards/                   # dashboard provider config
     └── dashboards/
-        ├── app-analytics.json            # generic per-app analytics dashboard
+        ├── 2-tier-fullstack-analytics.json  # generic per-app analytics dashboard (2-tier family)
+        ├── 3-tier-fullstack-analytics.json  # generic frontend+backend analytics dashboard (3-tier family)
         ├── authapi-analytics.json        # AuthApi-specific deep dive
-        ├── frontend-analytics.json       # frontend RUM dashboard
         └── team-overview.json            # landing page linking to the above
 ```
 
@@ -58,8 +58,8 @@ else in this stack.
 
 ## Dashboard
 
-`Application Analytics` (`app-analytics`) is templated on a `job` variable
-(defaults to `authapi`). It covers:
+`Application Analytics` (`2-tier-fullstack-analytics`) is templated on a
+`job` variable (defaults to `authapi`). It covers:
 
 - **Layer 1 — Golden Signals**: latency (p50/p95/p99), traffic, errors, saturation
 - **Layer 2 — Infrastructure**: CPU, memory, swap, disk I/O, disk space, network (from `node-exporter`)
@@ -73,8 +73,9 @@ is added.
 
 ## Multi-stack support — how it works
 
-`app-analytics.json` queries a normalized `app:*` metric schema so the same
-dashboard works across Node.js, .NET, and Java apps without modification.
+`2-tier-fullstack-analytics.json` queries a normalized `app:*` metric schema
+so the same dashboard works across Node.js, .NET, and Java apps without
+modification.
 Prometheus recording rules in `prometheus/recording_rules/` do the translation:
 
 | Tech stack | Native metric (inbound) | Native labels | Normalized to |

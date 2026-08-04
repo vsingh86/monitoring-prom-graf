@@ -68,7 +68,7 @@
           "links": [
             {
               "title": "Open App Analytics →",
-              "url": "/d/app-analytics?var-job=authapi&${__url_time_range}",
+              "url": "/d/2-tier-fullstack-analytics?var-job=authapi&${__url_time_range}",
               "targetBlank": false
             }
           ]
@@ -234,7 +234,7 @@
       "links": [
         {
           "title": "Open App Analytics →",
-          "url": "/d/app-analytics?var-job=authapi&${__url_time_range}",
+          "url": "/d/2-tier-fullstack-analytics?var-job=authapi&${__url_time_range}",
           "targetBlank": false
         }
       ]
@@ -272,7 +272,7 @@
           "links": [
             {
               "title": "Open App Analytics →",
-              "url": "/d/app-analytics?var-job=hris-hims-app-backend-dev&${__url_time_range}",
+              "url": "/d/2-tier-fullstack-analytics?var-job=hris-hims-app-backend-dev&${__url_time_range}",
               "targetBlank": false
             }
           ]
@@ -438,7 +438,7 @@
       "links": [
         {
           "title": "Open App Analytics →",
-          "url": "/d/app-analytics?var-job=hris-hims-app-backend-dev&${__url_time_range}",
+          "url": "/d/2-tier-fullstack-analytics?var-job=hris-hims-app-backend-dev&${__url_time_range}",
           "targetBlank": false
         }
       ]
@@ -476,7 +476,7 @@
           "links": [
             {
               "title": "Open App Analytics →",
-              "url": "/d/app-analytics?var-job=hris-card-frontend-dev&${__url_time_range}",
+              "url": "/d/2-tier-fullstack-analytics?var-job=hris-card-frontend-dev&${__url_time_range}",
               "targetBlank": false
             }
           ]
@@ -642,7 +642,7 @@
       "links": [
         {
           "title": "Open App Analytics →",
-          "url": "/d/app-analytics?var-job=hris-card-frontend-dev&${__url_time_range}",
+          "url": "/d/2-tier-fullstack-analytics?var-job=hris-card-frontend-dev&${__url_time_range}",
           "targetBlank": false
         }
       ]
@@ -680,7 +680,7 @@
           "links": [
             {
               "title": "Open App Analytics →",
-              "url": "/d/app-analytics?var-job=hris-scl-engineering-frontend-dev&${__url_time_range}",
+              "url": "/d/2-tier-fullstack-analytics?var-job=hris-scl-engineering-frontend-dev&${__url_time_range}",
               "targetBlank": false
             }
           ]
@@ -846,7 +846,7 @@
       "links": [
         {
           "title": "Open App Analytics →",
-          "url": "/d/app-analytics?var-job=hris-scl-engineering-frontend-dev&${__url_time_range}",
+          "url": "/d/2-tier-fullstack-analytics?var-job=hris-scl-engineering-frontend-dev&${__url_time_range}",
           "targetBlank": false
         }
       ]
@@ -884,7 +884,7 @@
           "links": [
             {
               "title": "Open App Analytics →",
-              "url": "/d/app-analytics?var-job=authapi&${__url_time_range}",
+              "url": "/d/2-tier-fullstack-analytics?var-job=authapi&${__url_time_range}",
               "targetBlank": false
             }
           ]
@@ -1050,7 +1050,7 @@
       "links": [
         {
           "title": "Open App Analytics →",
-          "url": "/d/app-analytics?var-job=authapi&${__url_time_range}",
+          "url": "/d/2-tier-fullstack-analytics?var-job=authapi&${__url_time_range}",
           "targetBlank": false
         }
       ]
@@ -1088,7 +1088,7 @@
           "links": [
             {
               "title": "Open App Analytics →",
-              "url": "/d/app-analytics?var-job=authapi&${__url_time_range}",
+              "url": "/d/2-tier-fullstack-analytics?var-job=authapi&${__url_time_range}",
               "targetBlank": false
             }
           ]
@@ -1254,7 +1254,7 @@
       "links": [
         {
           "title": "Open App Analytics →",
-          "url": "/d/app-analytics?var-job=authapi&${__url_time_range}",
+          "url": "/d/2-tier-fullstack-analytics?var-job=authapi&${__url_time_range}",
           "targetBlank": false
         }
       ]
@@ -1292,7 +1292,7 @@
           "links": [
             {
               "title": "Open App Analytics →",
-              "url": "/d/app-analytics?var-job=authapi&${__url_time_range}",
+              "url": "/d/2-tier-fullstack-analytics?var-job=authapi&${__url_time_range}",
               "targetBlank": false
             }
           ]
@@ -1458,7 +1458,7 @@
       "links": [
         {
           "title": "Open App Analytics →",
-          "url": "/d/app-analytics?var-job=authapi&${__url_time_range}",
+          "url": "/d/2-tier-fullstack-analytics?var-job=authapi&${__url_time_range}",
           "targetBlank": false
         }
       ]
@@ -1496,7 +1496,7 @@
           "links": [
             {
               "title": "Open App Analytics →",
-              "url": "/d/app-analytics?var-job=authapi&${__url_time_range}",
+              "url": "/d/2-tier-fullstack-analytics?var-job=authapi&${__url_time_range}",
               "targetBlank": false
             }
           ]
@@ -1662,7 +1662,7 @@
       "links": [
         {
           "title": "Open App Analytics →",
-          "url": "/d/app-analytics?var-job=authapi&${__url_time_range}",
+          "url": "/d/2-tier-fullstack-analytics?var-job=authapi&${__url_time_range}",
           "targetBlank": false
         }
       ]
@@ -1700,7 +1700,7 @@
           "links": [
             {
               "title": "Open App Analytics →",
-              "url": "/d/app-analytics?var-job=authapi&${__url_time_range}",
+              "url": "/d/2-tier-fullstack-analytics?var-job=authapi&${__url_time_range}",
               "targetBlank": false
             }
           ]
@@ -1866,7 +1866,7 @@
       "links": [
         {
           "title": "Open App Analytics →",
-          "url": "/d/app-analytics?var-job=authapi&${__url_time_range}",
+          "url": "/d/2-tier-fullstack-analytics?var-job=authapi&${__url_time_range}",
           "targetBlank": false
         }
       ]
@@ -1904,7 +1904,7 @@
           "links": [
             {
               "title": "Open App Analytics →",
-              "url": "/d/app-analytics?var-job=authapi&${__url_time_range}",
+              "url": "/d/2-tier-fullstack-analytics?var-job=authapi&${__url_time_range}",
               "targetBlank": false
             }
           ]
@@ -2070,7 +2070,7 @@
       "links": [
         {
           "title": "Open App Analytics →",
-          "url": "/d/app-analytics?var-job=authapi&${__url_time_range}",
+          "url": "/d/2-tier-fullstack-analytics?var-job=authapi&${__url_time_range}",
           "targetBlank": false
         }
       ]

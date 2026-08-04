@@ -31,9 +31,9 @@ rule_files:
 # ── Onboarding a new app ─────────────────────────────────────────────────────
 # Every job that belongs to an app — its application job, database job(s), and
 # dedicated infra host job(s) — must carry the SAME `app: <Name>` static label.
-# This is the join key app-analytics.json uses to scope Layer 2 (Infra) and
-# Layer 4 (Database) to whichever app is selected via the $job dropdown; it
-# resolves automatically once the label is consistent, no dashboard edits
+# This is the join key 2-tier-fullstack-analytics.json uses to scope Layer 2
+# (Infra) and Layer 4 (Database) to whichever app is selected via the $job
+# dropdown; it resolves automatically once the label is consistent, no dashboard edits
 # needed. See docs/onboarding-new-app.md for the full checklist and
 # copy-paste job templates.
 #

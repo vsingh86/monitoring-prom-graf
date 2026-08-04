@@ -1,5 +1,5 @@
 {
-  "description": "Director-level rollup: one card per team showing how many apps are currently monitored, derived live from Prometheus (count of distinct jobs per team: label). Not an operational dashboard -- see each team's own overview for that.",
+  "description": "Director-level rollup: one card per team showing how many apps are currently monitored, derived live from Prometheus (count of distinct app: label values per team: label -- not job count, since one app can have several jobs: application, database, infra). Not an operational dashboard -- see each team's own overview for that.",
   "editable": true,
   "graphTooltip": 1,
   "panels": [
@@ -97,7 +97,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "count(count by (job) (up{team=\"HR and Finance\"}))",
+          "expr": "count(count by (app) (up{team=\"HR and Finance\"}))",
           "legendFormat": "Apps Monitored",
           "refId": "A"
         }
@@ -174,7 +174,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "count(count by (job) (up{team=\"Public Safety\"}))",
+          "expr": "count(count by (app) (up{team=\"Public Safety\"}))",
           "legendFormat": "Apps Monitored",
           "refId": "A"
         }
@@ -251,7 +251,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "count(count by (job) (up{team=\"Middleware\"}))",
+          "expr": "count(count by (app) (up{team=\"Middleware\"}))",
           "legendFormat": "Apps Monitored",
           "refId": "A"
         }
