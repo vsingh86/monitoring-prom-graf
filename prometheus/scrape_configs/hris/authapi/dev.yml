@@ -12,6 +12,7 @@ scrape_configs:
           team: "HR and Finance"
           environment: staging
           app_type: nodejs
+          component: app
     tls_config:
       # ca_file: /etc/prometheus/certs/spuappwebdvl.pem
       # server_name: SPUAPPWEBDVL.ad.seattle.gov

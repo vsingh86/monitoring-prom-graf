@@ -68,7 +68,7 @@
           "links": [
             {
               "title": "Open App Analytics →",
-              "url": "/d/2-tier-fullstack-analytics?var-job=middleware-app1&${__url_time_range}",
+              "url": "/d/2-tier-fullstack-analytics?var-app=middleware-app1&${__url_time_range}",
               "targetBlank": false
             }
           ]
@@ -234,7 +234,7 @@
       "links": [
         {
           "title": "Open App Analytics →",
-          "url": "/d/2-tier-fullstack-analytics?var-job=middleware-app1&${__url_time_range}",
+          "url": "/d/2-tier-fullstack-analytics?var-app=middleware-app1&${__url_time_range}",
           "targetBlank": false
         }
       ]
@@ -272,7 +272,7 @@
           "links": [
             {
               "title": "Open App Analytics →",
-              "url": "/d/2-tier-fullstack-analytics?var-job=middleware-app2&${__url_time_range}",
+              "url": "/d/2-tier-fullstack-analytics?var-app=middleware-app2&${__url_time_range}",
               "targetBlank": false
             }
           ]
@@ -438,7 +438,7 @@
       "links": [
         {
           "title": "Open App Analytics →",
-          "url": "/d/2-tier-fullstack-analytics?var-job=middleware-app2&${__url_time_range}",
+          "url": "/d/2-tier-fullstack-analytics?var-app=middleware-app2&${__url_time_range}",
           "targetBlank": false
         }
       ]
@@ -476,7 +476,7 @@
           "links": [
             {
               "title": "Open App Analytics →",
-              "url": "/d/2-tier-fullstack-analytics?var-job=middleware-app3&${__url_time_range}",
+              "url": "/d/2-tier-fullstack-analytics?var-app=middleware-app3&${__url_time_range}",
               "targetBlank": false
             }
           ]
@@ -642,7 +642,7 @@
       "links": [
         {
           "title": "Open App Analytics →",
-          "url": "/d/2-tier-fullstack-analytics?var-job=middleware-app3&${__url_time_range}",
+          "url": "/d/2-tier-fullstack-analytics?var-app=middleware-app3&${__url_time_range}",
           "targetBlank": false
         }
       ]
@@ -680,7 +680,7 @@
           "links": [
             {
               "title": "Open App Analytics →",
-              "url": "/d/2-tier-fullstack-analytics?var-job=middleware-app4&${__url_time_range}",
+              "url": "/d/2-tier-fullstack-analytics?var-app=middleware-app4&${__url_time_range}",
               "targetBlank": false
             }
           ]
@@ -846,7 +846,7 @@
       "links": [
         {
           "title": "Open App Analytics →",
-          "url": "/d/2-tier-fullstack-analytics?var-job=middleware-app4&${__url_time_range}",
+          "url": "/d/2-tier-fullstack-analytics?var-app=middleware-app4&${__url_time_range}",
           "targetBlank": false
         }
       ]
@@ -884,7 +884,7 @@
           "links": [
             {
               "title": "Open App Analytics →",
-              "url": "/d/2-tier-fullstack-analytics?var-job=middleware-app5&${__url_time_range}",
+              "url": "/d/2-tier-fullstack-analytics?var-app=middleware-app5&${__url_time_range}",
               "targetBlank": false
             }
           ]
@@ -1050,7 +1050,7 @@
       "links": [
         {
           "title": "Open App Analytics →",
-          "url": "/d/2-tier-fullstack-analytics?var-job=middleware-app5&${__url_time_range}",
+          "url": "/d/2-tier-fullstack-analytics?var-app=middleware-app5&${__url_time_range}",
           "targetBlank": false
         }
       ]

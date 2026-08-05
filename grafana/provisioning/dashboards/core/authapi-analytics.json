@@ -1322,7 +1322,7 @@
       "title": "← Application Analytics",
       "tooltip": "Back to the generic Application Analytics dashboard",
       "type": "link",
-      "url": "/d/2-tier-fullstack-analytics?var-job=authapi&var-specific_dashboard=authapi-analytics"
+      "url": "/d/2-tier-fullstack-analytics?var-app=AuthApi&var-specific_dashboard=authapi-analytics"
     }
   ]
 }

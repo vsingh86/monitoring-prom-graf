@@ -1,8 +1,11 @@
 # HIMS -- development environment.
 # See docs/onboarding-new-app.md for what each label (app/app_type/db_type/
-# host_type/tier/environment) does and why every job below must share app: HIMS.
-# tier: frontend|backend distinguishes HIMS's app-frontend/infra-frontend jobs
-# from its app-backend job for the 3-tier-*-analytics dashboards.
+# host_type/component/environment) does and why every job below must share
+# app: HIMS.
+# component: app|frontend-app|backend-app|host|frontend-host|backend-host|
+# database identifies each job's role so dashboards can derive it from just
+# $app -- HIMS has a genuine frontend/backend split, so it uses the split
+# values (frontend-app/backend-app/frontend-host) instead of plain app/host.
 scrape_configs:
 # Oracle
   - job_name: hris-hims-db-dev  
@@ -14,6 +17,7 @@ scrape_configs:
           db_type: oracle
           app: HIMS
           team: "HR and Finance"
+          component: database
           environment: development
     relabel_configs:
       - source_labels: [__param_target]
@@ -37,7 +41,7 @@ scrape_configs:
           app: HIMS
           team: "HR and Finance"
           host_type: windows
-          tier: frontend
+          component: frontend-host
           environment: development
 
   - job_name: 'hris-hims-app-backend-dev'
@@ -52,7 +56,7 @@ scrape_configs:
           app: HIMS
           team: "HR and Finance"
           app_type: dotnet-framework
-          tier: backend
+          component: backend-app
           environment: development
 
   - job_name: "hris-hims-app-frontend-dev"
@@ -72,5 +76,5 @@ scrape_configs:
           app: HIMS
           team: "HR and Finance"
           app_type: dotnet-framework
-          tier: frontend
+          component: frontend-app
           environment: development

@@ -903,27 +903,27 @@
       {
         "current": {
           "selected": false,
-          "text": "authapi",
-          "value": "authapi"
+          "text": "",
+          "value": ""
         },
         "datasource": {
           "type": "prometheus",
           "uid": "prometheus"
         },
-        "definition": "label_values(up{job!~\"prometheus|grafana|node-exporter|fake-apps\"}, job)",
+        "definition": "label_values(up{app!=\"\"}, app)",
         "hide": 0,
         "includeAll": false,
         "multi": false,
-        "name": "job",
+        "name": "app",
         "options": [],
         "query": {
-          "query": "label_values(up{job!~\"prometheus|grafana|node-exporter|fake-apps\"}, job)",
+          "query": "label_values(up{app!=\"\"}, app)",
           "refId": "A"
         },
         "refresh": 2,
         "sort": 1,
-        "type": "query",
-        "label": "Application (Job)"
+        "label": "Application",
+        "type": "query"
       },
       {
         "current": {},
@@ -931,20 +931,20 @@
           "type": "prometheus",
           "uid": "prometheus"
         },
-        "definition": "label_values(up{job=\"$job\"}, app)",
+        "definition": "label_values(up{app=\"$app\", component=\"app\"}, job)",
         "hide": 2,
         "includeAll": false,
         "multi": false,
-        "name": "app",
+        "name": "job",
         "options": [],
         "query": {
-          "query": "label_values(up{job=\"$job\"}, app)",
+          "query": "label_values(up{app=\"$app\", component=\"app\"}, job)",
           "refId": "A"
         },
         "refresh": 2,
         "sort": 1,
-        "type": "query",
-        "label": "Application (derived)"
+        "label": "Job (derived)",
+        "type": "query"
       },
       {
         "current": {},
@@ -964,8 +964,8 @@
         },
         "refresh": 2,
         "sort": 1,
-        "type": "query",
-        "label": "Endpoint (Route)"
+        "label": "Endpoint (Route)",
+        "type": "query"
       }
     ]
   }

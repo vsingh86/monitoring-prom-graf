@@ -2,15 +2,19 @@
 
 Checklist for adding a new application to this monitoring stack so it shows
 up correctly in the `core/` dashboard family with no dashboard edits
-required. Most apps use the **2-tier family** (single app job, scoped by
-`$job`): `2-tier-fullstack-analytics` — Layer 1 (Golden Signals), Layer 2
-(Infrastructure), Layer 3 (Application), Layer 4 (Database) — plus the
-trimmed variants `2-tier-no-host-analytics`, `2-tier-no-db-analytics`,
+required. Every dashboard is scoped by a single top-level `$app` variable
+— which job plays which role is resolved automatically from the
+`component` label (step 1), so **every link into a dashboard uses
+`var-app=<AppName>`, never `var-job`.**
+
+Most apps use the **2-tier family** (single app job): `2-tier-fullstack-analytics`
+— Layer 1 (Golden Signals), Layer 2 (Infrastructure), Layer 3
+(Application), Layer 4 (Database) — plus the trimmed variants
+`2-tier-no-host-analytics`, `2-tier-no-db-analytics`,
 `2-tier-no-host-no-db-analytics` for apps missing one or both of host/db
 (see step 4). Apps with a genuine frontend/backend split (step 4a)
-additionally show up in the **3-tier family**, scoped by `$app` plus the
-`tier` label: `3-tier-fullstack-analytics`, `3-tier-no-host-analytics`,
-`3-tier-no-db-analytics`.
+additionally show up in the **3-tier family**: `3-tier-fullstack-analytics`,
+`3-tier-no-host-analytics`, `3-tier-no-db-analytics`.
 
 ## 1. Pick a team, an app, and `app`/`team` label values
 
@@ -20,9 +24,9 @@ convention) and confirm which team/division directory it belongs under
 team's Grafana folder/display name exactly; `hris` is the directory for what
 Grafana shows as the "HR and Finance" folder). **Every job that belongs to
 this app — its application job, database job(s), and infra host job(s) —
-must set both:**
-- `app: <Name>` — the join key `app-analytics.json` uses internally to tie
-  an application's request metrics, database metrics, and host metrics
+must set all three:**
+- `app: <Name>` — the join key every dashboard uses internally to tie an
+  application's request metrics, database metrics, and host metrics
   together. Skipping it, or using a different value on one of the jobs,
   means that job's data won't show up when you select this app in the
   dashboard.
@@ -32,6 +36,15 @@ must set both:**
   (`team: "HR and Finance"`). This is what the Directors rollup dashboard
   (`directors/all-teams-overview.json`) counts per team — get it wrong and
   this app won't be counted (or gets miscounted) there.
+- `component: <role>` — **required on every job, not optional.** One of
+  `app`, `frontend-app`, `backend-app`, `host`, `frontend-host`,
+  `backend-host`, `database`. This is what lets every dashboard resolve
+  "the job that plays this role" from `$app` alone — skip it and that
+  job silently won't be found by any dashboard even though `app`/`team`
+  are correct. Most apps have just one HTTP-serving job and use the plain
+  `app`/`host` values — see steps 2-4 for exactly which value goes where,
+  and step 4a for when to use the split `frontend-*`/`backend-*` values
+  instead.
 
 Every scrape job lives under `prometheus/scrape_configs/<team>/<app>/<env>.yml`
 (e.g. `prometheus/scrape_configs/hris/my-app/production.yml`). One file per
@@ -69,6 +82,7 @@ scrape_configs:
           app: MyApp
           team: "HR and Finance"     # exact Grafana folder display name -- see step 1
           app_type: nodejs           # or: dotnet, dotnet-framework, java
+          component: app             # or: frontend-app / backend-app -- see step 4a
           environment: production
 ```
 
@@ -107,6 +121,7 @@ another item under the same file's `scrape_configs:` list from step 2:
           app: MyApp                # same value as step 1
           team: "HR and Finance"    # same value as step 1
           db_type: postgres         # or: mysql, sqlserver, oracle
+          component: database       # always "database", regardless of tier count
           environment: production
     relabel_configs:
       - source_labels: [__param_target]
@@ -135,6 +150,7 @@ list in the same `<team>/<app>/<env>.yml` file as steps 2-3:
           app: MyApp                # same value as step 1
           team: "HR and Finance"    # same value as step 1
           host_type: windows        # or: linux (node-exporter)
+          component: host           # or: frontend-host / backend-host -- see step 4a
           environment: production
 ```
 
@@ -150,24 +166,36 @@ If a host is shared across multiple apps, leave `app` off entirely — the
 dashboard will correctly show no infra data for it under any single app's
 view rather than attributing a shared host to one app.
 
-## 4a. Does this app need the 3-tier family? (optional)
+## 4a. Does this app need the split `component` values? (optional)
 
-If this app has **two genuinely separate deployments** — a frontend
-app/host and a separate backend app/host, each independently scrapable
-(not just two IIS sites on the same box, though that's fine too — see
-HIMS) — set `tier: frontend` or `tier: backend` on its application job(s)
-(step 2) and its infra host job(s) (this step), one value per job,
-matching which side of the split that job belongs to. **Never** set
-`tier` on the database job (step 3) — the `$db_job` variable identifies
-the database independently of tier.
+By default, use the plain `component: app` (step 2) / `component: host`
+(step 4) values — that's correct for the overwhelming majority of apps,
+including bare APIs with no frontend at all (e.g. AuthApi). Only reach for
+the split values if this app has **two genuinely separate deployments** —
+a frontend app/host and a separate backend app/host, each independently
+scrapable (not just two IIS sites on the same box, though that's fine too
+— see HIMS). In that case:
+- Frontend application job → `component: frontend-app`
+- Backend application job → `component: backend-app`
+- Frontend infra host job → `component: frontend-host`
+- Backend infra host job → `component: backend-host`
 
-Job-name substrings are not a reliable way to guess tier — some apps'
-"...-frontend-..." job is really their only/sole app job, not one half of
-a pair (see CARD, SCL Eng Std). Only set `tier` when there really are two
-independent jobs to distinguish.
+**Never** use a split value on the database job (step 3) — database jobs
+always use `component: database` regardless of tier count.
 
-If the app has no tier split, skip this — it only shows up in the 2-tier
-family, which needs no `tier` label at all.
+Job-name substrings are not a reliable way to guess which value to use —
+some apps' "...-frontend-..." job is really their only/sole app job, not
+one half of a pair (see CARD, SCL Eng Std, both of which use plain
+`component: app` despite "frontend" appearing in the job name). Only use
+the split values when there really are two independent jobs to
+distinguish.
+
+An app with a genuine split shows up in **both** dashboard families: the
+2-tier family will show whichever one job happens to match
+`component="app"` (there won't be one, since a split app only has
+`frontend-app`/`backend-app` — so its 2-tier dashboards will show "No
+data" for Layer 1/3, which is expected; use the 3-tier family for split
+apps instead). An app without a split only shows up in the 2-tier family.
 
 ## 5. Reload Prometheus and verify targets
 
@@ -189,22 +217,24 @@ If a brand-new app's jobs don't show up at all, double-check step 2's
 ## 6. Verify in Grafana
 
 Open **Application Analytics** (`2-tier-fullstack-analytics`), switch the
-`job` dropdown to `my-app`. Everything else resolves automatically:
+`$app` dropdown to `MyApp`. Everything else resolves automatically:
 
-- `$app` (hidden) derives from `$job` via the `app` label.
-- `$db_job` (Layer 4) auto-populates with only this app's database job(s).
-- Layer 2 panels auto-scope to this app's labeled host(s).
+- `$job` (hidden) derives from `$app` via `component="app"`.
+- `$db_job` (Layer 4) resolves via `component="database"`.
+- `$host_job` (Layer 2, hidden) resolves via `component="host"`, and every
+  Layer 2 panel scopes to it.
 - `$route` (hidden) populates from this app's observed endpoints.
 
 If a layer shows "No data," it usually means: the corresponding job/label
-from steps 2-4 wasn't added, the `app` value doesn't match exactly across
-jobs, or the target is down.
+from steps 2-4 wasn't added, the `app` or `component` value doesn't match
+exactly across jobs, or the target is down.
 
-For an app with a `tier` split (step 4a), also open
+For an app with a split `component` (step 4a), also open
 `3-tier-fullstack-analytics`, pick it in the `$app` dropdown, and confirm
 the frontend/backend job dropdowns (hidden, but check via panel data)
-resolve — if a row shows "No data," the most common cause is `tier` not
-set on the matching job, or set to a typo'd value.
+resolve — if a row shows "No data," the most common cause is `component`
+not set to the matching split value on that job, or set to a typo'd
+value.
 
 ## 7. Optional: app-specific dashboard
 
@@ -225,11 +255,12 @@ Each team has its own overview dashboard under
 (e.g. `hr-finance/team-overview.json`, `public-safety/team-overview.json`).
 Replace one of its "Placeholder App N" cards with this app: update its two
 `up{job="..."}` targets and its link to
-`/d/2-tier-fullstack-analytics?var-job=my-app&${__url_time_range}` (swap in
-whichever 2-tier variant matches this app's actual topology per step 4's
-note — `no-host`/`no-db`/`no-host-no-db` — or, for an app with a `tier`
-split per step 4a, point it at the matching `3-tier-*-analytics` dashboard
-instead using `var-app=MyApp` in place of `var-job`). The Directors rollup
+`/d/2-tier-fullstack-analytics?var-app=MyApp&${__url_time_range}` — always
+`var-app`, never `var-job` (swap in whichever 2-tier variant matches this
+app's actual topology per step 4's note — `no-host`/`no-db`/`no-host-no-db`
+— or, for an app with a split `component` per step 4a, point it at the
+matching `3-tier-*-analytics` dashboard instead — same `var-app=MyApp`
+param, just a different dashboard uid). The Directors rollup
 (`directors/all-teams-overview.json`) needs no changes — its per-team app
 count is a live query against the `team:` label from step 1, not a
 hand-maintained card.

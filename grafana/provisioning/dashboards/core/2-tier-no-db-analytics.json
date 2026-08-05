@@ -341,7 +341,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "(100 - avg(rate(host:cpu_seconds_total{mode=\"idle\", app=\"$app\"}[$__rate_interval])) * 100) / 100",
+          "expr": "(100 - avg(rate(host:cpu_seconds_total{mode=\"idle\", job=\"$host_job\"}[$__rate_interval])) * 100) / 100",
           "legendFormat": "CPU",
           "refId": "B",
           "instant": false
@@ -351,7 +351,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "1 - (host:memory_available_bytes{app=\"$app\"} / host:memory_total_bytes{app=\"$app\"})",
+          "expr": "1 - (host:memory_available_bytes{job=\"$host_job\"} / host:memory_total_bytes{job=\"$host_job\"})",
           "legendFormat": "Memory",
           "refId": "C",
           "instant": false
@@ -417,7 +417,7 @@
                 "type": "prometheus",
                 "uid": "prometheus"
               },
-              "expr": "100 - (avg by(instance) (rate(host:cpu_seconds_total{mode=\"idle\", app=\"$app\"}[$__rate_interval])) * 100)",
+              "expr": "100 - (avg by(instance) (rate(host:cpu_seconds_total{mode=\"idle\", job=\"$host_job\"}[$__rate_interval])) * 100)",
               "legendFormat": "{{instance}} CPU %"
             }
           ],
@@ -456,7 +456,7 @@
                 "type": "prometheus",
                 "uid": "prometheus"
               },
-              "expr": "host:memory_total_bytes{app=\"$app\"} - host:memory_available_bytes{app=\"$app\"}",
+              "expr": "host:memory_total_bytes{job=\"$host_job\"} - host:memory_available_bytes{job=\"$host_job\"}",
               "legendFormat": "Used"
             },
             {
@@ -464,7 +464,7 @@
                 "type": "prometheus",
                 "uid": "prometheus"
               },
-              "expr": "host:memory_available_bytes{app=\"$app\"}",
+              "expr": "host:memory_available_bytes{job=\"$host_job\"}",
               "legendFormat": "Available"
             }
           ],
@@ -503,7 +503,7 @@
                 "type": "prometheus",
                 "uid": "prometheus"
               },
-              "expr": "host:memory_swap_total_bytes{app=\"$app\"} - host:memory_swap_free_bytes{app=\"$app\"}",
+              "expr": "host:memory_swap_total_bytes{job=\"$host_job\"} - host:memory_swap_free_bytes{job=\"$host_job\"}",
               "legendFormat": "Swap used"
             }
           ],
@@ -542,7 +542,7 @@
                 "type": "prometheus",
                 "uid": "prometheus"
               },
-              "expr": "rate(host:disk_read_bytes_total{app=\"$app\"}[$__rate_interval])",
+              "expr": "rate(host:disk_read_bytes_total{job=\"$host_job\"}[$__rate_interval])",
               "legendFormat": "{{device}} read"
             },
             {
@@ -550,7 +550,7 @@
                 "type": "prometheus",
                 "uid": "prometheus"
               },
-              "expr": "rate(host:disk_written_bytes_total{app=\"$app\"}[$__rate_interval])",
+              "expr": "rate(host:disk_written_bytes_total{job=\"$host_job\"}[$__rate_interval])",
               "legendFormat": "{{device}} write"
             }
           ],
@@ -612,7 +612,7 @@
                 "type": "prometheus",
                 "uid": "prometheus"
               },
-              "expr": "1 - (host:filesystem_avail_bytes{fstype!~\"tmpfs|overlay\", app=\"$app\"} / host:filesystem_size_bytes{fstype!~\"tmpfs|overlay\", app=\"$app\"})",
+              "expr": "1 - (host:filesystem_avail_bytes{fstype!~\"tmpfs|overlay\", job=\"$host_job\"} / host:filesystem_size_bytes{fstype!~\"tmpfs|overlay\", job=\"$host_job\"})",
               "legendFormat": "{{mountpoint}}"
             }
           ],
@@ -650,7 +650,7 @@
                 "type": "prometheus",
                 "uid": "prometheus"
               },
-              "expr": "rate(host:network_receive_bytes_total{device!~\"lo\", app=\"$app\"}[$__rate_interval])",
+              "expr": "rate(host:network_receive_bytes_total{device!~\"lo\", job=\"$host_job\"}[$__rate_interval])",
               "legendFormat": "{{device}} rx"
             },
             {
@@ -658,7 +658,7 @@
                 "type": "prometheus",
                 "uid": "prometheus"
               },
-              "expr": "rate(host:network_transmit_bytes_total{device!~\"lo\", app=\"$app\"}[$__rate_interval])",
+              "expr": "rate(host:network_transmit_bytes_total{device!~\"lo\", job=\"$host_job\"}[$__rate_interval])",
               "legendFormat": "{{device}} tx"
             }
           ],
@@ -1302,27 +1302,27 @@
       {
         "current": {
           "selected": false,
-          "text": "authapi",
-          "value": "authapi"
+          "text": "",
+          "value": ""
         },
         "datasource": {
           "type": "prometheus",
           "uid": "prometheus"
         },
-        "definition": "label_values(up{job!~\"prometheus|grafana|node-exporter|fake-apps\"}, job)",
+        "definition": "label_values(up{app!=\"\"}, app)",
         "hide": 0,
         "includeAll": false,
         "multi": false,
-        "name": "job",
+        "name": "app",
         "options": [],
         "query": {
-          "query": "label_values(up{job!~\"prometheus|grafana|node-exporter|fake-apps\"}, job)",
+          "query": "label_values(up{app!=\"\"}, app)",
           "refId": "A"
         },
         "refresh": 2,
         "sort": 1,
-        "type": "query",
-        "label": "Application (Job)"
+        "label": "Application",
+        "type": "query"
       },
       {
         "current": {},
@@ -1330,20 +1330,20 @@
           "type": "prometheus",
           "uid": "prometheus"
         },
-        "definition": "label_values(up{job=\"$job\"}, app)",
+        "definition": "label_values(up{app=\"$app\", component=\"app\"}, job)",
         "hide": 2,
         "includeAll": false,
         "multi": false,
-        "name": "app",
+        "name": "job",
         "options": [],
         "query": {
-          "query": "label_values(up{job=\"$job\"}, app)",
+          "query": "label_values(up{app=\"$app\", component=\"app\"}, job)",
           "refId": "A"
         },
         "refresh": 2,
         "sort": 1,
-        "type": "query",
-        "label": "Application (derived)"
+        "label": "Job (derived)",
+        "type": "query"
       },
       {
         "current": {},
@@ -1353,7 +1353,7 @@
         },
         "definition": "label_values(app:http_request_duration_seconds_count{job=\"$job\"}, route)",
         "hide": 2,
-        "includeAll": true,
+        "includeAll": false,
         "multi": false,
         "name": "route",
         "options": [],
@@ -1363,8 +1363,29 @@
         },
         "refresh": 2,
         "sort": 1,
-        "type": "query",
-        "label": "Endpoint (Route)"
+        "label": "Endpoint (Route)",
+        "type": "query"
+      },
+      {
+        "current": {},
+        "datasource": {
+          "type": "prometheus",
+          "uid": "prometheus"
+        },
+        "definition": "label_values(up{app=\"$app\", component=\"host\"}, job)",
+        "hide": 2,
+        "includeAll": false,
+        "multi": false,
+        "name": "host_job",
+        "options": [],
+        "query": {
+          "query": "label_values(up{app=\"$app\", component=\"host\"}, job)",
+          "refId": "A"
+        },
+        "refresh": 2,
+        "sort": 1,
+        "label": "Host Job (derived)",
+        "type": "query"
       }
     ]
   }

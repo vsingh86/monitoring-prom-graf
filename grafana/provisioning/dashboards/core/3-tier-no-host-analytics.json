@@ -2107,14 +2107,14 @@
           "type": "prometheus",
           "uid": "prometheus"
         },
-        "definition": "label_values(up{app=\"$app\", tier=\"frontend\", app_type!=\"\"}, job)",
+        "definition": "label_values(up{app=\"$app\", component=\"frontend-app\"}, job)",
         "hide": 2,
         "includeAll": false,
         "multi": false,
         "name": "frontend_job",
         "options": [],
         "query": {
-          "query": "label_values(up{app=\"$app\", tier=\"frontend\", app_type!=\"\"}, job)",
+          "query": "label_values(up{app=\"$app\", component=\"frontend-app\"}, job)",
           "refId": "A"
         },
         "refresh": 2,
@@ -2128,14 +2128,14 @@
           "type": "prometheus",
           "uid": "prometheus"
         },
-        "definition": "label_values(up{app=\"$app\", tier=\"backend\", app_type!=\"\"}, job)",
+        "definition": "label_values(up{app=\"$app\", component=\"backend-app\"}, job)",
         "hide": 2,
         "includeAll": false,
         "multi": false,
         "name": "backend_job",
         "options": [],
         "query": {
-          "query": "label_values(up{app=\"$app\", tier=\"backend\", app_type!=\"\"}, job)",
+          "query": "label_values(up{app=\"$app\", component=\"backend-app\"}, job)",
           "refId": "A"
         },
         "refresh": 2,
@@ -2195,14 +2195,14 @@
           "type": "prometheus",
           "uid": "prometheus"
         },
-        "definition": "label_values(db:connections_active{app=\"$app\"}, job)",
+        "definition": "label_values(up{app=\"$app\", component=\"database\"}, job)",
         "hide": 0,
         "includeAll": false,
         "multi": false,
         "name": "db_job",
         "options": [],
         "query": {
-          "query": "label_values(db:connections_active{app=\"$app\"}, job)",
+          "query": "label_values(up{app=\"$app\", component=\"database\"}, job)",
           "refId": "A"
         },
         "refresh": 2,

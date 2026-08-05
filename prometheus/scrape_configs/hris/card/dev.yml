@@ -10,6 +10,7 @@ scrape_configs:
           db_type: postgres
           app: CARD
           team: "HR and Finance"
+          component: database
           environment: development
     relabel_configs:
       - source_labels: [__param_target]
@@ -22,6 +23,7 @@ scrape_configs:
           app_type: nodejs
           app: CARD
           team: "HR and Finance"
+          component: app
           environment: development
     scheme: https
     authorization:
