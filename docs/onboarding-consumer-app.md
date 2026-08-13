@@ -22,44 +22,34 @@ to use depends on your stack — pick the one matching your `app_type`:
 
 ### This is the step most likely to go wrong — match the exact metric shape
 
-The platform team's recording rules (`prometheus/rules/data-mapping/<stack>.yml`)
-normalize each stack's *specific* metric names and labels into the shared
-`app:*` schema every dashboard queries. If your instrumentation doesn't
-match what the rule for your `app_type` expects, Prometheus will scrape your
-app fine — `up{job="..."}` will show `1` — but every dashboard panel will
-silently show "No data," because the recording rule that's supposed to
-normalize your metrics never matches anything.
+Behind the scenes, the platform team's recording rules normalize each
+stack's *specific* metric names and labels into the shared `app:*` schema
+every dashboard queries. If your instrumentation doesn't match what the
+rule for your `app_type` expects, Prometheus will scrape your app fine —
+`up{job="..."}` will show `1` — but every dashboard panel will silently
+show "No data." **This happened twice on this platform already**, both
+times because an app used a library's *default* metric names instead of
+what was expected.
 
-**This happened twice on this platform already**, both times because an app
-used a library's *default* metric names instead of what the recording rule
-expected:
-- One `dotnet-framework` app used `prometheus-net.AspNetCore`'s stock
-  `UseHttpMetrics()` middleware, which emits `http_requests_received_total`
-  with a `code` label — the recording rule was written for a hand-rolled
-  `http_requests_total` counter with a `status_code` label. Same library,
-  different configuration, incompatible metric names.
-- A SQL Server target initially had no scrape job at all pointed at it, so
-  it silently produced zero data despite the exporter itself working fine.
-
-**Before you ask the platform team to add your app, open the recording rule
-file for your exact `app_type`** and confirm your app's real scrape output
-(`curl http://your-app:port/metrics`) matches what it expects:
-- [`rules/data-mapping/nodejs.yml`](../prometheus/rules/data-mapping/nodejs.yml)
-- [`rules/data-mapping/dotnet.yml`](../prometheus/rules/data-mapping/dotnet.yml)
-- [`rules/data-mapping/dotnet_framework.yml`](../prometheus/rules/data-mapping/dotnet_framework.yml)
-- [`rules/data-mapping/java.yml`](../prometheus/rules/data-mapping/java.yml)
-
-If your output doesn't match, either reconfigure your instrumentation to
-produce the expected names/labels, or flag it to the platform team — they
-can extend the recording rule to recognize your shape too (as happened for
-the `prometheus-net` default-middleware case above), but that's much faster
-to do *before* onboarding than after a dashboard silently shows nothing.
+**Follow [`implementation-guide-app-metrics.md`](implementation-guide-app-metrics.md)
+for your `app_type`** — it has the exact metric names/labels to produce and
+setup code for each stack. Confirm your app's real scrape output
+(`curl http://your-app:port/metrics`) matches its tables *before* you ask
+the platform team to onboard your app. You shouldn't need to look at the
+platform team's recording rules yourself — the implementation guide is
+kept in sync with them; if your stack genuinely can't produce the expected
+shape, flag it to the platform team instead of trying to work around it —
+they can extend the recording rule to recognize your shape too, but that's
+much faster to do *before* onboarding than after a dashboard silently shows
+nothing.
 
 ## 2. Self-hosted only: install a host exporter (Layer 2)
 
 If your app runs on infrastructure your team controls (a VM, an on-prem
 server), install the matching exporter so host-level metrics (CPU, memory,
-disk, network) show up on Layer 2:
+disk, network) show up on Layer 2. Follow
+[`implementation-guide-host-metrics.md`](implementation-guide-host-metrics.md)
+for install and config steps for your OS:
 - Linux: [`node_exporter`](https://github.com/prometheus/node_exporter)
 - Windows: [`windows_exporter`](https://github.com/prometheus-community/windows_exporter)
 
