@@ -13,6 +13,7 @@ schema on the server (see postgres.py's collector for the same fix and why
 a blacklist of schema names doesn't scale).
 """
 import mysql.connector
+from mysql.connector.errorcode import ER_ACCESS_DENIED_ERROR
 from prometheus_client.core import GaugeMetricFamily
 
 from src.collectors.base import VendorAdapter
@@ -72,6 +73,13 @@ class MysqlAdapter(VendorAdapter):
         finally:
             cur.close()
         return True
+
+    def is_auth_error(self, exc: Exception) -> bool:
+        # mysql-connector-python exposes a real error code on connection-phase
+        # failures too, unlike psycopg2/pymssql -- ER_ACCESS_DENIED_ERROR
+        # (1045) is specifically "bad username/password," so this doesn't
+        # need to fall back to message-text matching.
+        return isinstance(exc, mysql.connector.Error) and getattr(exc, "errno", None) == ER_ACCESS_DENIED_ERROR
 
     def collect(self, conn) -> tuple[list, bool]:
         families: list = []

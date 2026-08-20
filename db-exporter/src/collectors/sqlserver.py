@@ -99,6 +99,13 @@ class SqlServerAdapter(VendorAdapter):
             cur.close()
         return True
 
+    # Like psycopg2, pymssql/FreeTDS collapses both bad credentials and
+    # network failures into pymssql.OperationalError with no distinct error
+    # code -- "Login failed for user" in the message is the only portable
+    # signal that this specifically was an authentication failure.
+    def is_auth_error(self, exc: Exception) -> bool:
+        return isinstance(exc, pymssql.OperationalError) and "login failed" in str(exc).lower()
+
     def collect(self, conn) -> tuple[list, bool]:
         families: list = []
         had_error = False

@@ -108,6 +108,17 @@ class OracleAdapter(VendorAdapter):
             cur.close()
         return True
 
+    def is_auth_error(self, exc: Exception) -> bool:
+        # oracledb attaches a structured _Error with a numeric .code to
+        # exc.args[0] -- ORA-01017 is specifically "invalid username/password,"
+        # unlike psycopg2/pymssql this doesn't need message-text matching.
+        if not isinstance(exc, oracledb.DatabaseError):
+            return False
+        args = exc.args
+        if args and hasattr(args[0], "code"):
+            return args[0].code == 1017
+        return "ORA-01017" in str(exc)
+
     def collect(self, conn) -> tuple[list, bool]:
         families: list = []
         had_error = False

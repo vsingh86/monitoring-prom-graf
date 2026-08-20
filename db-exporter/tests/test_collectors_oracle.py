@@ -1,3 +1,5 @@
+import oracledb
+
 from src.collectors.oracle import OracleAdapter, _TABLESPACE_SQL, _parse_oracle_interval_seconds
 from src.config import DatabaseTarget
 from tests.fakes import FakeConnection, build_registry, metric_lines
@@ -27,6 +29,32 @@ def test_parse_oracle_interval_seconds():
     assert _parse_oracle_interval_seconds("+01 02:03:04.5") == 1 * 86400 + 2 * 3600 + 3 * 60 + 4.5
     assert _parse_oracle_interval_seconds("-00 00:00:02") == -2.0
     assert _parse_oracle_interval_seconds("garbage") is None
+
+
+class _FakeOraError:
+    """Stand-in for oracledb's internal _Error object (exc.args[0]) -- there's
+    no public way to construct a real ORA-01017 without a live listener."""
+
+    def __init__(self, code, full_code, message):
+        self.code = code
+        self.full_code = full_code
+        self.message = message
+
+
+def test_is_auth_error_detects_invalid_username_password():
+    adapter = OracleAdapter(TARGET)
+    exc = oracledb.DatabaseError(
+        _FakeOraError(1017, "ORA-01017", "ORA-01017: invalid username/password; logon denied")
+    )
+    assert adapter.is_auth_error(exc) is True
+
+
+def test_is_auth_error_ignores_network_failures():
+    adapter = OracleAdapter(TARGET)
+    exc = oracledb.DatabaseError(
+        _FakeOraError(0, "DPY-6005", "DPY-6005: cannot connect to database")
+    )
+    assert adapter.is_auth_error(exc) is False
 
 
 def test_collect_happy_path_standby_unlimited_sessions():

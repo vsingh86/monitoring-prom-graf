@@ -16,6 +16,7 @@ class VendorAdapter(ABC):
     def __init__(self, target: DatabaseTarget):
         self.target = target
         self._conn: Any = None
+        self._auth_failed = False
 
     @abstractmethod
     def connect(self) -> Any:
@@ -24,6 +25,15 @@ class VendorAdapter(ABC):
     @abstractmethod
     def is_alive(self, conn: Any) -> bool:
         """Cheap liveness check (e.g. SELECT 1). Return False if conn is unusable."""
+
+    def is_auth_error(self, exc: Exception) -> bool:
+        """Return True if exc from connect() means "bad credentials," as
+        opposed to a transient/network failure (DB restarting, host down)
+        that's worth retrying on the next scrape. Default: never latch --
+        vendor adapters override this using their driver's own signal for
+        an authentication failure specifically (error code, not just any
+        OperationalError)."""
+        return False
 
     @abstractmethod
     def collect(self, conn: Any) -> tuple[list, bool]:
@@ -60,9 +70,25 @@ class VendorAdapter(ABC):
         return [result], False
 
     def get_connection(self) -> Any:
+        if self._auth_failed:
+            raise RuntimeError(
+                f"not retrying connection to target '{self.target.name}': a previous "
+                "attempt failed authentication, and retrying every scrape would keep "
+                "hammering the account with a wrong password (risking a lockout) -- "
+                "fix credentials in config.yaml and restart db-exporter to try again"
+            )
         if self._conn is None or not self._safe_is_alive(self._conn):
             self.close()
-            self._conn = self.connect()
+            try:
+                self._conn = self.connect()
+            except Exception as exc:
+                if self.is_auth_error(exc):
+                    self._auth_failed = True
+                    logger.error(
+                        "target '%s': authentication failed -- will not retry connecting "
+                        "until db-exporter is restarted (%s)", self.target.name, exc,
+                    )
+                raise
         return self._conn
 
     def _safe_is_alive(self, conn: Any) -> bool:

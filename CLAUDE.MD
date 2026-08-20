@@ -22,15 +22,21 @@ dashboards that work across tech stacks without per-app customization.
   Framework/Java and Postgres/MySQL/SQL Server/Oracle with zero
   per-app customization.
 - Grafana dashboards are generic, driven by template variables, and come in
-  two families. The **2-tier family** (single app job: app + optional host
-  + optional db) is driven by `$job`/`$app`/`$db_job`. The **3-tier
-  family** (a genuine frontend/backend split, identified via the `tier`
-  label below: frontend app+host, backend app+host, db) is driven by a
-  top-level `$app` plus tier-derived `$frontend_job`/`$backend_job`/
-  `$frontend_host_job`/`$backend_host_job`/`$db_job`. Onboarding a new app
+  two families, both anchored on a single top-level `$app` variable — every
+  other variable (`$job`, `$host_job`, `$db_job`, `$frontend_job`,
+  `$backend_job`, `$frontend_host_job`, `$backend_host_job`) is hidden and
+  derived from `$app` + the `component` label below. The **2-tier family**
+  (single app job: app + optional host + optional db) picks its one app
+  job via `component="app"`. The **3-tier family** (a genuine
+  frontend/backend split) picks four via `component="frontend-app"` /
+  `"backend-app"` / `"frontend-host"` / `"backend-host"`. Every link into
+  a `core/` dashboard from elsewhere (team-overview cards, etc.) uses
+  `var-app=<AppName>` — **never `var-job`** — this used to be split
+  (`var-job` for 2-tier, `var-app` for 3-tier) and that inconsistency
+  caused a real bug (a team-overview card silently defaulted to the wrong
+  app because it used the other family's URL param). Onboarding a new app
   should require **zero dashboard edits** — only new scrape-config files
-  plus the label conventions below (plus `tier` if it needs the 3-tier
-  family).
+  plus the label conventions below, `component` included.
 
 ## Key label conventions (every scrape job must set)
 
@@ -49,27 +55,34 @@ dashboards that work across tech stacks without per-app customization.
   `rules/data-mapping/db_<type>.yml`.
 - `host_type` — `linux` | `windows`. Selects `infra_linux.yml` /
   `infra_windows.yml`.
-- `tier` — `frontend` | `backend`. Set only on **application** jobs and
-  **infra host** jobs for an app with a genuine frontend/backend split —
-  never on database jobs (DB identity is handled entirely by the existing
-  `$db_job` variable, which needs no tier). Powers the `3-tier-*-analytics`
-  dashboards' `$frontend_job`/`$backend_job`/`$frontend_host_job`/
-  `$backend_host_job` variables, which disambiguate "frontend app job"
-  from "frontend host job" (same `app`, same `tier`) using the fact that
-  app jobs always carry `app_type` and host jobs always carry `host_type`:
-  `label_values(up{app="$app", tier="frontend", app_type!=""}, job)` for
-  the app job, `host_type!=""` for the host job — a missing label matches
-  `""` in PromQL, so `!=""` reliably selects only jobs where that label is
-  actually set. Job-name substrings are **not** a reliable way to infer
-  tier (CARD's only job is literally named `-frontend-` but it's its
-  sole app job, not one half of a pair) — that's why this needs an
-  explicit label. Apps without a real tier split (single app job, or one
-  app job + one db job) don't need this label at all and use the
-  `2-tier-*-analytics` family instead.
+- `component` — **required on every job, no exceptions**: `app` |
+  `frontend-app` | `backend-app` | `host` | `frontend-host` |
+  `backend-host` | `database`. This is the single label every dashboard
+  variable reads to find "the job that plays this role for `$app`" —
+  `label_values(up{app="$app", component="frontend-app"}, job)` — so
+  `$app` alone is always enough to derive every job a dashboard needs, for
+  both dashboard families. Single-tier apps (one HTTP-serving job — most
+  apps, e.g. `AuthApi`, `CARD`) use the plain values `app`/`host`; apps
+  with a genuine frontend/backend split (currently only `HIMS`) use the
+  split values `frontend-app`/`backend-app`/`frontend-host`/
+  `backend-host`. Database jobs always use `database` regardless of tier
+  count. Use `app` (not `frontend-app`) for a single-tier app even if it's
+  conceptually "the frontend" — some single-tier apps are a bare
+  API/backend with no frontend at all (e.g. AuthApi), so `frontend-app`
+  would be actively wrong for them. Job-name substrings are **not** a
+  reliable way to infer role (CARD's only job is literally named
+  `-frontend-` but it's its sole app job, not one half of a pair) — that's
+  why this needs an explicit label rather than a naming convention.
+  (Supersedes an earlier `tier: frontend|backend` label from a previous
+  session — `tier` is fully retired, don't reintroduce it.)
 - `environment` — `development` | `staging` | `production`.
 
 `job_name` convention: `<division>-<app>-<component>-<env>` (e.g.
-`hris-hims-app-backend-dev`).
+`hris-hims-app-backend-dev`) — an informal naming convention, not enforced
+and not reliable to parse (see CARD/SCL Eng Std, whose job names don't
+follow it). Don't confuse this positional `<component>` naming slot with
+the actual required `component` **label** above — dashboards read the
+label, never the job name.
 
 ## Directory layout
 
@@ -115,19 +128,20 @@ dashboards that work across tech stacks without per-app customization.
   - `core/` — shared dashboards linked into from every team. Two families,
     both uid = filename, both landing in Grafana's General folder (no
     `folder:` key on this provider):
-    - **2-tier family** (single app job, scoped by `$job`):
-      `2-tier-fullstack-analytics.json` (app + host + db, the full
-      dashboard), `2-tier-no-host-analytics.json` (app + db, no infra
-      row), `2-tier-no-db-analytics.json` (app + host, no database row),
-      `2-tier-no-host-no-db-analytics.json` (app only — apps with no
-      scrapable host and no database, e.g. fully vendor-hosted).
-    - **3-tier family** (frontend/backend split via the `tier` label,
+    - **2-tier family** (single app job, scoped by `$app`, `$job` hidden
+      and derived via `component="app"`): `2-tier-fullstack-analytics.json`
+      (app + host + db, the full dashboard), `2-tier-no-host-analytics.json`
+      (app + db, no infra row), `2-tier-no-db-analytics.json` (app + host,
+      no database row), `2-tier-no-host-no-db-analytics.json` (app only —
+      apps with no scrapable host and no database, e.g. fully
+      vendor-hosted).
+    - **3-tier family** (frontend/backend split via the `component` label,
       scoped by `$app`): `3-tier-fullstack-analytics.json` (frontend
       app+host, backend app+host, db), `3-tier-no-host-analytics.json`
       (frontend app, backend app, db — no host rows),
       `3-tier-no-db-analytics.json` (frontend app+host, backend app+host —
-      no database row). Only HIMS has the real `tier`-labeled data for
-      this family today.
+      no database row). Only HIMS has the real split-`component`-labeled
+      data for this family today.
     - `authapi-analytics.json` — AuthApi-specific deep-dive, currently
       unlinked (its `specific_dashboard` back-reference feature is paused,
       see `docs/onboarding-new-app.md` step 7); its one static back-link
@@ -136,9 +150,9 @@ dashboards that work across tech stacks without per-app customization.
     folder (folder-level dashboard RBAC is the goal). **Caveat**: folder
     permissions restrict which *dashboards* a user can open, not which
     *data* an open dashboard can query — the `core/` dashboards take an
-    open `$job`/`$app` param, so true data isolation needs Grafana
-    Teams/row permissions configured in Grafana itself, not expressible in
-    static provisioning JSON.
+    open `$app` param, so true data isolation needs Grafana Teams/row
+    permissions configured in Grafana itself, not expressible in static
+    provisioning JSON.
   - `directors/all-teams-overview.json` — live per-team app count via the
     `team` label, for leadership.
   - `dashboards.yml` — the single provisioning source of truth, one
@@ -194,9 +208,9 @@ slug `hris`) — HIMS, AuthApi, Card, SCLENGINEERINGS. Public Safety and
 Middleware exist as Grafana folders/dashboards with placeholder-only cards
 (`public-safety-app1..5`, `middleware-app1..5`) — no real scrape jobs yet.
 
-HIMS is currently the only app with a genuine frontend/backend `tier`
-split (its frontend and backend jobs run as two IIS sites on one physical
-host, `spuappwebdvl`, so its frontend-host and backend-host layers in the
-3-tier dashboards resolve to the same single infra job — expected, not a
-bug). AuthApi, Card, and SCLENGINEERINGS each have only a single app job
-and use the 2-tier dashboard family.
+HIMS is currently the only app with a genuine frontend/backend
+`component` split (its frontend and backend jobs run as two IIS sites on
+one physical host, `spuappwebdvl`, so its frontend-host and backend-host
+layers in the 3-tier dashboards resolve to the same single infra job —
+expected, not a bug). AuthApi, Card, and SCLENGINEERINGS each have only a
+single app job (`component: app`) and use the 2-tier dashboard family.

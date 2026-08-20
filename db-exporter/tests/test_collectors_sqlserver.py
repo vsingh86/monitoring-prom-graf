@@ -1,3 +1,5 @@
+import pymssql
+
 from src.collectors import sqlserver
 from src.collectors.sqlserver import SqlServerAdapter
 from src.config import DatabaseTarget
@@ -44,6 +46,18 @@ def test_per_database_queries_are_scoped_to_target_database():
             assert params == (TARGET.database,)
         elif sql == sqlserver._AG_LAG_SQL:
             assert params is None
+
+
+def test_is_auth_error_detects_login_failed():
+    adapter = SqlServerAdapter(TARGET)
+    exc = pymssql.OperationalError("(18456, b\"Login failed for user 'u'.DB-Lib error message 20018\")")
+    assert adapter.is_auth_error(exc) is True
+
+
+def test_is_auth_error_ignores_network_failures():
+    adapter = SqlServerAdapter(TARGET)
+    exc = pymssql.OperationalError("Unable to connect: Adaptive Server is unavailable or does not exist")
+    assert adapter.is_auth_error(exc) is False
 
 
 def test_collect_happy_path_with_ag():

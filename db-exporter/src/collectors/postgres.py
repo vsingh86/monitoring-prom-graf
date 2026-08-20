@@ -94,6 +94,18 @@ class PostgresAdapter(VendorAdapter):
             cur.fetchone()
         return True
 
+    # psycopg2 connection-phase failures are always OperationalError -- both
+    # network errors (host down, timeout) and bad credentials share that one
+    # class, so the driver gives no error code to switch on here. Matching
+    # libpq's own FATAL message text is the only portable way to tell a wrong
+    # password apart from "the database is unreachable right now."
+    _AUTH_ERROR_SUBSTRINGS = ("password authentication failed", "authentication failed", "invalid authorization")
+
+    def is_auth_error(self, exc: Exception) -> bool:
+        return isinstance(exc, psycopg2.OperationalError) and any(
+            s in str(exc).lower() for s in self._AUTH_ERROR_SUBSTRINGS
+        )
+
     def collect(self, conn) -> tuple[list, bool]:
         families: list = []
         had_error = False

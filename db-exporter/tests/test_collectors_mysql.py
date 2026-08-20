@@ -1,3 +1,5 @@
+from mysql.connector import errors as mysql_errors
+
 from src.collectors import mysql
 from src.collectors.mysql import MysqlAdapter
 from src.config import DatabaseTarget
@@ -37,6 +39,18 @@ def test_query_duration_and_size_are_scoped_to_target_database():
     for sql, params in conn.calls:
         if sql in scoped_queries:
             assert params == (TARGET.database,)
+
+
+def test_is_auth_error_detects_access_denied():
+    adapter = MysqlAdapter(TARGET)
+    exc = mysql_errors.ProgrammingError(msg="Access denied for user 'u'@'host'", errno=1045, sqlstate="28000")
+    assert adapter.is_auth_error(exc) is True
+
+
+def test_is_auth_error_ignores_network_failures():
+    adapter = MysqlAdapter(TARGET)
+    exc = mysql_errors.InterfaceError(msg="Can't connect to MySQL server", errno=2003)
+    assert adapter.is_auth_error(exc) is False
 
 
 def test_collect_happy_path_is_replica():

@@ -1,3 +1,5 @@
+import psycopg2
+
 from src.collectors import postgres
 from src.collectors.postgres import PostgresAdapter
 from src.config import DatabaseTarget
@@ -45,6 +47,18 @@ def test_every_per_database_query_is_scoped_to_target_database():
     for sql, params in conn.calls:
         if sql in scoped_queries:
             assert params == (TARGET.database,)
+
+
+def test_is_auth_error_detects_wrong_password():
+    adapter = PostgresAdapter(TARGET)
+    exc = psycopg2.OperationalError('FATAL:  password authentication failed for user "u"\n')
+    assert adapter.is_auth_error(exc) is True
+
+
+def test_is_auth_error_ignores_network_failures():
+    adapter = PostgresAdapter(TARGET)
+    exc = psycopg2.OperationalError("could not connect to server: Connection refused")
+    assert adapter.is_auth_error(exc) is False
 
 
 def test_collect_happy_path_is_replica():
